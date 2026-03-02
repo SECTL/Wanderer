@@ -7,7 +7,11 @@
     <ScrollViewer Margin="12 12 18 12">
         <StackPanel Orientation="Vertical">
             <TextBlock TextWrapping="Wrap">
-                本程序采用 GPL 3.0 协议分发。您可以在 <HyperlinkButton NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU 官方网站</HyperlinkButton> 上找到协议文本，及非官方中文翻译。
+                该程序用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。<LineBreak />
+                <!-- 本项目基于 GNU General Public License v3.0 获得许可。 <LineBreak /> -->
+                <!-- 您可以在 <HyperlinkButton NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU 官方网站</HyperlinkButton> 上找到协议文本，及非官方中文翻译。 <LineBreak />-->
+                Copyright (c) 2026 lrs2187<LineBreak />
+                <!-- 使用了 Avalonia + FluentAvalonia 框架制作。 -->
             </TextBlock>
         </StackPanel>
     </ScrollViewer>

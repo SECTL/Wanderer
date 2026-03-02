@@ -28,7 +28,7 @@
                            Margin="0 0 0 2"
                            IsHitTestVisible="False"/>
 
-                    <TextBlock Text="流浪者考勤"
+                    <TextBlock Text="易考勤"
                                FontSize="12"
                                VerticalAlignment="Center"
                                IsHitTestVisible="False"/>

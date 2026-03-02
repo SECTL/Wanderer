@@ -7,7 +7,7 @@
                        x:Class="WandererAttendance.Views.MainWindow"
                        Icon="/Assets/AppLogo.ico"
                        WindowStartupLocation="CenterScreen"
-                       Title="流浪者考勤"
+                       Title="易考勤"
                        Width="400" Height="600"
                        MinWidth="400" MinHeight="600"
                        Loaded="OnLoaded"/>
