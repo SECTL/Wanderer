@@ -2,7 +2,7 @@
   <!-- https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <AvaloniaVersion>11.3.9</AvaloniaVersion>
+    <AvaloniaVersion>11.3.12</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- Avalonia packages -->
@@ -16,8 +16,10 @@
     <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="DotNetCommon.PinYin" Version="8.0.0" />
     <PackageVersion Include="DynamicData" Version="9.4.1" />
     <PackageVersion Include="FluentAvaloniaUI" Version="2.4.1" />
+    <PackageVersion Include="Irihi.Ursa" Version="1.15.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
     <PackageVersion Include="MiniExcel" Version="2.0.0-preview.2" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0" />

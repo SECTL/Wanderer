@@ -80,10 +80,7 @@ public partial class ProfilePage : UserControl
         }
 
         var profile = new ProfileConfigModel(name);
-        foreach (var kvp in GlobalConstants.DefaultStatuses)
-        {
-            profile.Profile.Statuses.Add(kvp.Key, kvp.Value);
-        }
+        profile.Profile.Statuses.AddRange(GlobalConstants.DefaultStatuses);
         
         var json = JsonSerializer.Serialize(profile);
         await File.WriteAllTextAsync(path, json);
@@ -338,10 +335,9 @@ public partial class ProfilePage : UserControl
 
     private void ButtonAddStatus_OnClick(object? sender, RoutedEventArgs e)
     {
-        var guid = Guid.NewGuid();
         var status = new Status();
-        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(guid, status);
-        ViewModel.SelectedStatus = KeyValuePair.Create(guid, status);
+        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status);
+        ViewModel.SelectedStatus = status;
     }
 
     private void ButtonRemoveStatus_OnClick(object? sender, RoutedEventArgs e)
@@ -352,11 +348,11 @@ public partial class ProfilePage : UserControl
         }
 
         var status = ViewModel.SelectedStatus;
-        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Remove(status.Value.Key);
+        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Remove(status);
         ViewModel.SelectedStatus = null;
 
         var revertButton = new Button { Content = "撤销" };
-        var toastMessage = new ToastMessage($"已删除「{status.Value.Value.Name}」。")
+        var toastMessage = new ToastMessage($"已删除「{status.Name}」。")
         {
             ActionContent = revertButton,
             Duration = TimeSpan.FromSeconds(10)
@@ -364,7 +360,7 @@ public partial class ProfilePage : UserControl
 
         revertButton.Click += (_, _) =>
         {
-            ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status.Value.Key, status.Value.Value);
+            ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status);
             ViewModel.SelectedStatus = status;
             toastMessage.Close();
         };

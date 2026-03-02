@@ -2,9 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:faStyling="using:FluentAvalonia.Styling"
         xmlns:faWindowing="using:FluentAvalonia.UI.Windowing"
-        xmlns:views="using:WandererAttendance.Views"
         xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
         xmlns:controls="clr-namespace:WandererAttendance.Controls">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="/Themes/MultiComboBox.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+    
     <faStyling:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
     
     <StyleInclude Source="/Themes/TabStrip.axaml"/>
@@ -22,16 +29,7 @@
 
     <Style Selector=":is(faWindowing|AppWindow)">
         <Setter Property="Icon" Value="/Assets/AppLogo.png"/>
-        <!-- <Setter Property="FontFamily" Value="{DynamicResource MapleMonoNfCn}"/> -->
     </Style>
-    
-    <!-- <Style Selector=":is(views|MainView)"> -->
-    <!--     <Setter Property="FontFamily" Value="{DynamicResource MapleMonoNfCn}"/> -->
-    <!-- </Style> -->
-    <!-- -->
-    <!-- <Style Selector=":is(TextBlock):not(#Icon)"> -->
-    <!--     <Setter Property="FontFamily" Value="{DynamicResource MapleMonoNfCn}"/> -->
-    <!-- </Style> -->
     
     <!-- E70E 为向上箭头 E70D 为向下箭头 -->
     <Style Selector=":is(TextBlock)[Text=&#xE70E;], :is(TextBlock)[Text=&#xE70D;]">

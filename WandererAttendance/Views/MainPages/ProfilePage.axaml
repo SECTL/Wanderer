@@ -290,10 +290,10 @@
                       ItemsSource="{Binding ViewModel.ProfileConfigHandler.Data.Profile.Statuses}"
                       SelectedItem="{Binding ViewModel.SelectedStatus, Mode=TwoWay}">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Binding="{Binding Value.IsDefault, Mode=TwoWay}"
+                    <DataGridCheckBoxColumn Binding="{Binding IsDefault, Mode=TwoWay}"
                                             Header="默认存在?" IsReadOnly="False" />
                     
-                    <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}"
                                         Header="名称" IsReadOnly="False" />
                 </DataGrid.Columns>
             </DataGrid>

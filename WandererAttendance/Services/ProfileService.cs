@@ -1,8 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using DynamicData;
 using Microsoft.Extensions.Logging;
+using WandererAttendance.Models.Profile;
+using WandererAttendance.Services.Config;
 
 namespace WandererAttendance.Services;
 
@@ -11,12 +15,18 @@ public class ProfileService
     public static string ProfileName = "EMPTY";
     public static string ProfilePath => Utils.GetFilePath("Profiles");
     
+    public ProfileConfigHandler ProfileConfigHandler { get; }
     private ILogger<ProfileService> Logger { get; }
     public ObservableCollection<string> Profiles { get; } = [];
+    public OneDayAttendanceStatus AttendanceStatus { get; }
 
-    public ProfileService(ILogger<ProfileService> logger)
+    public ProfileService(ILogger<ProfileService> logger, ProfileConfigHandler profileConfigHandler)
     {
         Logger = logger;
+        ProfileConfigHandler = profileConfigHandler;
+
+        AttendanceStatus = ProfileConfigHandler.Data.Statuses.GetValueOrDefault(
+                DateOnly.FromDateTime(DateTime.Now), new OneDayAttendanceStatus());
         
         RefreshProfiles();
     }

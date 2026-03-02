@@ -2,7 +2,75 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:WandererAttendance.Views.MainPages"
+             xmlns:converters="clr-namespace:WandererAttendance.Converters"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:profile="clr-namespace:WandererAttendance.Models.Profile"
+             x:Class="WandererAttendance.Views.MainPages.AttendancePage"
+             x:Name="RootControl"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="WandererAttendance.Views.MainPages.AttendancePage">
-    Welcome to Avalonia!
+             x:DataType="local:AttendancePage"
+             d:DataContext="{d:DesignInstance local:AttendancePage}">
+    <UserControl.Resources>
+        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+    </UserControl.Resources>
+    
+    <Grid RowDefinitions="Auto *">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto *" Margin="4" ColumnSpacing="4">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Text="{Binding ViewModel.TodayDate}" />
+            
+            <TextBox Grid.Column="1"
+                     HorizontalAlignment="Right"
+                     Width="256"
+                     Watermark="搜索..."
+                     Text="{Binding ViewModel.SearchText}"
+                     TextChanged="SearchTextBox_TextChanged" />
+        </Grid>
+        
+        <DataGrid Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  CanUserSortColumns="True"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  ItemsSource="{Binding ViewModel.Persons}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
+                                    Header="姓名" IsReadOnly="True" />
+
+                <DataGridTextColumn Binding="{Binding Person.Id, Mode=TwoWay}"
+                                    Header="编号" IsReadOnly="True" />
+
+                <DataGridTextColumn Binding="{Binding Person.Sex, Converter={StaticResource HumanSexToStringConverter}}"
+                                    Header="性别" IsReadOnly="True" />
+                
+                <DataGridTemplateColumn Header="状态" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <u:MultiComboBox HorizontalAlignment="Stretch"
+                                             x:CompileBindings="False"
+                                             ItemsSource="{Binding #RootControl.ViewModel.ProfileConfigHandler.Data.Profile.Statuses}"
+                                             SelectedItems="{Binding Statuses}">
+                                <u:MultiComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="profile:Status">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </u:MultiComboBox.ItemTemplate>
+                                
+                                <u:MultiComboBox.SelectedItemTemplate>
+                                    <DataTemplate x:DataType="profile:Status">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </u:MultiComboBox.SelectedItemTemplate>
+                            </u:MultiComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

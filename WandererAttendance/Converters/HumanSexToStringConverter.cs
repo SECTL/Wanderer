@@ -24,6 +24,16 @@ public class HumanSexToStringConverter : IValueConverter
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotSupportedException();
+        if (value is not string sex)
+        {
+            return HumanSex.Unknown;
+        }
+        
+        return sex switch
+        {
+            "男" => HumanSex.Male,
+            "女" => HumanSex.Female,
+            _ => HumanSex.Unknown
+        };
     }
 }

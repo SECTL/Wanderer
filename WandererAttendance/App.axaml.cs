@@ -115,6 +115,7 @@ public partial class App : Application
                 
                 // 界面 ViewModels
                 services.AddTransient<HomePageViewModel>();
+                services.AddTransient<AttendancePageViewModel>();
                 services.AddTransient<ProfilePageViewModel>();
             })
             .Build();
