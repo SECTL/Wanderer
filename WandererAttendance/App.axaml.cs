@@ -1,10 +1,11 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -52,6 +53,12 @@ public partial class App : Application
         {
             IsDesktop = false;
             singleViewPlatform.MainView = IAppHost.GetService<MainView>();
+        }
+        
+        if (OperatingSystem.IsBrowser())
+        {
+            var view = IAppHost.GetService<MainView>();
+            view.Classes.Add("browser");
         }
 
         base.OnFrameworkInitializationCompleted();

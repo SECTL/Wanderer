@@ -3,7 +3,8 @@
         xmlns:faStyling="using:FluentAvalonia.Styling"
         xmlns:faWindowing="using:FluentAvalonia.UI.Windowing"
         xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
-        xmlns:controls="clr-namespace:WandererAttendance.Controls">
+        xmlns:controls="clr-namespace:WandererAttendance.Controls"
+        xmlns:faControls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia">
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -63,5 +64,9 @@
                 <Setter Property="IsVisible" Value="True"/>
             </Style>
         </Style>
+    </Style>
+    
+    <Style Selector=":is(UserControl).browser faControls|SettingsExpander /template/ Expander#Expander">
+        <Setter Property="faControls:ExpanderExt.ExpanderAnimationType" Value="{x:Null}" />
     </Style>
 </Styles>
