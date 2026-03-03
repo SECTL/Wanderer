@@ -9,7 +9,6 @@
              x:Class="WandererAttendance.Views.MainView"
              x:DataType="views:MainView"
              d:DataContext="{d:DesignInstance views:MainView}"
-             Background="{DynamicResource ApplicationPageBackgroundThemeBrush}"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded">
     <Grid RowDefinitions="Auto *">

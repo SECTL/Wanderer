@@ -13,7 +13,10 @@
         </ResourceDictionary>
     </Styles.Resources>
     
-    <faStyling:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+    <faStyling:FluentAvaloniaTheme PreferSystemTheme="True"
+                                   PreferUserAccentColor="True"
+                                   UseSystemFontOnWindows="False"
+                                   TextVerticalAlignmentOverrideBehavior="Disabled" />
     
     <StyleInclude Source="/Themes/TabStrip.axaml"/>
     <StyleInclude Source="/Themes/PopupAnimations.axaml"/>
@@ -33,11 +36,7 @@
 
     <Style Selector=":is(faWindowing|AppWindow)">
         <Setter Property="Icon" Value="/Assets/AppLogo.png"/>
-    </Style>
-    
-    <!-- E70E 为向上箭头 E70D 为向下箭头 -->
-    <Style Selector=":is(TextBlock)[Text=&#xE70E;], :is(TextBlock)[Text=&#xE70D;]">
-        <Setter Property="FontFamily" Value="{DynamicResource SymbolThemeFontFamily}"/>
+        <Setter Property="FontFamily" Value="{StaticResource HarmonyOsSansSc}" />
     </Style>
     
     <Style Selector="asyncImageLoader|AdvancedImage">
