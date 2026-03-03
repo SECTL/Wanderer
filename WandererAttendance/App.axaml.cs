@@ -6,6 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -158,16 +159,19 @@ public partial class App : Application
     {
         var logger = IAppHost.GetService<ILogger<App>>();
         logger.LogInformation("正在停止应用");
-
-        if (IsDesktop && (MainWindow?.IsLoaded ?? false))
-        {
-            MainWindow.Close();
-        }
         
         var configHandler = IAppHost.GetService<MainConfigHandler>();
         configHandler.Save();
         
         var profileConfigHandler = IAppHost.GetService<ProfileConfigHandler>();
         profileConfigHandler.Save();
+
+        if (IsDesktop && (MainWindow?.IsLoaded ?? false))
+        {
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                MainWindow.Close();
+            });
+        }
     }
 }
