@@ -143,6 +143,7 @@ public partial class App : Application
         
         var lifetime = IAppHost.GetService<IHostApplicationLifetime>();
         lifetime.ApplicationStopping.Register(Stop);
+        lifetime.ApplicationStopped.Register(() => logger.LogInformation("App Stopped."));
         
         var mainConfigHandler = IAppHost.GetService<MainConfigHandler>();
         
@@ -158,6 +159,11 @@ public partial class App : Application
         var logger = IAppHost.GetService<ILogger<App>>();
         logger.LogInformation("正在停止应用");
 
+        if (IsDesktop && (MainWindow?.IsLoaded ?? false))
+        {
+            MainWindow.Close();
+        }
+        
         var configHandler = IAppHost.GetService<MainConfigHandler>();
         configHandler.Save();
         

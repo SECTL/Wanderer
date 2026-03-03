@@ -15,6 +15,7 @@ public partial class MainWindow : AppWindow
         SplashScreen = new EmptySplashScreen();
         InitializeComponent();
 
+        Closed += Window_OnClosed;
         TitleBar.Height = 48;
         TitleBar.ExtendsContentIntoTitleBar = true;
         TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
@@ -30,5 +31,10 @@ public partial class MainWindow : AppWindow
             TransparencyLevelHint = [WindowTransparencyLevel.Mica];
             Background = Brushes.Transparent;
         }
+    }
+
+    private void Window_OnClosed(object? sender, EventArgs? e)
+    {
+        App.Stop();
     }
 }
