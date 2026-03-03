@@ -80,15 +80,25 @@ public partial class App : Application
                 // 日志
                 services.AddLogging(builder =>
                 {
-                    builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
-                    builder.AddConsole(console => { console.FormatterName = "classisland"; });
+                    if (!OperatingSystem.IsBrowser())
+                    {
+                        builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
+                        builder.AddConsole(console => { console.FormatterName = "classisland"; });
+                    }
 #if DEBUG
                     builder.SetMinimumLevel(LogLevel.Trace);
 #endif
                 });
                 
                 // 配置
-                services.AddSingleton<ConfigServiceBase, DesktopConfigService>();
+                if (OperatingSystem.IsBrowser())
+                {
+                    services.AddSingleton<ConfigServiceBase, BrowserConfigService>();
+                }
+                else
+                {
+                    services.AddSingleton<ConfigServiceBase, DesktopConfigService>();
+                }
                 services.AddSingleton<MainConfigHandler>();
                 services.AddSingleton<ProfileConfigHandler>();
                 

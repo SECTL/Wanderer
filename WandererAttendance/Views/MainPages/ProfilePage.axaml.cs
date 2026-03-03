@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml.Templates;
@@ -15,6 +13,7 @@ using WandererAttendance.Helpers.UI;
 using WandererAttendance.Models;
 using WandererAttendance.Models.Profile;
 using WandererAttendance.Models.UI;
+using WandererAttendance.Services.Config;
 using WandererAttendance.ViewModels.MainPages;
 
 namespace WandererAttendance.Views.MainPages;
@@ -23,6 +22,9 @@ namespace WandererAttendance.Views.MainPages;
 public partial class ProfilePage : UserControl
 {
     public ProfilePageViewModel ViewModel { get; } = IAppHost.GetService<ProfilePageViewModel>();
+
+    private ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
+    private ConfigServiceBase ConfigService { get; } = IAppHost.GetService<ConfigServiceBase>();
 
     public ProfilePage()
     {
@@ -71,19 +73,16 @@ public partial class ProfilePage : UserControl
         }
 
         var name = textBox.Text ?? "EMPTY";
-        var path = Path.Combine(Services.ProfileService.ProfilePath, $"{name}.json");
-
-        if (File.Exists(path))
+        var profile = new ProfileConfigModel(name);
+        
+        if (ConfigService.IsConfigExists(profile))
         {
             this.ShowWarningToast("重复的档案名称。");
             return;
         }
 
-        var profile = new ProfileConfigModel(name);
         profile.Profile.Statuses.AddRange(GlobalConstants.DefaultStatuses);
-        
-        var json = JsonSerializer.Serialize(profile);
-        await File.WriteAllTextAsync(path, json);
+        ConfigService.SaveConfig(profile);
         
         ViewModel.RefreshProfiles();
         ViewModel.SelectedProfile = name;
@@ -114,14 +113,16 @@ public partial class ProfilePage : UserControl
             SecondaryButtonText = "取消"
         }.ShowAsync();
 
-        var raw = Path.Combine(Services.ProfileService.ProfilePath, $"{ViewModel.SelectedProfile}.json");
-        var path = Path.Combine(Services.ProfileService.ProfilePath, $"{textBox.Text}.json");
-        if (r != ContentDialogResult.Primary || !File.Exists(raw))
+        var before = ViewModel.SelectedProfile;
+        var after = textBox.Text ?? "EMPTY";
+        
+        var config = ConfigService.LoadConfig(new ProfileConfigModel(before));
+        if (r != ContentDialogResult.Primary || !ConfigService.IsConfigExists(config))
         {
             return;
         }
 
-        if (File.Exists(path))
+        if (ConfigService.IsConfigExists(new ProfileConfigModel(before)))
         {
             this.ShowToast(new ToastMessage
             {
@@ -131,45 +132,36 @@ public partial class ProfilePage : UserControl
             return;
         }
 
-        File.Move(raw, path);
-        if (Services.ProfileService.ProfileName == Path.GetFileNameWithoutExtension(raw))
+        ConfigService.DeleteConfig(config);
+        config.Profile.Name = after;
+        ConfigService.SaveConfig(config);
+        
+        if (Services.ProfileService.ProfileName == before)
         {
-            Services.ProfileService.ProfileName = Path.GetFileNameWithoutExtension(path);
-            ViewModel.MainConfigHandler.Data.ProfileName = Path.GetFileNameWithoutExtension(path);
+            Services.ProfileService.ProfileName = after;
+            ViewModel.MainConfigHandler.Data.ProfileName = after;
+            ProfileConfigHandler.Data.Profile.Name = after;
         }
-
-        // rename
-        var text = await File.ReadAllTextAsync(path);
-        var profile = JsonSerializer.Deserialize<ProfileConfigModel>(text) ?? new ProfileConfigModel();
-        profile.Profile.Name = textBox.Text;
-        var json = JsonSerializer.Serialize(profile);
-        await File.WriteAllTextAsync(path, json);
         
         ViewModel.RefreshProfiles();
-        ViewModel.SelectedProfile = textBox.Text;
+        ViewModel.SelectedProfile = after;
     }
 
-    private async void MenuItemProfileDuplicate_OnClick(object? sender, RoutedEventArgs e)
+    private void MenuItemProfileDuplicate_OnClick(object? sender, RoutedEventArgs e)
     {
-        var raw = Path.Combine(Services.ProfileService.ProfilePath, $"{ViewModel.SelectedProfile}.json");
-        var d = $"{ViewModel.SelectedProfile} - 副本.json";
-        var d1 = Path.Combine(Services.ProfileService.ProfilePath, $"{d}");
-        File.Copy(raw, d1);
-        
-        // rename
-        var text = await File.ReadAllTextAsync(d1);
-        var profile = JsonSerializer.Deserialize<ProfileConfigModel>(text) ?? new ProfileConfigModel();
-        profile.Profile.Name = Path.GetFileNameWithoutExtension(d);
-        var json = JsonSerializer.Serialize(profile);
-        await File.WriteAllTextAsync(d1, json);
+        var before = ViewModel.SelectedProfile;
+        var after = $"{ViewModel.SelectedProfile} - 副本";
+
+        var config = ConfigService.LoadConfig(new ProfileConfigModel(before));
+        config.Profile.Name = after;
+        ConfigService.SaveConfig(config);
         
         ViewModel.RefreshProfiles();
-        ViewModel.SelectedProfile = Path.GetFileNameWithoutExtension(d);
+        ViewModel.SelectedProfile = after;
     }
 
     private async void MenuItemDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        var path = Path.Combine(Services.ProfileService.ProfilePath, $"{ViewModel.SelectedProfile}.json");
         if (ViewModel.SelectedProfile == Services.ProfileService.ProfileName)
         {
             this.ShowToast(new ToastMessage("无法删除已加载的档案。")
@@ -190,7 +182,7 @@ public partial class ProfilePage : UserControl
 
         if (r == ContentDialogResult.Primary)
         {
-            File.Delete(path);
+            ConfigService.DeleteConfig(new ProfileConfigModel(ViewModel.SelectedProfile));
         }
 
         ViewModel.SelectedProfile = ViewModel.CurrentProfile;
@@ -294,9 +286,9 @@ public partial class ProfilePage : UserControl
 
         ViewModel.Sheet = extension switch
         {
-            ".txt" => LoadFromTxt(stream),
-            ".xlsx" or ".xls" => LoadFromExcel(stream),
-            ".csv" => LoadFromCsv(stream),
+            ".txt" => await LoadFromTxtAsync(stream),
+            ".xlsx" or ".xls" => await LoadFromExcelAsync(stream),
+            ".csv" => await LoadFromCsvAsync(stream),
             _ => []
         };
         

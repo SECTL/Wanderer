@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DynamicData;
 using Microsoft.Extensions.Logging;
+using WandererAttendance.Helpers;
 using WandererAttendance.Models.Profile;
 using WandererAttendance.Services.Config;
 
@@ -35,9 +36,20 @@ public class ProfileService
     {
         Logger.LogInformation("刷新档案列表");
         Profiles.Clear();
-        Profiles.AddRange(
-            from i in Directory.GetFiles(ProfilePath) 
-            where i.EndsWith(".json")
-            select Path.GetFileName(i).Replace(".json", ""));
+
+        if (OperatingSystem.IsBrowser())
+        {
+            Profiles.AddRange(
+                from i in BrowserLocalStorage.GetKeys()
+                where i.StartsWith(ProfilePath) && i.EndsWith(".json")
+                select Path.GetFileName(i).Replace(".json", ""));
+        }
+        else
+        {
+            Profiles.AddRange(
+                from i in Directory.GetFiles(ProfilePath) 
+                where i.EndsWith(".json")
+                select Path.GetFileName(i).Replace(".json", ""));
+        }
     }
 }
