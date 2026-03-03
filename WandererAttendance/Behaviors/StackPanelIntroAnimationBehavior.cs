@@ -72,7 +72,7 @@ public class StackPanelIntroAnimationBehavior
         var index = 0;
         var timer = new DispatcherTimer(DispatcherPriority.Send)
         {
-            Interval = TimeSpan.FromSeconds(0.1)
+            Interval = TimeSpan.FromSeconds(0.05)
         };
         timer.Tick += (sender, args) =>
         {

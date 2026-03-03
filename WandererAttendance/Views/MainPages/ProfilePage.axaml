@@ -77,7 +77,7 @@
                 </StackPanel>
                 
                 <Button Classes="accent" Click="ButtonApplySettings_OnClick">
-                    <controls:IconText Glyph="&#xE424;" Text="应用当前设置" />
+                    <controls:IconText Glyph="&#xE424;" Text="预览当前设置" />
                 </Button>
                 
                 <TextBlock Margin="4 0 0 0">预览</TextBlock>

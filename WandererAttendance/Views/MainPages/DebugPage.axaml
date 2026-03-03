@@ -6,13 +6,15 @@
              xmlns:fa="using:FluentAvalonia.UI.Controls"
              xmlns:controls="clr-namespace:WandererAttendance.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
-    <StackPanel Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
-        <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xE06F;}"
-                             Header="功能测试" Description="测试几个小功能"
-                             IsExpanded="True">
-            <fa:SettingsExpanderItem Content="弹出 Toast"
-                                     IsClickEnabled="True"
-                                     Click="ShowToastButton_OnClick"/>
-        </fa:SettingsExpander>
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
+            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xE06F;}"
+                                 Header="功能测试" Description="测试几个小功能"
+                                 IsExpanded="True">
+                <fa:SettingsExpanderItem Content="弹出 Toast"
+                                         IsClickEnabled="True"
+                                         Click="ShowToastButton_OnClick"/>
+            </fa:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
