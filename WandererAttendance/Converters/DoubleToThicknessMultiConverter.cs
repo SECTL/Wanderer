@@ -12,7 +12,7 @@ namespace WandererAttendance.Converters;
 public class DoubleToThicknessMultiConverter : IMultiValueConverter
 {
     /// <inheritdoc />
-    public object Convert(IList<object?> values, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
         return values.Count switch
         {
@@ -28,8 +28,8 @@ public class DoubleToThicknessMultiConverter : IMultiValueConverter
     }
 
     /// <inheritdoc />
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    public object?[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture)
     {
-        return Array.Empty<object>();
+        return Array.Empty<object?>();
     }
 }
