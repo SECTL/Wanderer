@@ -31,6 +31,16 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="..\README.md">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        
+        <None Update="..\LICENSE">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    
+    <ItemGroup>
       <Compile Update="Views\MainPages\ProfilePage.Import.cs">
         <DependentUpon>ProfilePage.axaml</DependentUpon>
       </Compile>
