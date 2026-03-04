@@ -135,74 +135,11 @@ jobs:
           name: android_apk
           path: dist/WandererAttendance_android.apk
 
-  build_browser:
-    name: Build_Browser
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || github.ref }}
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-
-      - name: Install wasm-tools workload
-        run: dotnet workload install wasm-tools
-
-      - name: Restore
-        run: dotnet restore WandererAttendance.Browser/WandererAttendance.Browser.csproj
-
-      - name: Publish Browser
-        run: |
-          dotnet publish WandererAttendance.Browser/WandererAttendance.Browser.csproj \
-            -c Release \
-            --no-restore \
-            -o dist/browser_publish
-
-      - name: Prepare Browser Artifacts and CNAME
-        shell: pwsh
-        run: |
-          $wwwroot = "dist/browser_publish/wwwroot"
-          if (-not (Test-Path $wwwroot)) { throw "Browser wwwroot not found: $wwwroot" }
-          "wanderer.lrsgzs.top" | Out-File -FilePath "$wwwroot/CNAME" -Encoding ascii -NoNewline
-          Compress-Archive -Path "$wwwroot/*" -DestinationPath "dist/WandererAttendance_browser.zip" -Force
-
-      - name: Upload Browser Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: browser_package
-          path: dist/WandererAttendance_browser.zip
-
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/browser_publish/wwwroot
-
-  deploy_browser_pages:
-    name: Deploy_Browser_Pages
-    runs-on: ubuntu-latest
-    needs: build_browser
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag }}
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
   publish:
     name: Publish_Release
     runs-on: windows-2022
-    needs: [build_desktop, build_android, build_browser]
-    if: ${{ always() && success('build_desktop') && success('build_android') && success('build_browser') && github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag && github.event_name != 'pull_request' }}
+    needs: [build_desktop, build_android]
+    if: ${{ always() && success('build_desktop') && success('build_android') && github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag && github.event_name != 'pull_request' }}
     permissions:
       contents: write
     concurrency:
