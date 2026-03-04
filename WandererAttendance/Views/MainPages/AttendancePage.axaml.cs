@@ -25,16 +25,16 @@ public partial class AttendancePage : UserControl
     private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)
     {
         var search = ViewModel.SearchText;
-        ViewModel.PersonSource.Clear();
+        ViewModel.Persons.Clear();
         if (search == string.Empty)
         {
-            ViewModel.PersonSource.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
+            ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
             return;
         }
 
         const StringComparison ignoreCase = StringComparison.CurrentCultureIgnoreCase;
         
-        ViewModel.PersonSource.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
+        ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
             .Where(person =>
                 person.Name.Contains(search, ignoreCase) 
                 || person.Id.Contains(search, ignoreCase)

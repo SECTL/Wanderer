@@ -3,23 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:WandererAttendance.Views.MainPages"
-             xmlns:converters="clr-namespace:WandererAttendance.Converters"
-             xmlns:u="https://irihi.tech/ursa"
-             xmlns:profile="clr-namespace:WandererAttendance.Models.Profile"
-             xmlns:behaviors="clr-namespace:WandererAttendance.Behaviors"
-             xmlns:enums="clr-namespace:WandererAttendance.Enums"
              xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:controls="clr-namespace:WandererAttendance.Controls"
              x:Class="WandererAttendance.Views.MainPages.AttendancePage"
-             x:Name="RootControl"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="local:AttendancePage"
              d:DataContext="{d:DesignInstance local:AttendancePage}">
-    <UserControl.Resources>
-        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
-    </UserControl.Resources>
-    
-    <Grid RowDefinitions="Auto *" RowSpacing="4" Classes="animated-intro">
+    <Grid RowDefinitions="Auto *" Classes="animated-intro">
         <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
             <Grid ColumnDefinitions="Auto * Auto" ColumnSpacing="4">
                 <TextBlock Grid.Column="0"
@@ -46,67 +36,8 @@
             </Grid>
         </Border>
         
-        <DataGrid Grid.Row="1"
-                  AutoGenerateColumns="False"
-                  CanUserSortColumns="True"
-                  CanUserResizeColumns="True"
-                  GridLinesVisibility="Horizontal"
-                  IsReadOnly="True"
-                  SelectionMode="Single"
-                  ItemsSource="{Binding ViewModel.Persons}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
-                                    Header="姓名" IsReadOnly="True" />
-
-                <DataGridTextColumn Binding="{Binding Person.Id, Mode=TwoWay}"
-                                    Header="编号" IsReadOnly="True" />
-
-                <DataGridTextColumn Binding="{Binding Person.Sex, Converter={StaticResource HumanSexToStringConverter}}"
-                                    Header="性别" IsReadOnly="True" />
-                
-                <DataGridTemplateColumn Header="状态" IsReadOnly="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid x:Name="StatusGrid"
-                                  Tag="{Binding #RootControl.ViewModel.MainConfigHandler.Data.StatusChangerShowMode,
-                                        Converter={x:Static ObjectConverters.Equal},
-                                        ConverterParameter={x:Static enums:StatusChangerShowMode.ChipListBox}}">
-                                <ListBox Theme="{StaticResource ChipListBoxTheme}"
-                                         HorizontalAlignment="Stretch"
-                                         SelectionMode="Multiple"
-                                         ItemsSource="{Binding #RootControl.ViewModel.ProfileConfigHandler.Data.Profile.Statuses}"
-                                         SelectedItems="{Binding Statuses}"
-                                         behaviors:ListBoxMultiSelectBehavior.EnableClickToggle="True"
-                                         IsVisible="{Binding #StatusGrid.Tag}">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate x:DataType="profile:Status">
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                                
-                                <u:MultiComboBox HorizontalAlignment="Stretch"
-                                                 x:CompileBindings="False"
-                                                 ItemsSource="{Binding #RootControl.ViewModel.ProfileConfigHandler.Data.Profile.Statuses}"
-                                                 SelectedItems="{Binding Statuses}"
-                                                 IsVisible="{Binding !#StatusGrid.Tag}">
-                                    <u:MultiComboBox.ItemTemplate>
-                                        <DataTemplate x:DataType="profile:Status">
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </u:MultiComboBox.ItemTemplate>
-                                
-                                    <u:MultiComboBox.SelectedItemTemplate>
-                                        <DataTemplate x:DataType="profile:Status">
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </u:MultiComboBox.SelectedItemTemplate>
-                                </u:MultiComboBox>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <controls:AttendanceEditor Grid.Row="1"
+                                   Persons="{Binding ViewModel.Persons}"
+                                   Date="{Binding ViewModel.TodayDate}" />
     </Grid>
 </UserControl>

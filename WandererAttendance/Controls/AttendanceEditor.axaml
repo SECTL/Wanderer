@@ -1,0 +1,81 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:WandererAttendance.Controls"
+             xmlns:enums="clr-namespace:WandererAttendance.Enums"
+             xmlns:behaviors="clr-namespace:WandererAttendance.Behaviors"
+             xmlns:profile="clr-namespace:WandererAttendance.Models.Profile"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:converters="clr-namespace:WandererAttendance.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WandererAttendance.Controls.AttendanceEditor"
+             x:Name="RootControl"
+             Unloaded="Control_OnUnloaded">
+    <UserControl.Resources>
+        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+    </UserControl.Resources>
+
+    <DataGrid DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:AttendanceEditor}}"
+              AutoGenerateColumns="False"
+              CanUserSortColumns="True"
+              CanUserResizeColumns="True"
+              GridLinesVisibility="Horizontal"
+              IsReadOnly="True"
+              SelectionMode="Single"
+              ItemsSource="{Binding Model.Persons}">
+        <DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
+                                Header="姓名" IsReadOnly="True" />
+
+            <DataGridTextColumn Binding="{Binding Person.Id, Mode=TwoWay}"
+                                Header="编号" IsReadOnly="True" />
+
+            <DataGridTextColumn Binding="{Binding Person.Sex, Converter={StaticResource HumanSexToStringConverter}}"
+                                Header="性别" IsReadOnly="True" />
+            
+            <DataGridTemplateColumn Header="状态" IsReadOnly="True">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Grid x:Name="StatusGrid"
+                              Tag="{Binding #RootControl.Model.MainConfigHandler.Data.StatusChangerShowMode,
+                                    Converter={x:Static ObjectConverters.Equal},
+                                    ConverterParameter={x:Static enums:StatusChangerShowMode.ChipListBox}}">
+                            <ListBox Theme="{StaticResource ChipListBoxTheme}"
+                                     HorizontalAlignment="Stretch"
+                                     SelectionMode="Multiple"
+                                     ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses}"
+                                     SelectedItems="{Binding Statuses}"
+                                     behaviors:ListBoxMultiSelectBehavior.EnableClickToggle="True"
+                                     IsVisible="{Binding #StatusGrid.Tag}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="profile:Status">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            
+                            <u:MultiComboBox HorizontalAlignment="Stretch"
+                                             x:CompileBindings="False"
+                                             ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses}"
+                                             SelectedItems="{Binding Statuses}"
+                                             IsVisible="{Binding !#StatusGrid.Tag}">
+                                <u:MultiComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="profile:Status">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </u:MultiComboBox.ItemTemplate>
+                            
+                                <u:MultiComboBox.SelectedItemTemplate>
+                                    <DataTemplate x:DataType="profile:Status">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </u:MultiComboBox.SelectedItemTemplate>
+                            </u:MultiComboBox>
+                        </Grid>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

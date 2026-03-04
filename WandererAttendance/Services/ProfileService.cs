@@ -16,8 +16,9 @@ public class ProfileService
     public static string ProfileName = "EMPTY";
     public static string ProfilePath => Utils.GetFilePath("Profiles");
     
-    public ProfileConfigHandler ProfileConfigHandler { get; }
     private ILogger<ProfileService> Logger { get; }
+    
+    public ProfileConfigHandler ProfileConfigHandler { get; }
     public ObservableCollection<string> Profiles { get; } = [];
     public OneDayAttendanceStatus AttendanceStatus { get; }
 
