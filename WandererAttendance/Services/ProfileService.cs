@@ -42,6 +42,7 @@ public class ProfileService
             Profiles.AddRange(
                 from i in BrowserLocalStorage.GetKeys()
                 where i.StartsWith(ProfilePath) && i.EndsWith(".json")
+                orderby i
                 select Path.GetFileName(i).Replace(".json", ""));
         }
         else
@@ -49,6 +50,7 @@ public class ProfileService
             Profiles.AddRange(
                 from i in Directory.GetFiles(ProfilePath) 
                 where i.EndsWith(".json")
+                orderby i
                 select Path.GetFileName(i).Replace(".json", ""));
         }
     }
