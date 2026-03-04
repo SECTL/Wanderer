@@ -5,6 +5,7 @@
              xmlns:local="using:WandererAttendance.Views.MainPages"
              xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:controls="clr-namespace:WandererAttendance.Controls"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              x:Class="WandererAttendance.Views.MainPages.AttendancePage"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="local:AttendancePage"
@@ -38,6 +39,6 @@
         
         <controls:AttendanceEditor Grid.Row="1"
                                    Persons="{Binding ViewModel.Persons}"
-                                   Date="{Binding ViewModel.TodayDate}" />
+                                   Date="{x:Static system:DateTime.Today}" />
     </Grid>
 </UserControl>

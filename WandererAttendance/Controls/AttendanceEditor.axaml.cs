@@ -74,10 +74,10 @@ public partial class AttendanceEditor : UserControl
         set => SetValue(PersonsProperty, value);
     }
     
-    public static readonly StyledProperty<DateOnly> DateProperty =
-        AvaloniaProperty.Register<AttendanceEditor, DateOnly>(nameof(Date), DateOnly.FromDateTime(DateTime.Now));
+    public static readonly StyledProperty<DateTime> DateProperty =
+        AvaloniaProperty.Register<AttendanceEditor, DateTime>(nameof(Date), DateTime.Today);
 
-    public DateOnly Date
+    public DateTime Date
     {
         get => GetValue(DateProperty);
         set => SetValue(DateProperty, value);
@@ -95,7 +95,7 @@ public partial class AttendanceEditor : UserControl
     {
         InitializeComponent();
         Persons = [];
-        Model.UpdateDate(Date);
+        Model.UpdateDate(DateOnly.FromDateTime(Date));
         Model.UpdatePersons(Persons ?? []);
     }
 
@@ -119,9 +119,9 @@ public partial class AttendanceEditor : UserControl
 
     private void OnDateChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.NewValue is DateOnly date)
+        if (e.NewValue is DateTime date)
         {
-            Model.UpdateDate(date);
+            Model.UpdateDate(DateOnly.FromDateTime(date));
         }
     }
 
