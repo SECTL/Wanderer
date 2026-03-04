@@ -5,7 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:WandererAttendance.Views.MainPages"
              xmlns:controls="clr-namespace:WandererAttendance.Controls"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d"
              x:DataType="local:HomePage"
              d:DataContext="{d:DesignInstance local:HomePage}">

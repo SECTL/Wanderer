@@ -8,7 +8,7 @@
              x:Class="WandererAttendance.Views.MainPages.HistoryPage"   
              x:DataType="local:HistoryPage"
              d:DataContext="{d:DesignInstance local:HistoryPage}">
-    <Grid RowDefinitions="Auto *">
+    <Grid RowDefinitions="Auto *" Classes="animated-intro">
         <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
             <Grid ColumnDefinitions="Auto Auto * Auto" Margin="8">
                 <CalendarDatePicker Grid.Column="0"
