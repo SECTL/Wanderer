@@ -47,7 +47,10 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore
-        run: dotnet restore WandererAttendance.Desktop/WandererAttendance.Desktop.csproj
+        shell: pwsh
+        env:
+          RID: ${{ matrix.os == 'windows' && format('win-{0}', matrix.arch) || (matrix.os == 'linux' && format('linux-{0}', matrix.arch) || format('osx-{0}', matrix.arch)) }}
+        run: dotnet restore WandererAttendance.Desktop/WandererAttendance.Desktop.csproj -r $env:RID
 
       - name: Publish Desktop
         shell: pwsh
@@ -61,7 +64,6 @@ jobs:
             -c Release `
             -r $env:RID `
             --self-contained $env:SELF_CONTAINED `
-            -p:PublishSingleFile=true `
             -p:PublishTrimmed=false `
             -p:UseAppHost=true `
             --no-restore `
@@ -240,4 +242,3 @@ jobs:
           bodyFile: ./release-note.md
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.event.inputs.release_tag }}
-
