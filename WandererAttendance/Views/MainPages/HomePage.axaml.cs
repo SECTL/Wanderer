@@ -26,6 +26,6 @@ public partial class HomePage : UserControl
 
     private void ButtonRefresh_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.RefreshData();
+        AttendanceViewer.RefreshData();
     }
 }

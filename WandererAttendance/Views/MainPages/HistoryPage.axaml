@@ -57,7 +57,8 @@
                 
                 <Carousel Grid.Row="1" Classes="animated" SelectedIndex="{Binding ViewModel.SelectedSubPage}">
                     <!-- 整体数据 -->
-                    <controls:OneDayAttendanceViewer Date="{Binding ViewModel.SelectedDate}" />
+                    <controls:OneDayAttendanceViewer Margin="8"
+                                                     Date="{Binding ViewModel.SelectedDate}" />
                     
                     <!-- 详细信息 -->
                     <controls:AttendanceEditor Date="{Binding ViewModel.SelectedDate}"

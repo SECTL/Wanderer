@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:WandererAttendance.Views.MainPages"
              xmlns:controls="clr-namespace:WandererAttendance.Controls"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d"
              x:DataType="local:HomePage"
              d:DataContext="{d:DesignInstance local:HomePage}">
@@ -15,46 +16,24 @@
                 <Run Text="{Binding ViewModel.TodayDate}" />
             </TextBlock>
             
-            <Button Classes="accent" HorizontalAlignment="Stretch"
+            <Button Classes="accent" Height="48"
+                    HorizontalAlignment="Stretch"
                     Click="GoAttendancePageButton_OnClick">
-                <controls:IconText Glyph="&#xE0AA;" Text="去考勤" />
+                <controls:IconText Glyph="&#xE0AA;" Text="去考勤" FontSize="18" />
             </Button>
             
-            <Expander Header="今日考勤状态" IsExpanded="True">
-                <ItemsControl ItemsSource="{Binding ViewModel.AttendanceData}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" Spacing="8" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-    
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical" Spacing="2">
-                                <TextBlock>
-                                    <Run Text="{Binding Status.Name}" />
-                                    <Run Text="{Binding Count}" />
-                                    人
-                                </TextBlock>
-                                
-                                <ItemsControl ItemsSource="{Binding Persons}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" ItemSpacing="4" LineSpacing="2" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Expander>
+            <Separator />
+            
+            <Grid ColumnDefinitions="* Auto">
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="今日考勤状态" />
+                
+                <Button Grid.Column="1" Click="ButtonRefresh_OnClick">
+                    <controls:IconText Glyph="&#xE0B5;" Text="刷新" />
+                </Button>
+            </Grid>
+            
+            <controls:OneDayAttendanceViewer x:Name="AttendanceViewer"
+                                             Date="{x:Static system:DateTime.Today}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>
