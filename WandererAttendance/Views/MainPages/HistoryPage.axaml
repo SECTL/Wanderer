@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance local:HistoryPage}">
     <Grid RowDefinitions="Auto *" Classes="animated-intro">
         <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-            <Grid ColumnDefinitions="Auto Auto * Auto" Margin="8">
+            <Grid ColumnDefinitions="Auto Auto * Auto" ColumnSpacing="4" Margin="8">
                 <CalendarDatePicker Grid.Column="0"
                                     IsTodayHighlighted="True"
                                     SelectedDate="{Binding ViewModel.SelectedDate}" />
@@ -57,8 +57,10 @@
                 
                 <Carousel Grid.Row="1" Classes="animated" SelectedIndex="{Binding ViewModel.SelectedSubPage}">
                     <!-- 整体数据 -->
-                    <controls:OneDayAttendanceViewer Margin="8"
-                                                     Date="{Binding ViewModel.SelectedDate}" />
+                    <ScrollViewer>
+                        <controls:OneDayAttendanceViewer Margin="8"
+                                                         Date="{Binding ViewModel.SelectedDate}" />
+                    </ScrollViewer>
                     
                     <!-- 详细信息 -->
                     <controls:AttendanceEditor Date="{Binding ViewModel.SelectedDate}"

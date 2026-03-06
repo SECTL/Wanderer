@@ -6,8 +6,8 @@
              xmlns:wa="clr-namespace:WandererAttendance"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WandererAttendance.Views.MainPages.AboutPage">
-    <ScrollViewer Margin="12 12 18 12">
-        <StackPanel Orientation="Vertical" Classes="animated-intro">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Classes="animated-intro">
             <fa:SettingsExpander Header="易考勤" Description="用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。"
                                  IsExpanded="True">
                 <fa:SettingsExpander.IconSource>

@@ -9,8 +9,8 @@
              mc:Ignorable="d"
              x:DataType="local:HomePage"
              d:DataContext="{d:DesignInstance local:HomePage}">
-    <ScrollViewer Margin="12 12 18 12">
-        <StackPanel Orientation="Vertical" Spacing="8" Classes="animated-intro">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
             <TextBlock FontSize="16">
                 日期:
                 <Run Text="{Binding ViewModel.TodayDate}" />
