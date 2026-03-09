@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using DynamicData;
+using DynamicData.Kernel;
 using WandererAttendance.Abstraction;
 using WandererAttendance.Models;
 using WandererAttendance.Models.Profile;
@@ -76,26 +77,16 @@ public partial class AttendanceDayControl : UserControl
         // 拉取数据
         var attendanceStatus = Utils.CopyObjectByJson(
             config.Statuses.GetValueOrDefault(date, new OneDayAttendanceStatus()));
-        foreach (var person in config.Profile.Persons)
+        foreach (var kvp in config.Profile.Persons)
         {
-            if (attendanceStatus.Persons.GetValueOrDefault(person.Guid) != null) continue;
+            if (attendanceStatus.Persons.GetValueOrDefault(kvp.Key) != null) continue;
 
             var status = new AttendanceStatus();
             status.Statuses.AddRange(config.Profile.Statuses
-                .Where(s => s.IsDefault)
-                .Select(s => s.Guid));
-            attendanceStatus.Persons[person.Guid] = status;
+                .Where(s => s.Value.IsDefault)
+                .Select(s => s.Key));
+            attendanceStatus.Persons[kvp.Key] = status;
         }
-        
-        // 统计数据
-        Data.AddRange(config.Profile.Statuses
-            .Select(s => new StatusAndCount
-            {
-                Status = s,
-                Count = config.Profile.Persons
-                    .Count(p => attendanceStatus.Persons[p.Guid].Statuses.Contains(s.Guid)),
-                Persons = []  // 当前控件无需显示详细人员
-            }));
         
         // 简略文本
         if (config.Statuses.GetValueOrDefault(date) == null)
@@ -104,16 +95,20 @@ public partial class AttendanceDayControl : UserControl
             return;
         }
 
-        var firstStatus = config.Profile.Statuses.FirstOrDefault(s => s.IsDefault) ??
-                          config.Profile.Statuses.FirstOrDefault();
-        if (firstStatus == null)
+        var firstStatus = config.Profile.Statuses.FirstOrOptional(s => s.Value.IsDefault);
+        if (!firstStatus.HasValue)
+        {
+            firstStatus = config.Profile.Statuses.FirstOrOptional(_ => true);
+        }
+        
+        if (!firstStatus.HasValue)
         {
             SimpleText = "无状态";
             return;
         }
 
         var count = config.Profile.Persons
-            .Count(p => attendanceStatus.Persons[p.Guid].Statuses.Contains(firstStatus.Guid));
-        SimpleText = $"{firstStatus.Name} {count} 人";
+            .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(firstStatus.Value.Key));
+        SimpleText = $"{firstStatus.Value.Value.Name} {count} 人";
     }
 }

@@ -54,26 +54,27 @@ public partial class OneDayAttendanceViewer : UserControl
         // 拉取数据
         var attendanceStatus = Utils.CopyObjectByJson(
             config.Statuses.GetValueOrDefault(date, new OneDayAttendanceStatus()));
-        foreach (var person in config.Profile.Persons)
+        foreach (var kvp in config.Profile.Persons)
         {
-            if (attendanceStatus.Persons.GetValueOrDefault(person.Guid) != null) continue;
+            if (attendanceStatus.Persons.GetValueOrDefault(kvp.Key) != null) continue;
 
             var status = new AttendanceStatus();
             status.Statuses.AddRange(config.Profile.Statuses
-                .Where(s => s.IsDefault)
-                .Select(s => s.Guid));
-            attendanceStatus.Persons[person.Guid] = status;
+                .Where(s => s.Value.IsDefault)
+                .Select(s => s.Key));
+            attendanceStatus.Persons[kvp.Key] = status;
         }
         
         // 统计数据
         Data.AddRange(config.Profile.Statuses
             .Select(s => new StatusAndCount
             {
-                Status = s,
+                Status = s.Value,
                 Count = config.Profile.Persons
-                    .Count(p => attendanceStatus.Persons[p.Guid].Statuses.Contains(s.Guid)),
+                    .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key)),
                 Persons = config.Profile.Persons
-                    .Where(p => attendanceStatus.Persons[p.Guid].Statuses.Contains(s.Guid))
+                    .Where(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key))
+                    .Select(p => p.Value)
                     .ToList()
             }));
     }

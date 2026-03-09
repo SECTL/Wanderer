@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Avalonia.Interactivity;
 using MiniExcelLibs;
 using MiniExcelLibs.Csv;
 using MiniExcelLibs.OpenXml;

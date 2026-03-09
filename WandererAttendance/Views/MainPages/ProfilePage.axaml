@@ -257,10 +257,10 @@
                       ItemsSource="{Binding ViewModel.ProfileConfigHandler.Data.Profile.Persons}"
                       SelectedItem="{Binding ViewModel.SelectedPerson, Mode=TwoWay}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}"
+                    <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
                                         Header="姓名" IsReadOnly="False" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
 
-                    <DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}"
+                    <DataGridTextColumn Binding="{Binding Value.Id, Mode=TwoWay}"
                                         Header="编号" IsReadOnly="False" />
 
                     <DataGridTemplateColumn Header="性别" IsReadOnly="False" SortMemberPath="Sex">
@@ -268,12 +268,12 @@
                             <DataTemplate>
                                 <TextBlock HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
-                                           Text="{Binding Sex, Converter={StaticResource HumanSexToStringConverter}}" />
+                                           Text="{Binding Value.Sex, Converter={StaticResource HumanSexToStringConverter}}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <fa:FAComboBox SelectedIndex="{Binding Sex}">
+                                <fa:FAComboBox SelectedIndex="{Binding Value.Sex}">
                                     <fa:FAComboBoxItem>男</fa:FAComboBoxItem>
                                     <fa:FAComboBoxItem>女</fa:FAComboBoxItem>
                                     <fa:FAComboBoxItem>未知</fa:FAComboBoxItem>
@@ -286,7 +286,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ItemsControl VerticalAlignment="Center" Margin="4 0"
-                                              ItemsSource="{Binding Tags}">
+                                              ItemsSource="{Binding Value.Tags}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
@@ -313,7 +313,7 @@
                                 <u:MultiComboBox HorizontalAlignment="Stretch"
                                                  x:CompileBindings="False"
                                                  ItemsSource="{Binding #RootControl.ProfileConfigHandler.Data.Profile.Tags.Keys}"
-                                                 SelectedItems="{Binding Tags}">
+                                                 SelectedItems="{Binding Value.Tags}">
                                     <u:MultiComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="system:Guid">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
@@ -342,10 +342,10 @@
                       ItemsSource="{Binding ViewModel.ProfileConfigHandler.Data.Profile.Statuses}"
                       SelectedItem="{Binding ViewModel.SelectedStatus, Mode=TwoWay}">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Binding="{Binding IsDefault, Mode=TwoWay}"
+                    <DataGridCheckBoxColumn Binding="{Binding Value.IsDefault, Mode=TwoWay}"
                                             Header="默认存在?" IsReadOnly="False" />
                     
-                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}"
+                    <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
                                         Header="名称" IsReadOnly="False" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
                 </DataGrid.Columns>
             </DataGrid>

@@ -6,107 +6,58 @@ using System.Linq;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
+using WandererAttendance.Abstraction;
 using WandererAttendance.Models.Profile;
+using WandererAttendance.Services.Config;
 
 namespace WandererAttendance.Models;
 
 public partial class PersonWithStatus : ObservableObject, IDisposable
 {
-    private readonly Guid _personGuid;
-    private readonly OneDayAttendanceStatus _status;
-    private readonly IList<Status> _allStatuses;
-    private bool _isUpdatingFromService = false;
+    private ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
+    private OneDayAttendanceStatus _oneDayAttendanceStatus;
+    private AttendanceStatus _attendanceStatus;
+    
+    private bool _tmpStatusFlag = false;
+    
+    [ObservableProperty] private Guid _guid;
+    [ObservableProperty] private Person _person;
+    [ObservableProperty] private ObservableCollection<Guid> _statuses;
 
-    public Person Person { get; }
-    public ObservableCollection<Status> Statuses { get; } = [];
-
-    public PersonWithStatus(Person person, IList<Status> allStatuses, OneDayAttendanceStatus status)
+    public PersonWithStatus(Guid guid, Person person, OneDayAttendanceStatus status)
     {
+        Guid = guid;
         Person = person;
-        
-        _personGuid = person.Guid;
-        _allStatuses = allStatuses;
-        _status = status;
+        _oneDayAttendanceStatus = status;
 
-        LoadStatuses();
-
-        Statuses.CollectionChanged += OnStatusesCollectionChanged;
-        _status.Persons.CollectionChanged += OnPersonsDictionaryChanged;
-    }
-
-    private void LoadStatuses()
-    {
-        if (_isUpdatingFromService) return; // 防止递归
-        _isUpdatingFromService = true;
-        
-        try
+        var attendanceStatus = status.Persons.GetValueOrDefault(guid);
+        if (attendanceStatus == null)
         {
-            var statusEntry = _status.Persons.GetValueOrDefault(_personGuid);
-
-            Statuses.Clear();
-            if (statusEntry == null)
+            attendanceStatus = new AttendanceStatus();
+            _tmpStatusFlag = true;
+            foreach (var kvp in ProfileConfigHandler.Data.Profile.Statuses)
             {
-                statusEntry = new AttendanceStatus();
-                
-                foreach (var s in _allStatuses.Where(s => s.IsDefault))
-                {
-                    Statuses.Add(s);
-                    statusEntry.Statuses.Add(s.Guid);
-                }
-            }
-            else
-            {
-                var statusGuids = statusEntry.Statuses;
-                foreach (var guid in statusGuids)
-                {
-                    var status = _allStatuses.FirstOrDefault(st => st.Guid == guid);
-                    Statuses.Add(status ?? new Status(guid, "???"));
-                }
+                if (!kvp.Value.IsDefault) continue;
+                attendanceStatus.Statuses.Add(kvp.Key);
             }
         }
-        finally
-        {
-            _isUpdatingFromService = false;
-        }
+
+        _attendanceStatus = attendanceStatus;
+        Statuses = attendanceStatus.Statuses;
+        Statuses.CollectionChanged += StatusesOnCollectionChanged;
     }
 
-    private void OnPersonsDictionaryChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void StatusesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        LoadStatuses();
-    }
-
-    private void OnStatusesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (_isUpdatingFromService)
-            return;
-
-        Dispatcher.UIThread.Post(UpdateServiceStatuses);
-    }
-
-    private void UpdateServiceStatuses()
-    {
-        var statusEntry = _status.Persons.GetValueOrDefault(_personGuid);
-        var flag = false;
+        if (!_tmpStatusFlag) return;
         
-        if (statusEntry == null)
-        {
-            statusEntry = new AttendanceStatus();
-            flag = true;
-        }
-
-        statusEntry.Statuses.Clear();
-        statusEntry.Statuses.AddRange(Statuses.Select(s => s.Guid));
-
-        if (flag)
-        {
-            _status.Persons[_personGuid] = statusEntry;
-        }
+        _oneDayAttendanceStatus.Persons[Guid] = _attendanceStatus;
+        _tmpStatusFlag = false;
     }
 
     public void Dispose()
     {
-        Statuses.CollectionChanged -= OnStatusesCollectionChanged;
-        _status.Persons.CollectionChanged -= OnPersonsDictionaryChanged;
+        Statuses.CollectionChanged -= StatusesOnCollectionChanged;
         GC.SuppressFinalize(this);
     }
 }

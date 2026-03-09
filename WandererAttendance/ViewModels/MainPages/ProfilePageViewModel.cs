@@ -36,7 +36,7 @@ public partial class ProfilePageViewModel : ObservableRecipient
     [ObservableProperty] private string _selectedProfile;
     
     // 人员编辑
-    [ObservableProperty] private Person? _selectedPerson;
+    [ObservableProperty] private KeyValuePair<Guid, Person>? _selectedPerson;
 
     // 导入人员
     [ObservableProperty] private bool _isImporting = false;
@@ -56,7 +56,7 @@ public partial class ProfilePageViewModel : ObservableRecipient
     [ObservableProperty] private ObservableCollection<Person> _previewPersons = [];
     
     // 状态编辑
-    [ObservableProperty] private Status? _selectedStatus;
+    [ObservableProperty] private KeyValuePair<Guid, Status>? _selectedStatus;
     
     // 标签编辑
     [ObservableProperty] private KeyValuePair<Guid, Tag>? _selectedTag;

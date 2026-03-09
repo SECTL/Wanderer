@@ -2,7 +2,6 @@
 using Avalonia.Interactivity;
 using WandererAttendance.Abstraction;
 using WandererAttendance.Attributes;
-using WandererAttendance.Services.Config;
 using WandererAttendance.ViewModels.MainPages;
 
 namespace WandererAttendance.Views.MainPages;

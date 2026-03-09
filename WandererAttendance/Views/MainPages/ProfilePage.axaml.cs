@@ -5,11 +5,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Platform.Storage;
-using DynamicData;
 using FluentAvalonia.UI.Controls;
 using WandererAttendance.Abstraction;
 using WandererAttendance.Attributes;
 using WandererAttendance.Controls;
+using WandererAttendance.Extensions;
 using WandererAttendance.Helpers.UI;
 using WandererAttendance.Models;
 using WandererAttendance.Models.Profile;
@@ -221,9 +221,10 @@ public partial class ProfilePage : UserControl
 
     private void ButtonAddPerson_OnClick(object? sender, RoutedEventArgs e)
     {
-        var person = new Person();
-        ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(person);
-        ViewModel.SelectedPerson = person;
+        var guid = Guid.NewGuid();
+        ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(guid, new Person());
+        ViewModel.SelectedPerson = ViewModel.ProfileConfigHandler.Data.Profile.Persons
+            .First(kvp => kvp.Key == guid);
     }
 
     private void ButtonRemovePerson_OnClick(object? sender, RoutedEventArgs e)
@@ -233,12 +234,12 @@ public partial class ProfilePage : UserControl
             return;
         }
 
-        var person = ViewModel.SelectedPerson;
-        ViewModel.ProfileConfigHandler.Data.Profile.Persons.Remove(person);
+        var person = ViewModel.SelectedPerson.Value;
+        ViewModel.ProfileConfigHandler.Data.Profile.Persons.Remove(person.Key);
         ViewModel.SelectedPerson = null;
 
         var revertButton = new Button { Content = "撤销" };
-        var toastMessage = new ToastMessage($"已删除「{person.Name}」。")
+        var toastMessage = new ToastMessage($"已删除「{person.Value.Name}」。")
         {
             ActionContent = revertButton,
             Duration = TimeSpan.FromSeconds(10)
@@ -246,8 +247,9 @@ public partial class ProfilePage : UserControl
 
         revertButton.Click += (_, _) =>
         {
-            ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(person);
-            ViewModel.SelectedPerson = person;
+            ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(person.Key, person.Value);
+            ViewModel.SelectedPerson = ViewModel.ProfileConfigHandler.Data.Profile.Persons
+                .First(kvp => kvp.Key == person.Key);
             toastMessage.Close();
         };
 
@@ -315,9 +317,11 @@ public partial class ProfilePage : UserControl
         };
         var result = await dialog.ShowAsync();
 
-        if (result == ContentDialogResult.Primary)
+        if (result != ContentDialogResult.Primary) return;
+        
+        foreach (var person in ViewModel.ImportedPersons)
         {
-            ViewModel.ProfileConfigHandler.Data.Profile.Persons.AddRange(ViewModel.ImportedPersons);
+            ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(Guid.NewGuid(), person);
         }
     }
 
@@ -328,9 +332,10 @@ public partial class ProfilePage : UserControl
 
     private void ButtonAddStatus_OnClick(object? sender, RoutedEventArgs e)
     {
-        var status = new Status();
-        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status);
-        ViewModel.SelectedStatus = status;
+        var guid = Guid.NewGuid();
+        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(guid, new Status());
+        ViewModel.SelectedStatus = ViewModel.ProfileConfigHandler.Data.Profile.Statuses
+            .First(kvp => kvp.Key == guid);
     }
 
     private void ButtonRemoveStatus_OnClick(object? sender, RoutedEventArgs e)
@@ -340,12 +345,12 @@ public partial class ProfilePage : UserControl
             return;
         }
 
-        var status = ViewModel.SelectedStatus;
-        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Remove(status);
+        var status = ViewModel.SelectedStatus.Value;
+        ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Remove(status.Key);
         ViewModel.SelectedStatus = null;
 
         var revertButton = new Button { Content = "撤销" };
-        var toastMessage = new ToastMessage($"已删除「{status.Name}」。")
+        var toastMessage = new ToastMessage($"已删除「{status.Value.Name}」。")
         {
             ActionContent = revertButton,
             Duration = TimeSpan.FromSeconds(10)
@@ -353,8 +358,9 @@ public partial class ProfilePage : UserControl
 
         revertButton.Click += (_, _) =>
         {
-            ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status);
-            ViewModel.SelectedStatus = status;
+            ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status.Key, status.Value);
+            ViewModel.SelectedStatus = ViewModel.ProfileConfigHandler.Data.Profile.Statuses
+                .First(kvp => kvp.Key == status.Key);
             toastMessage.Close();
         };
 

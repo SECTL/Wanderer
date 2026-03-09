@@ -1,6 +1,6 @@
-﻿using DynamicData;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using WandererAttendance.Abstraction;
+using WandererAttendance.Extensions;
 using WandererAttendance.Models;
 
 namespace WandererAttendance.Services.Config;

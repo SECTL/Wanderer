@@ -5,16 +5,17 @@
              xmlns:local="clr-namespace:WandererAttendance.Controls"
              xmlns:enums="clr-namespace:WandererAttendance.Enums"
              xmlns:behaviors="clr-namespace:WandererAttendance.Behaviors"
-             xmlns:profile="clr-namespace:WandererAttendance.Models.Profile"
              xmlns:u="https://irihi.tech/ursa"
              xmlns:converters="clr-namespace:WandererAttendance.Converters"
              xmlns:comparers="clr-namespace:WandererAttendance.Comparers"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WandererAttendance.Controls.AttendanceEditor"
              x:Name="RootControl"
              Unloaded="Control_OnUnloaded">
     <UserControl.Resources>
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+        <converters:GuidToStatusNameConverter x:Key="GuidToStatusNameConverter" />
     </UserControl.Resources>
 
     <DataGrid DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:AttendanceEditor}}"
@@ -45,31 +46,31 @@
                             <ListBox Theme="{StaticResource ChipListBoxTheme}"
                                      HorizontalAlignment="Stretch"
                                      SelectionMode="Multiple"
-                                     ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses}"
+                                     ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
                                      SelectedItems="{Binding Statuses}"
                                      behaviors:ListBoxMultiSelectBehavior.EnableClickToggle="True"
                                      IsVisible="{Binding #StatusGrid.Tag}">
                                 <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="profile:Status">
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    <DataTemplate x:DataType="system:Guid">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
     
                             <u:MultiComboBox HorizontalAlignment="Stretch"
                                              x:CompileBindings="False"
-                                             ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses}"
+                                             ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
                                              SelectedItems="{Binding Statuses}"
                                              IsVisible="{Binding !#StatusGrid.Tag}">
                                 <u:MultiComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="profile:Status">
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    <DataTemplate x:DataType="system:Guid">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
                                     </DataTemplate>
                                 </u:MultiComboBox.ItemTemplate>
     
                                 <u:MultiComboBox.SelectedItemTemplate>
-                                    <DataTemplate x:DataType="profile:Status">
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                    <DataTemplate x:DataType="system:Guid">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
                                     </DataTemplate>
                                 </u:MultiComboBox.SelectedItemTemplate>
                             </u:MultiComboBox>

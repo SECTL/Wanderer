@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using WandererAttendance.Abstraction;
+using WandererAttendance.ComponentModels;
 using WandererAttendance.Models;
 using WandererAttendance.Models.Profile;
 using WandererAttendance.Services;
@@ -27,7 +28,7 @@ public partial class AttendanceEditor : UserControl
 
         private readonly IDisposable _cleanUp;
         private OneDayAttendanceStatus _attendanceStatus = new();
-        private readonly SourceList<Person> _personSource = new();
+        private readonly SourceList<KeyValuePair<Guid, Person>> _personSource = new();
         private DateOnly _lastDate = new();
 
         private readonly ReadOnlyObservableCollection<PersonWithStatus> _persons;
@@ -36,7 +37,7 @@ public partial class AttendanceEditor : UserControl
         public AttendanceEditorModel()
         {
             _cleanUp = _personSource.Connect()
-                .Transform(person => new PersonWithStatus(person, ProfileService.ProfileConfigHandler.Data.Profile.Statuses, _attendanceStatus))
+                .Transform(kvp => new PersonWithStatus(kvp.Key, kvp.Value, _attendanceStatus))
                 .DisposeMany()
                 .Bind(out _persons)
                 .Subscribe();
@@ -54,12 +55,12 @@ public partial class AttendanceEditor : UserControl
             _attendanceStatus = ProfileService.ProfileConfigHandler.Data.Statuses.GetValueOrDefault(date, new OneDayAttendanceStatus());
             
             // hard reload
-            var cache = _personSource.Items.Select(i => i);
+            var cache = _personSource.Items.Select(i => i).ToList();
             _personSource.Clear();
             _personSource.AddRange(cache);
         }
         
-        public void UpdatePersons(IEnumerable<Person> persons)
+        public void UpdatePersons(IDictionary<Guid, Person> persons)
         {
             _personSource.Clear();
             _personSource.AddRange(persons);
@@ -87,10 +88,10 @@ public partial class AttendanceEditor : UserControl
         }
     }
     
-    public static readonly StyledProperty<ObservableCollection<Person>?> PersonsProperty =
-        AvaloniaProperty.Register<AttendanceEditor, ObservableCollection<Person>?>(nameof(Persons), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<ObservableDictionary<Guid, Person>?> PersonsProperty =
+        AvaloniaProperty.Register<AttendanceEditor, ObservableDictionary<Guid, Person>?>(nameof(Persons), defaultBindingMode: BindingMode.OneWay);
 
-    public ObservableCollection<Person>? Persons
+    public ObservableDictionary<Guid, Person>? Persons
     {
         get => GetValue(PersonsProperty);
         set => SetValue(PersonsProperty, value);
@@ -123,19 +124,19 @@ public partial class AttendanceEditor : UserControl
 
     private void OnPersonsChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.OldValue is ObservableCollection<Person> oldPersons)
+        if (e.OldValue is ObservableDictionary<Guid, Person> oldPersons)
         {
             oldPersons.CollectionChanged -= Persons_OnCollectionChanged;
         }
 
-        if (e.NewValue is ObservableCollection<Person> newPersons)
+        if (e.NewValue is ObservableDictionary<Guid, Person> newPersons)
         {
             newPersons.CollectionChanged += Persons_OnCollectionChanged;
             Model.UpdatePersons(newPersons);
         }
         else
         {
-            Model.UpdatePersons([]);
+            Model.UpdatePersons(new Dictionary<Guid, Person>());
         }
     }
 

@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using DynamicData;
 using WandererAttendance.Abstraction;
 using WandererAttendance.Attributes;
+using WandererAttendance.Extensions;
 using WandererAttendance.Helpers.UI;
 using WandererAttendance.Shared;
 using WandererAttendance.ViewModels.MainPages;
@@ -36,11 +37,11 @@ public partial class AttendancePage : UserControl
         
         ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
             .Where(person =>
-                person.Name.Contains(search, ignoreCase) 
-                || person.Id.Contains(search, ignoreCase)
-                || PinyinHelper.GetFullPinyinList(person.Name)
+                person.Value.Name.Contains(search, ignoreCase) 
+                || person.Value.Id.Contains(search, ignoreCase)
+                || PinyinHelper.GetFullPinyinList(person.Value.Name)
                     .Any(pinyin => pinyin.StartsWith(search, ignoreCase))
-                || PinyinHelper.GetFirstPinyinList(person.Name)
+                || PinyinHelper.GetFirstPinyinList(person.Value.Name)
                     .Any(pinyin => pinyin.StartsWith(search, ignoreCase))));
     }
 
