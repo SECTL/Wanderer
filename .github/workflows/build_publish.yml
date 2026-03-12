@@ -66,6 +66,7 @@ jobs:
             --self-contained $env:SELF_CONTAINED `
             -p:PublishTrimmed=false `
             -p:UseAppHost=true `
+            -p:OutputType=WinExe `
             --no-restore `
             -o $outDir
 
