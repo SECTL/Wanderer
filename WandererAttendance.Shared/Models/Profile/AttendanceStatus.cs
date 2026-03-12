@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace WandererAttendance.Models.Profile;
+namespace WandererAttendance.Shared.Models.Profile;
 
 public partial class AttendanceStatus : ObservableRecipient
 {

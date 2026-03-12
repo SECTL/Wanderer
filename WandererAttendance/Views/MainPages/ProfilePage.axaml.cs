@@ -12,9 +12,9 @@ using WandererAttendance.Controls;
 using WandererAttendance.Extensions;
 using WandererAttendance.Helpers.UI;
 using WandererAttendance.Models;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Models.UI;
 using WandererAttendance.Services.Config;
+using WandererAttendance.Shared.Models.Profile;
 using WandererAttendance.ViewModels.MainPages;
 
 namespace WandererAttendance.Views.MainPages;

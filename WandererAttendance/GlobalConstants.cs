@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Avalonia.Media;
 using ClassIsland;
-using WandererAttendance.Models.Profile;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance;
 

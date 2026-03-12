@@ -1,9 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using WandererAttendance.Enums;
+using WandererAttendance.Shared.Enums;
 
-namespace WandererAttendance.Models.Profile;
+namespace WandererAttendance.Shared.Models.Profile;
 
 public partial class Person : ObservableRecipient
 {

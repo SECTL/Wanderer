@@ -6,8 +6,8 @@ using System.Linq;
 using DynamicData;
 using Microsoft.Extensions.Logging;
 using WandererAttendance.Helpers;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Services.Config;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.Services;
 

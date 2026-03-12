@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using WandererAttendance.Models;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Shared;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.Comparers;
 

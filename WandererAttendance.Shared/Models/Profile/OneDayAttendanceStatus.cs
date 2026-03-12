@@ -1,8 +1,8 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using WandererAttendance.ComponentModels;
+using WandererAttendance.Shared.ComponentModels;
 
-namespace WandererAttendance.Models.Profile;
+namespace WandererAttendance.Shared.Models.Profile;
 
 public partial class OneDayAttendanceStatus : ObservableRecipient
 {

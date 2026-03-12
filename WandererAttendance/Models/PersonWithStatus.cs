@@ -7,8 +7,8 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using WandererAttendance.Abstraction;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Services.Config;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.Models;
 

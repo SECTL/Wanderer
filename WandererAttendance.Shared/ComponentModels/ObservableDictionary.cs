@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace WandererAttendance.ComponentModels;
+namespace WandererAttendance.Shared.ComponentModels;
 
 /// <summary>
 /// 同时实现 <see cref="IDictionary"/>、<see cref="IList"/>、<see cref="INotifyCollectionChanged"/> 的字典结构。

@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Data.Converters;
 using WandererAttendance.Abstraction;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Services;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.Converters;
 

@@ -5,9 +5,10 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using WandererAttendance.Enums;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Services;
 using WandererAttendance.Services.Config;
+using WandererAttendance.Shared.Enums;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.ViewModels.MainPages;
 

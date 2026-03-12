@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace WandererAttendance.Models.Profile;
+namespace WandererAttendance.Shared.Models.Profile;
 
 public partial class Tag : ObservableRecipient
 {

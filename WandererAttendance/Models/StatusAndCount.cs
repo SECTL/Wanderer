@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WandererAttendance.Models.Profile;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.Models;
 

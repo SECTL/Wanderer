@@ -29,6 +29,8 @@ public partial class App : Application
     public static IClassicDesktopStyleApplicationLifetime? Lifetime { get; private set; }
     public static bool IsDesktop { get; private set; } = false;
     public static MainWindow? MainWindow { get; private set; } = null;
+
+    public static bool IsStopping { get; set; } = false;
     
     public override void Initialize()
     {
@@ -164,7 +166,10 @@ public partial class App : Application
     
     public static void Stop()
     {
+        if (IsStopping) return;
+        
         var logger = IAppHost.GetService<ILogger<App>>();
+        IsStopping = true;
         
         Dispatcher.UIThread.Invoke(() =>
         {

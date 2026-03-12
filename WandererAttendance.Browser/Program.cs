@@ -1,12 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Browser;
-using WandererAttendance;
+
+namespace WandererAttendance.Browser;
 
 internal sealed partial class Program
 {
     private static Task Main(string[] args) => BuildAvaloniaApp()
-            .StartBrowserAppAsync("out");
+        .StartBrowserAppAsync("out");
 
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>();

@@ -2,10 +2,10 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
-using WandererAttendance.ComponentModels;
 using WandererAttendance.Extensions;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Services.Config;
+using WandererAttendance.Shared.ComponentModels;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.ViewModels.MainPages;
 

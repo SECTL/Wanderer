@@ -1,4 +1,4 @@
-﻿namespace WandererAttendance.Enums;
+﻿namespace WandererAttendance.Shared.Enums;
 
 public enum HumanSex
 {

@@ -19,15 +19,17 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="DotNetCommon.PinYin" />
-        <PackageReference Include="DynamicData" />
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="Irihi.Ursa" />
         <PackageReference Include="Microsoft.Extensions.Hosting" />
         <PackageReference Include="MiniExcel" />
         <PackageReference Include="Xaml.Behaviors" />
         <PackageReference Include="Pastel" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="../WandererAttendance.Shared/WandererAttendance.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

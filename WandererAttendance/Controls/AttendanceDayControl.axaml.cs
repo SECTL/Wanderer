@@ -8,8 +8,8 @@ using DynamicData;
 using DynamicData.Kernel;
 using WandererAttendance.Abstraction;
 using WandererAttendance.Models;
-using WandererAttendance.Models.Profile;
 using WandererAttendance.Services.Config;
+using WandererAttendance.Shared.Models.Profile;
 
 namespace WandererAttendance.Controls;
 
