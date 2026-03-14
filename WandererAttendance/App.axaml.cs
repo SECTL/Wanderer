@@ -24,6 +24,7 @@ using WandererAttendance.Services;
 using WandererAttendance.Services.Config;
 using WandererAttendance.Services.Logging;
 using WandererAttendance.Shared;
+using WandererAttendance.Shared.Models.Profile;
 using WandererAttendance.ViewModels;
 using WandererAttendance.ViewModels.MainPages;
 using WandererAttendance.Views;
@@ -229,11 +230,12 @@ public partial class App : Application
         
         logger.LogInformation("当前档案：{PROFILE_NAME}", mainConfigHandler.Data.ProfileName);
         ProfileService.ProfileName = mainConfigHandler.Data.ProfileName;
-        IAppHost.GetService<ProfileConfigHandler>();
-
+        var profileConfigHandler = IAppHost.GetService<ProfileConfigHandler>();
+        profileConfigHandler.StartPinyinCacheTask();
+        
         _ = IAppHost.Host?.StartAsync();
     }
-    
+
     private static void CreatePhonyRootWindow()
     {
         PhonyRootWindow = new Window

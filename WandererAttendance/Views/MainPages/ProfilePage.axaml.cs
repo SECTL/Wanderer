@@ -323,6 +323,8 @@ public partial class ProfilePage : UserControl
         {
             ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(Guid.NewGuid(), person);
         }
+        
+        ViewModel.ProfileConfigHandler.StartPinyinCacheTask();
     }
 
     private void ButtonApplySettings_OnClick(object? sender, RoutedEventArgs e)

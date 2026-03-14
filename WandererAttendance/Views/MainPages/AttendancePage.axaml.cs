@@ -31,17 +31,9 @@ public partial class AttendancePage : UserControl
             ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
             return;
         }
-
-        const StringComparison ignoreCase = StringComparison.CurrentCultureIgnoreCase;
         
         ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
-            .Where(person =>
-                person.Value.Name.Contains(search, ignoreCase) 
-                || person.Value.Id.Contains(search, ignoreCase)
-                || PinyinHelper.GetFullPinyinList(person.Value.Name)
-                    .Any(pinyin => pinyin.StartsWith(search, ignoreCase))
-                || PinyinHelper.GetFirstPinyinList(person.Value.Name)
-                    .Any(pinyin => pinyin.StartsWith(search, ignoreCase))));
+            .Where(person => person.Value.IsMatch(search)));
     }
 
     private void ButtonSave_OnClick(object? sender, RoutedEventArgs e)

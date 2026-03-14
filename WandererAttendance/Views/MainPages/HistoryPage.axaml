@@ -63,8 +63,18 @@
                     </ScrollViewer>
                     
                     <!-- 详细信息 -->
-                    <controls:AttendanceEditor Date="{Binding ViewModel.SelectedDate}"
-                                               Persons="{Binding ViewModel.ProfileConfigHandler.Data.Profile.Persons}" />
+                    <Grid RowDefinitions="Auto *" RowSpacing="4">
+                        <TextBox Grid.Row="0"
+                                 HorizontalAlignment="Stretch"
+                                 MaxWidth="256"
+                                 Watermark="搜索..."
+                                 Text="{Binding ViewModel.SearchText}"
+                                 TextChanged="SearchTextBox_TextChanged" />
+                        
+                        <controls:AttendanceEditor Grid.Row="1"
+                                                   Date="{Binding ViewModel.SelectedDate}"
+                                                   Persons="{Binding ViewModel.Persons}" />
+                    </Grid>
                 </Carousel>
             </Grid>
         </Carousel>
