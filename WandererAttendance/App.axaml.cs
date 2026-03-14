@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
@@ -131,6 +130,7 @@ public partial class App : Application
                 services.AddMainPage<AttendancePage>();
                 services.AddMainPage<ProfilePage>();
                 services.AddMainPage<HistoryPage>();
+                services.AddMainPage<RankingPage>();
 
                 services.AddMainPageFooter<AboutPage>();
                 services.AddMainPageFooterSeparator();
