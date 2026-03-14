@@ -3,21 +3,20 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentAvalonia.UI.Windowing;
+using WandererAttendance.Abstraction;
 using WandererAttendance.Controls;
 using WandererAttendance.Helpers;
+using WandererAttendance.Services.Config;
 
 namespace WandererAttendance.Views;
 
 public partial class MainWindow : AppWindow
 {
-    public bool CanClose { get; set; } = false;
-    
     public MainWindow()
     {
         SplashScreen = new EmptySplashScreen();
         InitializeComponent();
 
-        Closing += Window_OnClosing;
         TitleBar.Height = 48;
         TitleBar.ExtendsContentIntoTitleBar = true;
         TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
@@ -35,11 +34,8 @@ public partial class MainWindow : AppWindow
         }
     }
 
-    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
-        if (CanClose) return;
-        
-        e.Cancel = true;
-        Hide();
+        IAppHost.GetService<ProfileConfigHandler>().Save();
     }
 }

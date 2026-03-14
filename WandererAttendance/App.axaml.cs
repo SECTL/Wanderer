@@ -1,21 +1,29 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Threading;
+using FluentAvalonia.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using WandererAttendance.Abstraction;
+using WandererAttendance.Controls;
 using WandererAttendance.Extensions.Registry;
 using WandererAttendance.Services;
 using WandererAttendance.Services.Config;
 using WandererAttendance.Services.Logging;
+using WandererAttendance.Shared;
 using WandererAttendance.ViewModels;
 using WandererAttendance.ViewModels.MainPages;
 using WandererAttendance.Views;
@@ -28,6 +36,7 @@ public partial class App : Application
     public static IClassicDesktopStyleApplicationLifetime? Lifetime { get; private set; }
     public static bool IsDesktop { get; private set; } = false;
     public static MainWindow? MainWindow { get; private set; } = null;
+    public static Window PhonyRootWindow = null!;
 
     public static bool IsStopping { get; set; } = false;
     
@@ -40,7 +49,7 @@ public partial class App : Application
     {
         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("zh-hans");
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("zh-hans");
-        
+
         BuildHost();
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -51,22 +60,18 @@ public partial class App : Application
 
             Lifetime = desktop;
             IsDesktop = true;
-            MainWindow = new MainWindow
-            {
-                Content = IAppHost.GetService<MainView>()
-            };
-            desktop.MainWindow = MainWindow;
+            desktop.Startup += DesktopOnLifetimeStartup;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             IsDesktop = false;
+            InitializeHost();
+            
             singleViewPlatform.MainView = IAppHost.GetService<MainView>();
-        }
-        
-        if (OperatingSystem.IsBrowser())
-        {
-            var view = IAppHost.GetService<MainView>();
-            view.Classes.Add("browser");
+            if (OperatingSystem.IsBrowser())
+            {
+                singleViewPlatform.MainView.Classes.Add("browser");
+            }
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -85,7 +90,69 @@ public partial class App : Application
         }
     }
 
-    private void BuildHost()
+    private async void DesktopOnLifetimeStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
+    {
+        CreatePhonyRootWindow();
+        
+        var mutex = new Mutex(true, "Global\\WandererAttendance.Lock", out var createNew);
+        if (!createNew)
+        {
+            await ProcessInstanceExisted();
+            Environment.Exit(0);
+            return;
+        }
+        
+        InitializeHost();
+        ShowMainWindow();
+    }
+    
+    private async Task ProcessInstanceExisted()
+    {
+        var dialog = new TaskDialog
+        {
+            Title = "易考勤 已在运行",
+            Content = "易考勤 已经启动，请通过任务栏托盘图标进行设置等操作。",
+            XamlRoot = GetRootWindow(),
+            Buttons =
+            [
+                new TaskDialogButton("取消", false)
+            ],
+            Commands =
+            [
+                new TaskDialogCommand
+                {
+                    DialogResult = true,
+                    ClosesOnInvoked = true,
+                    Text = "重启当前实例",
+                    Description = "结束正在运行的 易考勤 实例，然后再次启动本实例。",
+                    IconSource = new FluentIconSource("\ue0bd"),
+                }
+            ]
+        };
+        var r = await dialog.ShowAsync();
+        if (!Equals(r, true))
+        {
+            return;
+        }
+        try
+        {
+            var proc = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Environment.ProcessPath))
+                .Where(x=>x.Id != Environment.ProcessId);
+            foreach (var i in proc)
+            {
+                i.Kill(true);
+            }
+
+            Restart();
+        }
+        catch (Exception e)
+        {
+            await CommonTaskDialogs
+                .ShowDialog("重启失败", "无法重新启动应用，可能当前运行的实例正在以管理员身份运行。请使用任务管理器终止正在运行的实例，然后再试一次。"+Environment.NewLine+Environment.NewLine+$"{e.Message}");
+        }
+    }
+
+    private static void BuildHost()
     {
         IAppHost.Host = Host
             .CreateDefaultBuilder()
@@ -146,7 +213,10 @@ public partial class App : Application
                 services.AddTransient<HistoryPageViewModel>();
             })
             .Build();
+    }
 
+    private static void InitializeHost()
+    {
         var logger = IAppHost.GetService<ILogger<App>>();
         logger.LogInformation("WandererAttendance Copyright by lrs2187(2026) Licensed under GPL3.0");
         logger.LogInformation("Host built.");
@@ -161,7 +231,46 @@ public partial class App : Application
         ProfileService.ProfileName = mainConfigHandler.Data.ProfileName;
         IAppHost.GetService<ProfileConfigHandler>();
 
-        _ = IAppHost.Host.StartAsync();
+        _ = IAppHost.Host?.StartAsync();
+    }
+    
+    private static void CreatePhonyRootWindow()
+    {
+        PhonyRootWindow = new Window
+        {
+            Width = 1,
+            Height = 1,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            ShowActivated = false,
+            SystemDecorations = SystemDecorations.None,
+            ShowInTaskbar = false,
+            Background = Brushes.Transparent,
+            TransparencyLevelHint = [ WindowTransparencyLevel.Transparent ],
+            Title = "PhonyRootWindow"
+        };
+        
+        PhonyRootWindow.Closing += (sender, args) =>
+        {
+            if (args.CloseReason is WindowCloseReason.ApplicationShutdown or WindowCloseReason.OSShutdown)
+            {
+                return;
+            }
+            args.Cancel = true;
+        };
+        
+        PhonyRootWindow.Show();
+    }
+    
+    public static Window GetRootWindow()
+    {
+        var w = Lifetime?.Windows
+            .FirstOrDefault(x => x.GetType().Name != "TrayPopupRoot" && x is { IsActive: true, IsVisible: true });
+        if (w != null) 
+            return w;
+        w = PhonyRootWindow;
+        w.Activate();
+
+        return w;
     }
     
     public static void Stop()
@@ -177,7 +286,6 @@ public partial class App : Application
 
             if (IsDesktop && MainWindow != null)
             {
-                MainWindow.CanClose = true;
                 MainWindow.Close();
             }
 
@@ -191,7 +299,6 @@ public partial class App : Application
 
     public static void Restart()
     {
-        Stop();
         var path = Environment.ProcessPath;
         if (path == null) return;
         
@@ -203,16 +310,33 @@ public partial class App : Application
         Process.Start(startInfo);
     }
 
-    private void NativeMenuItemOpenMainWindow_OnClick(object? sender, EventArgs e)
+    public static void ShowMainWindow()
     {
-        if (!IsDesktop || MainWindow == null) return;
+        if (!IsDesktop)
+        {
+            return;
+        }
+        
+        if (MainWindow is not { IsLoaded: true })
+        {
+            MainWindow = new MainWindow
+            {
+                Content = IAppHost.GetService<MainView>()
+            };
+        }
         
         MainWindow.Show();
         MainWindow.Activate();
     }
+    
+    private void NativeMenuItemOpenMainWindow_OnClick(object? sender, EventArgs e)
+    {
+        ShowMainWindow();
+    }
 
     private void NativeMenuItemRestartApp_OnClick(object? sender, EventArgs e)
     {
+        Stop();
         Restart();
     }
 

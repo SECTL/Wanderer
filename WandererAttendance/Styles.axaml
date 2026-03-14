@@ -37,7 +37,7 @@
         </Style>
     </Style>
 
-    <Style Selector=":is(faWindowing|AppWindow)">
+    <Style Selector="Window">
         <Setter Property="Icon" Value="/Assets/AppLogo.png"/>
         <Setter Property="FontFamily" Value="{StaticResource HarmonyOsSansSc}" />
     </Style>
