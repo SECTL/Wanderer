@@ -188,7 +188,7 @@ public partial class App : Application
                 services.AddSingleton<ProfileService>();
                 
                 // 主窗口
-                services.AddSingleton<MainView>();
+                services.AddTransient<MainView>();
                 services.AddTransient<MainViewModel>();
                 
                 // 界面 Views

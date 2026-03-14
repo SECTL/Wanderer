@@ -22,11 +22,11 @@ public class ProfileConfigHandler(ILogger<ProfileConfigHandler> logger, ConfigSe
     {
         Task.Run(() =>
         {
-            Parallel.ForEach(Data.Profile.Persons, person =>
+            foreach (var person in Data.Profile.Persons)
             {
                 PinyinHelper.GetFullPinyinList(person.Value.Name);
                 PinyinHelper.GetFirstPinyinList(person.Value.Name);
-            });
+            }
         });
     }
 }
