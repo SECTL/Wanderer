@@ -4,8 +4,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using WandererAttendance.Abstraction;
+using WandererAttendance.Helpers.UI;
 using WandererAttendance.Models;
 using WandererAttendance.Services.Config;
 using WandererAttendance.Shared.Models.Profile;
@@ -77,5 +79,20 @@ public partial class OneDayAttendanceViewer : UserControl
                     .Select(p => p.Value)
                     .ToList()
             }));
+    }
+
+    [RelayCommand]
+    public void CopyStatusAndCount(StatusAndCount statusAndCount)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel?.Clipboard == null) return;
+
+        var text = statusAndCount.Persons
+            .Aggregate(
+                $"{statusAndCount.Status.Name}：{statusAndCount.Count} 人",
+                (current, person) => current + $"\n{person.Name}");
+
+        topLevel.Clipboard.SetTextAsync(text).Wait();
+        this.ShowSuccessToast("复制成功。");
     }
 }

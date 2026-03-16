@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:WandererAttendance.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="WandererAttendance.Controls.OneDayAttendanceViewer">
+             x:Class="WandererAttendance.Controls.OneDayAttendanceViewer"
+             x:Name="RootControl">
     <ItemsControl DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:OneDayAttendanceViewer}}"
                   ItemsSource="{Binding Data}">
         <ItemsControl.ItemsPanel>
@@ -15,13 +16,24 @@
     
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Expander>
+                <Expander Classes="stretch-header">
                     <Expander.Header>
-                        <TextBlock>
-                            <Run Text="{Binding Status.Name}" />
-                            <Run Text="{Binding Count}" />
-                            人
-                        </TextBlock>
+                        <Grid ColumnDefinitions="* Auto" Margin="0 0 -12 0">
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                                <Run Text="{Binding Status.Name}" />
+                                <Run Text="{Binding Count}" />
+                                人
+                            </TextBlock>
+                            
+                            <Button Grid.Column="1"
+                                    Width="32" Height="32"
+                                    Command="{Binding #RootControl.CopyStatusAndCountCommand}"
+                                    CommandParameter="{Binding}"
+                                    Theme="{StaticResource TransparentButton}"
+                                    ToolTip.Tip="复制">
+                                <local:FluentIcon Glyph="&#xE58B;" />
+                            </Button>
+                        </Grid>
                     </Expander.Header>
                                 
                     <ItemsControl ItemsSource="{Binding Persons}">

@@ -6,8 +6,10 @@
              xmlns:ranking="clr-namespace:WandererAttendance.Models.Ranking"
              xmlns:converters="clr-namespace:WandererAttendance.Converters"
              xmlns:comparers="clr-namespace:WandererAttendance.Comparers"
+             xmlns:controls="clr-namespace:WandererAttendance.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WandererAttendance.Views.MainPages.RankingPage"
+             x:Name="RootPage"
              x:DataType="local:RankingPage"
              d:DataContext="{d:DesignInstance local:RankingPage}">
     <UserControl.Resources>
@@ -74,14 +76,25 @@
     
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Expander>
+                            <Expander Classes="stretch-header">
                                 <Expander.Header>
-                                    <TextBlock>
-                                        <Run Text="{Binding Status.Name}" />
-                                        有
-                                        <Run Text="{Binding Items.Count}" />
-                                        人 上榜
-                                    </TextBlock>
+                                    <Grid ColumnDefinitions="* Auto" Margin="0 0 -12 0">
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                                            <Run Text="{Binding Status.Name}" />
+                                            有
+                                            <Run Text="{Binding Items.Count}" />
+                                            人 上榜
+                                        </TextBlock>
+                        
+                                        <Button Grid.Column="1"
+                                                Width="32" Height="32"
+                                                Command="{Binding #RootPage.CopyStatusWithRankingCommand}"
+                                                CommandParameter="{Binding}"
+                                                Theme="{StaticResource TransparentButton}"
+                                                ToolTip.Tip="复制">
+                                            <controls:FluentIcon Glyph="&#xE58B;" />
+                                        </Button>
+                                    </Grid>
                                 </Expander.Header>
                                 
                                 <ItemsControl ItemsSource="{Binding Items}">
