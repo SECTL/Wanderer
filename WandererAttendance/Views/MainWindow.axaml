@@ -8,6 +8,7 @@
                        Icon="/Assets/AppLogo.ico"
                        WindowStartupLocation="CenterScreen"
                        Title="易考勤"
+                       SystemDecorations="BorderOnly"
                        Width="500" Height="600"
                        MinWidth="400" MinHeight="600"
                        Loaded="OnLoaded"

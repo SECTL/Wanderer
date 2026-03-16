@@ -35,6 +35,7 @@ public partial class App : Application
 {
     public static IClassicDesktopStyleApplicationLifetime? Lifetime { get; private set; }
     public static bool IsDesktop { get; private set; } = false;
+    public static bool IsWindows { get; private set; } = OperatingSystem.IsWindows();
     public static MainWindow? MainWindow { get; private set; } = null;
     public static Window PhonyRootWindow = null!;
 

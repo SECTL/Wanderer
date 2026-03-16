@@ -5,6 +5,7 @@
              xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:local="clr-namespace:WandererAttendance.Views.MainPages"
              xmlns:controls="clr-namespace:WandererAttendance.Controls"
+             xmlns:wandererAttendance="clr-namespace:WandererAttendance"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WandererAttendance.Views.MainPages.SettingsPage"
              x:DataType="local:SettingsPage"
@@ -21,6 +22,18 @@
                         <ComboBoxItem>
                             <controls:IconText Glyph="&#xF325;" Text="多选下拉框" />
                         </ComboBoxItem>
+                    </ComboBox>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+            
+            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xE520;}"
+                                 Header="背景材质" Description="该选项会影响主窗口的背景材质。亚克力需要 Windows 10 1903 及以上版本，云母需要 Windows 11。"
+                                 IsVisible="{x:Static wandererAttendance:App.IsWindows}">
+                <fa:SettingsExpander.Footer>
+                    <ComboBox SelectedIndex="{Binding BackgroundEffect}">
+                        <ComboBoxItem>无材质</ComboBoxItem>
+                        <ComboBoxItem>云母</ComboBoxItem>
+                        <ComboBoxItem>亚克力</ComboBoxItem>
                     </ComboBox>
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>

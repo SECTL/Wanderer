@@ -12,4 +12,5 @@ public partial class MainConfigModel : ConfigBase
     
     [ObservableProperty] private string _profileName = "Default";
     [ObservableProperty] private StatusChangerShowMode _statusChangerShowMode = StatusChangerShowMode.ChipListBox;
+    [ObservableProperty] private BackgroundEffect _backgroundEffect = BackgroundEffect.Mica;
 }
