@@ -53,6 +53,11 @@ public partial class RankingPageViewModel : ObservableRecipient
         
         var configData = ProfileConfigHandler.Data;
 
+        var defaultAttendanceStatus = new AttendanceStatus();
+        defaultAttendanceStatus.Statuses.AddRange(configData.Profile.Statuses
+            .Where(s => s.Value.IsDefault)
+            .Select(s => s.Key));
+        
         StatusRanking.AddRange(configData.Profile.Statuses
             .Select(s =>
             {
@@ -62,8 +67,8 @@ public partial class RankingPageViewModel : ObservableRecipient
                     foreach (var oneDayAttendanceStatus in configData.Statuses.Values)
                     {
                         var attendanceStatus =
-                            oneDayAttendanceStatus.Persons.GetValueOrDefault(person, new AttendanceStatus());
-
+                            oneDayAttendanceStatus.Persons.GetValueOrDefault(person, defaultAttendanceStatus);
+                        
                         if (attendanceStatus.Statuses.Contains(s.Key))
                         {
                             counts[person] = counts.GetValueOrDefault(person, 0) + 1;
