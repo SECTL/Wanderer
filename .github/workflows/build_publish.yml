@@ -109,6 +109,8 @@ jobs:
         env:
           VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || steps.get_tag.outputs.LATEST_TAG }}
           ARCH: ${{ matrix.arch }}
+          RID: ${{ matrix.os == 'windows' && format('win-{0}', matrix.arch) || (matrix.os == 'linux' && format('linux-{0}', matrix.arch) || format('osx-{0}', matrix.arch)) }}
+          MODE: ${{ matrix.build_type == 'selfContained' && 'sc' || 'fdd' }}
         run: |
           $outDir = "dist/desktop/$env:RID-$env:MODE"
           $issContent = Get-Content -Path "Setup.iss" -Raw
