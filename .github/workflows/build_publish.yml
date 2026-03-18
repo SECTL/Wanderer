@@ -80,45 +80,17 @@ jobs:
           $target = "dist/WandererAttendance_desktop_$env:RID`_$env:MODE.zip"
           Compress-Archive -Path $source -DestinationPath $target -Force
 
-      - name: Upload Desktop Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: desktop_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
-          path: dist/WandererAttendance_desktop_*.zip
-
-  build_windows_setup:
-    name: Build_Windows_Setup_${{ matrix.arch }}
-    runs-on: windows-2022
-    needs: build_desktop
-    if: ${{ success('build_desktop') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push') }}
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [x64, x86, arm64]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || github.ref }}
-
       - name: Get Latest Tag
         id: get_tag
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag == '' }}
+        if: ${{ github.event_name != 'workflow_dispatch' && matrix.os == 'windows' }}
         shell: pwsh
         run: |
           $latestTag = git describe --tags --abbrev=0
           echo "LATEST_TAG=$latestTag" >> $env:GITHUB_OUTPUT
           echo "Latest tag: $latestTag"
 
-      - name: Download Windows Desktop Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: desktop_windows_${{ matrix.arch }}_selfContained
-          path: dist/desktop/win-${{ matrix.arch }}-sc
-
       - name: Install Inno Setup Chinese Language
+        if: ${{ matrix.os == 'windows' }}
         run: |
           $langUrl = "https://raw.githubusercontent.com/kira-96/Inno-Setup-Chinese-Simplified-Translation/main/ChineseSimplified.isl"
           $langPath = "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
@@ -132,25 +104,29 @@ jobs:
           echo "Downloaded Chinese Language: $langPath"
 
       - name: Build Setup
+        if: ${{ matrix.os == 'windows' }}
         shell: pwsh
         env:
-          VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag != '' && github.event.inputs.release_tag || (steps.get_tag.outputs.LATEST_TAG != '' && steps.get_tag.outputs.LATEST_TAG || github.ref_name) }}
+          VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || steps.get_tag.outputs.LATEST_TAG }}
           ARCH: ${{ matrix.arch }}
         run: |
-          # 读取并更新 Setup.iss 中的版本号
           $issContent = Get-Content -Path "Setup.iss" -Raw
-          $updatedContent = $issContent -replace 'VERSION', $env:VERSION
+          $updatedContent = $issContent -replace 'APP_VERSION', $env:VERSION
           Set-Content -Path "Setup.iss" -Value $updatedContent -NoNewline
-
-          # 创建输出目录
           New-Item -ItemType Directory -Path "SetupOutput" -Force | Out-Null
 
-          # 编译安装程序
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Setup.iss `
             /F"WandererAttendance-Setup-$env:ARCH" `
             /O"SetupOutput"
 
+      - name: Upload Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
+          path: dist/WandererAttendance_desktop_*.zip
+
       - name: Upload Setup Artifact
+        if: ${{ matrix.os == 'windows' }}
         uses: actions/upload-artifact@v4
         with:
           name: setup_${{ matrix.arch }}
