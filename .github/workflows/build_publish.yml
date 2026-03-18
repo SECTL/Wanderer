@@ -120,7 +120,7 @@ jobs:
           New-Item -ItemType Directory -Path "SetupOutput" -Force | Out-Null
 
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Setup.iss `
-            /F"WandererAttendance-Setup-$env:ARCH" `
+            /F"WandererAttendance_Setup_$env:ARCH_$env:MODE" `
             /O"SetupOutput"
 
       - name: Upload Desktop Artifact
@@ -134,7 +134,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: setup_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
-          path: SetupOutput/WandererAttendance-Setup-${{ matrix.arch }}_${{ matrix.build_type }}.exe
+          path: SetupOutput/WandererAttendance_Setup_${{ matrix.arch }}_${{ matrix.build_type }}.exe
 
   build_android:
     name: Build_Android_apk
