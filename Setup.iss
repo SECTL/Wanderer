@@ -6,6 +6,7 @@
 #define MyAppVersion "APP_VERSION"
 #define MyAppPublisher "lrs2187"
 #define MyAppExeName "WandererAttendance.Desktop.exe"
+#define MyAppOutDir "APP_OUTDIR"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -44,8 +45,8 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "WandererAttendance.Desktop\bin\Release\net9.0\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "WandererAttendance.Desktop\bin\Release\net9.0\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppOutDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppOutDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
