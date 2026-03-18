@@ -184,7 +184,7 @@ jobs:
   publish:
     name: Publish_Release
     runs-on: windows-2022
-    needs: [build_desktop, build_android, build_windows_setup]
+    needs: [build_desktop, build_android]
     if: ${{ always() && success('build_desktop') && success('build_android') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push') }}
     permissions:
       contents: write
