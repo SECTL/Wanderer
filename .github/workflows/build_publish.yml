@@ -57,7 +57,7 @@ jobs:
         env:
           RID: ${{ matrix.os == 'windows' && format('win-{0}', matrix.arch) || (matrix.os == 'linux' && format('linux-{0}', matrix.arch) || format('osx-{0}', matrix.arch)) }}
           SELF_CONTAINED: ${{ matrix.build_type == 'selfContained' }}
-          MODE: ${{ matrix.build_type == 'selfContained' && 'sc' || 'fdd' }}
+          MODE: ${{ matrix.build_type }}
         run: |
           $outDir = "dist/desktop/$env:RID-$env:MODE"
           dotnet publish WandererAttendance.Desktop/WandererAttendance.Desktop.csproj `
@@ -73,7 +73,7 @@ jobs:
         shell: pwsh
         env:
           RID: ${{ matrix.os == 'windows' && format('win-{0}', matrix.arch) || (matrix.os == 'linux' && format('linux-{0}', matrix.arch) || format('osx-{0}', matrix.arch)) }}
-          MODE: ${{ matrix.build_type == 'selfContained' && 'sc' || 'fdd' }}
+          MODE: ${{ matrix.build_type }}
         run: |
           New-Item -ItemType Directory -Path dist -Force | Out-Null
           $source = "dist/desktop/$env:RID-$env:MODE/*"
@@ -110,7 +110,7 @@ jobs:
           VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || steps.get_tag.outputs.LATEST_TAG }}
           ARCH: ${{ matrix.arch }}
           RID: ${{ matrix.os == 'windows' && format('win-{0}', matrix.arch) || (matrix.os == 'linux' && format('linux-{0}', matrix.arch) || format('osx-{0}', matrix.arch)) }}
-          MODE: ${{ matrix.build_type == 'selfContained' && 'sc' || 'fdd' }}
+          MODE: ${{ matrix.build_type }}
         run: |
           $outDir = "dist/desktop/$env:RID-$env:MODE"
           $issContent = Get-Content -Path "Setup.iss" -Raw
@@ -134,7 +134,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: setup_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
-          path: SetupOutput/WandererAttendance-Setup-${{ matrix.arch }}.exe
+          path: SetupOutput/WandererAttendance-Setup-${{ matrix.arch }}_${{ matrix.build_type }}.exe
 
   build_android:
     name: Build_Android_apk
