@@ -5,8 +5,8 @@
         <SupportedOSPlatformVersion>28</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>top.lrsgzs.WandererAttendance</ApplicationId>
-        <ApplicationVersion>1010</ApplicationVersion>
-        <ApplicationDisplayVersion>1.0.1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1020</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0.2.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     </PropertyGroup>
