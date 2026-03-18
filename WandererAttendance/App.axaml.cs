@@ -93,8 +93,6 @@ public partial class App : Application
 
     private async void DesktopOnLifetimeStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
     {
-        CreatePhonyRootWindow();
-        
         var mutex = new Mutex(true, "Global\\WandererAttendance.Lock", out var createNew);
         if (!createNew)
         {
@@ -109,6 +107,8 @@ public partial class App : Application
     
     private async Task ProcessInstanceExisted()
     {
+        CreatePhonyRootWindow();
+
         var dialog = new TaskDialog
         {
             Title = "易考勤 已在运行",
