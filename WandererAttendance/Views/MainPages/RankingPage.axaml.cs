@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using WandererAttendance.Abstraction;
@@ -32,11 +33,13 @@ public partial class RankingPage : UserControl
         if (search == string.Empty)
         {
             ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
+            ViewModel.UpdatePersonWithStatusCountsList();
             return;
         }
         
         ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
             .Where(person => person.Value.IsMatch(search)));
+        ViewModel.UpdatePersonWithStatusCountsList();
     }
     
     [RelayCommand]
@@ -52,5 +55,10 @@ public partial class RankingPage : UserControl
 
         topLevel.Clipboard.SetTextAsync(text).Wait();
         this.ShowSuccessToast("复制成功。");
+    }
+
+    private void ButtonExport_OnClick(object? sender, RoutedEventArgs e)
+    {
+        
     }
 }

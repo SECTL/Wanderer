@@ -121,14 +121,31 @@
             </ScrollViewer>
             
             <!-- 按人员查看 -->
-            <DataGrid x:Name="PersonsDataGrid"
-                      ItemsSource="{Binding ViewModel.PersonWithStatusCountsList}"
-                      AutoGenerateColumns="False"
-                      CanUserSortColumns="True"
-                      CanUserResizeColumns="True"
-                      GridLinesVisibility="Horizontal"
-                      IsReadOnly="True"
-                      SelectionMode="Single">
+            <Grid RowDefinitions="Auto *">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto *" Margin="8">
+                    <Button Grid.Column="0" Theme="{StaticResource TransparentButton}"
+                            Click="ButtonExport_OnClick">
+                        <controls:IconText Glyph="&#xE68F;" Text="导出" />
+                    </Button>
+                    
+                    <TextBox Grid.Column="1"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center"
+                             Width="256"
+                             Watermark="搜索..."
+                             Text="{Binding ViewModel.SearchText}"
+                             TextChanged="SearchTextBox_TextChanged" />
+                </Grid>
+                
+                <DataGrid x:Name="PersonsDataGrid"
+                          Grid.Row="1"
+                          ItemsSource="{Binding ViewModel.PersonWithStatusCountsList}"
+                          AutoGenerateColumns="False"
+                          CanUserSortColumns="True"
+                          CanUserResizeColumns="True"
+                          GridLinesVisibility="Horizontal"
+                          IsReadOnly="True"
+                          SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
                                         Header="姓名" IsReadOnly="True" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
@@ -168,6 +185,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            </Grid>
         </Carousel>
     </Grid>
 </UserControl>

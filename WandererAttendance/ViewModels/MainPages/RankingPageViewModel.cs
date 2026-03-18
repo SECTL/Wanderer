@@ -40,11 +40,9 @@ public partial class RankingPageViewModel : ObservableRecipient
     // 按人员查看
     [ObservableProperty] private string _searchText = string.Empty;
     public ObservableDictionary<Guid, Person> Persons { get; } = [];
-
+    
     public ObservableCollection<DataGridColumn> DataGridColumns { get; } = [];
-    private ReadOnlyObservableCollection<PersonWithStatusCounts> _personWithStatusCountsList;
-    public ReadOnlyObservableCollection<PersonWithStatusCounts> PersonWithStatusCountsList =>
-        _personWithStatusCountsList;
+    public ObservableCollection<PersonWithStatusCounts> PersonWithStatusCountsList { get; } = [];
 
     public RankingPageViewModel(ProfileConfigHandler profileConfigHandler)
     {
@@ -103,10 +101,17 @@ public partial class RankingPageViewModel : ObservableRecipient
                 Binding = new Binding($"StatusCounts[{index}]")
             });
         }
+
+        UpdatePersonWithStatusCountsList();
+    }
+
+    public void UpdatePersonWithStatusCountsList()
+    {
+        var configData = ProfileConfigHandler.Data;
         
-        Persons
-            .AsObservableChangeSet()
-            .Transform(kvp =>
+        PersonWithStatusCountsList.Clear();
+        PersonWithStatusCountsList.AddRange(
+            Persons.Select(kvp =>
             {
                 Dictionary<Guid, int> counts = [];
                 foreach (var status in configData.Profile.Statuses.Keys)
@@ -115,7 +120,8 @@ public partial class RankingPageViewModel : ObservableRecipient
 
                     foreach (var oneDayAttendanceStatus in configData.Statuses.Values)
                     {
-                        var attendanceStatus = oneDayAttendanceStatus.Persons.GetValueOrDefault(kvp.Key, new AttendanceStatus());
+                        var attendanceStatus =
+                            oneDayAttendanceStatus.Persons.GetValueOrDefault(kvp.Key, new AttendanceStatus());
                         if (attendanceStatus.Statuses.Contains(status))
                         {
                             counts[status]++;
@@ -128,8 +134,6 @@ public partial class RankingPageViewModel : ObservableRecipient
                     Person = kvp.Value,
                     StatusCounts = counts.Values.ToList()
                 };
-            })
-            .Bind(out _personWithStatusCountsList)
-            .Subscribe();
+            }));
     }
 }
