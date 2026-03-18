@@ -86,6 +86,76 @@ jobs:
           name: desktop_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
           path: dist/WandererAttendance_desktop_*.zip
 
+  build_windows_setup:
+    name: Build_Windows_Setup_${{ matrix.arch }}
+    runs-on: windows-2022
+    needs: build_desktop
+    if: ${{ success('build_desktop') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64, x86, arm64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || github.ref }}
+
+      - name: Get Latest Tag
+        id: get_tag
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag == '' }}
+        shell: pwsh
+        run: |
+          $latestTag = git describe --tags --abbrev=0
+          echo "LATEST_TAG=$latestTag" >> $env:GITHUB_OUTPUT
+          echo "Latest tag: $latestTag"
+
+      - name: Download Windows Desktop Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: desktop_windows_${{ matrix.arch }}_selfContained
+          path: dist/desktop/win-${{ matrix.arch }}-sc
+
+      - name: Install Inno Setup Chinese Language
+        run: |
+          $langUrl = "https://raw.githubusercontent.com/kira-96/Inno-Setup-Chinese-Simplified-Translation/main/ChineseSimplified.isl"
+          $langPath = "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+          $langDir = "C:\Program Files (x86)\Inno Setup 6\Languages"
+          
+          if (!(Test-Path $langDir)) {
+            New-Item -ItemType Directory -Path $langDir -Force
+          }
+
+          Invoke-WebRequest -Uri $langUrl -OutFile $langPath
+          echo "Downloaded Chinese Language: $langPath"
+
+      - name: Build Setup
+        shell: pwsh
+        env:
+          VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag != '' && github.event.inputs.release_tag || (steps.get_tag.outputs.LATEST_TAG != '' && steps.get_tag.outputs.LATEST_TAG || github.ref_name) }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          # 读取并更新 Setup.iss 中的版本号
+          $issContent = Get-Content -Path "Setup.iss" -Raw
+          $updatedContent = $issContent -replace 'VERSION', $env:VERSION
+          Set-Content -Path "Setup.iss" -Value $updatedContent -NoNewline
+
+          # 创建输出目录
+          New-Item -ItemType Directory -Path "SetupOutput" -Force | Out-Null
+
+          # 编译安装程序
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Setup.iss `
+            /F"WandererAttendance-Setup-$env:ARCH" `
+            /O"SetupOutput"
+
+      - name: Upload Setup Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: setup_${{ matrix.arch }}
+          path: SetupOutput/WandererAttendance-Setup-${{ matrix.arch }}.exe
+
   build_android:
     name: Build_Android_apk
     runs-on: ubuntu-24.04
@@ -138,8 +208,8 @@ jobs:
   publish:
     name: Publish_Release
     runs-on: windows-2022
-    needs: [build_desktop, build_android]
-    if: ${{ always() && success('build_desktop') && success('build_android') && github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag && github.event_name != 'pull_request' }}
+    needs: [build_desktop, build_android, build_windows_setup]
+    if: ${{ always() && success('build_desktop') && success('build_android') && success('build_windows_setup') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push') }}
     permissions:
       contents: write
     concurrency:
@@ -160,7 +230,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Path ./out -Force | Out-Null
-          Get-ChildItem ./out_artifacts -Recurse -File -Include *.zip,*.apk | ForEach-Object {
+          Get-ChildItem ./out_artifacts -Recurse -File -Include *.zip,*.apk,*.exe | ForEach-Object {
             Copy-Item $_.FullName ./out -Force
           }
           Write-Host "Combined files:"
@@ -174,7 +244,7 @@ jobs:
       - name: Upload APP to release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./out/*.zip,./out/*.apk"
+          artifacts: "./out/*.zip,./out/*.apk,./out/*.exe"
           draft: true
           bodyFile: ./release-note.md
           token: ${{ secrets.GITHUB_TOKEN }}

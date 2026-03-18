@@ -21,7 +21,13 @@ public static partial class Utils
         }
         else
         {
+#if DEBUG
             basePath = Path.Combine([AppContext.BaseDirectory, "data"]);
+#else
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "WandererAttendance";
+            basePath = Path.Combine([appData, appName]);
+#endif
         }
         
         var path = Path.Combine([basePath, ..strings]);
