@@ -4,10 +4,10 @@
              RequestedThemeVariant="Default">
     <TrayIcon.Icons>
         <TrayIcons>
-            <TrayIcon Icon="/Assets/AppLogo.png" ToolTipText="易考勤">
+            <TrayIcon Icon="/Assets/AppLogo.png" ToolTipText="Wanderer">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="易考勤">
+                        <NativeMenuItem Header="Wanderer">
                             <NativeMenuItem.Icon>
                                 <OnPlatform Default="/Assets/AppLogo.png">
                                     <On Content="{x:Null}" Options="macOS"/>

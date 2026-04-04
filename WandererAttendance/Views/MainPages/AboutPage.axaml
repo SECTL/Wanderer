@@ -8,7 +8,7 @@
              x:Class="WandererAttendance.Views.MainPages.AboutPage">
     <ScrollViewer>
         <StackPanel Orientation="Vertical" Margin="12 12 18 12" Classes="animated-intro">
-            <fa:SettingsExpander Header="易考勤" Description="用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。"
+            <fa:SettingsExpander Header="Wanderer" Description="用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。"
                                  IsExpanded="True">
                 <fa:SettingsExpander.IconSource>
                     <fa:ImageIconSource Source="/Assets/AppLogo.png"/>
@@ -21,8 +21,8 @@
                     </TextBlock>
                 </fa:SettingsExpander.Footer>
                 
-                <fa:SettingsExpanderItem Content="Copyright (c) 2026 lrs2187">
-                    <!--                 Description="本项目基于 GNU General Public License v3.0 获得许可。"> -->
+                <fa:SettingsExpanderItem Content="Copyright (c) 2026 lrs2187"
+                                         Description="本项目基于 GNU General Public License v3.0 获得许可。">
                 </fa:SettingsExpanderItem>
             </fa:SettingsExpander>
         </StackPanel>

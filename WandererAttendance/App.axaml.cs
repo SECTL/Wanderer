@@ -111,8 +111,8 @@ public partial class App : Application
 
         var dialog = new TaskDialog
         {
-            Title = "易考勤 已在运行",
-            Content = "易考勤 已经启动，请通过任务栏托盘图标进行设置等操作。",
+            Title = "Wanderer 已在运行",
+            Content = "Wanderer 已经启动，请通过任务栏托盘图标进行设置等操作。",
             XamlRoot = GetRootWindow(),
             Buttons =
             [
@@ -125,7 +125,7 @@ public partial class App : Application
                     DialogResult = true,
                     ClosesOnInvoked = true,
                     Text = "重启当前实例",
-                    Description = "结束正在运行的 易考勤 实例，然后再次启动本实例。",
+                    Description = "结束正在运行的 Wanderer 实例，然后再次启动本实例。",
                     IconSource = new FluentIconSource("\ue0bd"),
                 }
             ]
