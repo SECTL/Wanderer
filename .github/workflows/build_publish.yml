@@ -50,7 +50,7 @@ jobs:
         shell: pwsh
         env:
           RID: ${{ matrix.os == 'windows' && format('win-{0}', matrix.arch) || (matrix.os == 'linux' && format('linux-{0}', matrix.arch) || format('osx-{0}', matrix.arch)) }}
-        run: dotnet restore WandererAttendance.Desktop/WandererAttendance.Desktop.csproj -r $env:RID
+        run: dotnet restore Wanderer.Desktop/Wanderer.Desktop.csproj -r $env:RID
 
       - name: Publish Desktop
         shell: pwsh
@@ -60,7 +60,7 @@ jobs:
           MODE: ${{ matrix.build_type }}
         run: |
           $outDir = "dist/desktop/$env:RID-$env:MODE"
-          dotnet publish WandererAttendance.Desktop/WandererAttendance.Desktop.csproj `
+          dotnet publish Wanderer.Desktop/Wanderer.Desktop.csproj `
             -c Release `
             -r $env:RID `
             --self-contained $env:SELF_CONTAINED `
@@ -77,7 +77,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Path dist -Force | Out-Null
           $source = "dist/desktop/$env:RID-$env:MODE/*"
-          $target = "dist/WandererAttendance_desktop_$env:RID`_$env:MODE.zip"
+          $target = "dist/Wanderer_desktop_$env:RID`_$env:MODE.zip"
           Compress-Archive -Path $source -DestinationPath $target -Force
 
       - name: Get Latest Tag
@@ -120,21 +120,21 @@ jobs:
           New-Item -ItemType Directory -Path "SetupOutput" -Force | Out-Null
 
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Setup.iss `
-            /F"WandererAttendance_setup_$env:ARCH-$env:MODE" `
+            /F"Wanderer_setup_$env:ARCH-$env:MODE" `
             /O"SetupOutput"
 
       - name: Upload Desktop Artifact
         uses: actions/upload-artifact@v4
         with:
           name: desktop_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
-          path: dist/WandererAttendance_desktop_*.zip
+          path: dist/Wanderer_desktop_*.zip
 
       - name: Upload Setup Artifact
         if: ${{ matrix.os == 'windows' }}
         uses: actions/upload-artifact@v4
         with:
           name: setup_${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.build_type }}
-          path: SetupOutput/WandererAttendance_setup_*.exe
+          path: SetupOutput/Wanderer_setup_*.exe
 
   build_android:
     name: Build_Android_apk
@@ -161,11 +161,11 @@ jobs:
         run: dotnet workload install android
 
       - name: Restore
-        run: dotnet restore WandererAttendance.Android/WandererAttendance.Android.csproj
+        run: dotnet restore Wanderer.Android/Wanderer.Android.csproj
 
       - name: Publish Android
         run: |
-          dotnet publish WandererAttendance.Android/WandererAttendance.Android.csproj \
+          dotnet publish Wanderer.Android/Wanderer.Android.csproj \
             -c Release \
             -f net9.0-android35.0 \
             -p:AndroidPackageFormat=apk \
@@ -177,13 +177,13 @@ jobs:
         run: |
           $apk = Get-ChildItem -Path dist/android -Recurse -Filter *.apk | Select-Object -First 1
           if (-not $apk) { throw "No APK found in dist/android" }
-          Copy-Item $apk.FullName dist/WandererAttendance_android.apk -Force
+          Copy-Item $apk.FullName dist/Wanderer_android.apk -Force
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
         with:
           name: android_apk
-          path: dist/WandererAttendance_android.apk
+          path: dist/Wanderer_android.apk
 
   publish:
     name: Publish_Release
