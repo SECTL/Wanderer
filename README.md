@@ -1,6 +1,6 @@
 ﻿<div align="center">
 
-# <image src="WandererAttendance/Assets/AppLogo.png" height="28" width="28"/> 易考勤
+# <image src="Wanderer/Assets/AppLogo.png" height="28" width="28"/> 易考勤
 
 [![Stars](https://img.shields.io/github/stars/lrsgzs/WandererAttendance?label=Stars)](https://github.com/lrsgzs/WandererAttendance)
 [![正式版 Release](https://img.shields.io/github/v/release/lrsgzs/WandererAttendance?style=flat-square&color=%233fb950&label=正式版)](https://github.com/lrsgzs/WandererAttendance/releases/latest)

@@ -1,0 +1,112 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Wanderer.Controls"
+             xmlns:enums="clr-namespace:Wanderer.Enums"
+             xmlns:behaviors="clr-namespace:Wanderer.Behaviors"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:converters="clr-namespace:Wanderer.Converters"
+             xmlns:comparers="clr-namespace:Wanderer.Comparers"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Wanderer.Controls.AttendanceEditor"
+             x:Name="RootControl"
+             Unloaded="Control_OnUnloaded">
+    <UserControl.Resources>
+        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+        <converters:GuidToStatusNameConverter x:Key="GuidToStatusNameConverter" />
+        <converters:GuidToTagNameConverter x:Key="GuidToTagNameConverter" />
+    </UserControl.Resources>
+
+    <DataGrid DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:AttendanceEditor}}"
+              AutoGenerateColumns="False"
+              CanUserSortColumns="True"
+              CanUserResizeColumns="True"
+              GridLinesVisibility="Horizontal"
+              IsReadOnly="True"
+              SelectionMode="Single"
+              ItemsSource="{Binding Model.Persons}">
+        <DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
+                                Header="姓名" IsReadOnly="True" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
+    
+            <DataGridTextColumn Binding="{Binding Person.Id, Mode=TwoWay}"
+                                Header="编号" IsReadOnly="True" />
+    
+            <DataGridTextColumn Binding="{Binding Person.Sex, Converter={StaticResource HumanSexToStringConverter}}"
+                                Header="性别" IsReadOnly="True" />
+            
+            <DataGridTemplateColumn Header="标签" IsReadOnly="True" CanUserSort="False">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ItemsControl VerticalAlignment="Center" Margin="4 0"
+                                      ItemsSource="{Binding Person.Tags}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                                    
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            Height="28"
+                                            CornerRadius="14"
+                                            Padding="8 0"
+                                            Background="{DynamicResource ControlFillColorTransparentBrush}">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+    
+            <DataGridTemplateColumn Header="状态" IsReadOnly="True">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Grid x:Name="StatusGrid"
+                              Tag="{Binding #RootControl.Model.MainConfigHandler.Data.StatusChangerShowMode,
+                                    Converter={x:Static ObjectConverters.Equal},
+                                    ConverterParameter={x:Static enums:StatusChangerShowMode.ChipListBox}}">
+                            <ListBox Theme="{StaticResource ChipListBoxTheme}"
+                                     HorizontalAlignment="Stretch"
+                                     SelectionMode="Multiple"
+                                     ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
+                                     SelectedItems="{Binding Statuses}"
+                                     behaviors:ListBoxMultiSelectBehavior.EnableClickToggle="True"
+                                     IsVisible="{Binding #StatusGrid.Tag}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="system:Guid">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+    
+                            <u:MultiComboBox HorizontalAlignment="Stretch"
+                                             x:CompileBindings="False"
+                                             ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
+                                             SelectedItems="{Binding Statuses}"
+                                             IsVisible="{Binding !#StatusGrid.Tag}">
+                                <u:MultiComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="system:Guid">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
+                                    </DataTemplate>
+                                </u:MultiComboBox.ItemTemplate>
+    
+                                <u:MultiComboBox.SelectedItemTemplate>
+                                    <DataTemplate x:DataType="system:Guid">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
+                                    </DataTemplate>
+                                </u:MultiComboBox.SelectedItemTemplate>
+                            </u:MultiComboBox>
+                        </Grid>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

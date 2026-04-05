@@ -1,0 +1,42 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:local="clr-namespace:Wanderer.Views.MainPages"
+             xmlns:controls="clr-namespace:Wanderer.Controls"
+             xmlns:wanderer="clr-namespace:Wanderer"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Wanderer.Views.MainPages.SettingsPage"
+             x:DataType="local:SettingsPage"
+             d:DataContext="{d:DesignInstance local:SettingsPage}">
+    <ScrollViewer DataContext="{Binding MainConfigHandler.Data}">
+        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
+            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xF19C;}"
+                                 Header="考勤状态修改样式" Description="该选项会影响您在修改考勤状态时，考勤状态显示的样式。">
+                <fa:SettingsExpander.Footer>
+                    <ComboBox SelectedIndex="{Binding StatusChangerShowMode}">
+                        <ComboBoxItem>
+                            <controls:IconText Glyph="&#xE047;" Text="横向列表" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <controls:IconText Glyph="&#xF325;" Text="多选下拉框" />
+                        </ComboBoxItem>
+                    </ComboBox>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+            
+            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xE520;}"
+                                 Header="背景材质" Description="该选项会影响主窗口的背景材质。亚克力需要 Windows 10 1903 及以上版本，云母需要 Windows 11。"
+                                 IsVisible="{x:Static wanderer:App.IsWindows}">
+                <fa:SettingsExpander.Footer>
+                    <ComboBox SelectedIndex="{Binding BackgroundEffect}">
+                        <ComboBoxItem>无材质</ComboBoxItem>
+                        <ComboBoxItem>云母</ComboBoxItem>
+                        <ComboBoxItem>亚克力</ComboBoxItem>
+                    </ComboBox>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

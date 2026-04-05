@@ -1,0 +1,52 @@
+﻿using System;
+using System.IO;
+using System.Text.Json;
+
+namespace Wanderer;
+
+public static partial class Utils
+{
+    public static string GetFilePath(params string[] strings)
+    {
+        string basePath;
+        if (OperatingSystem.IsBrowser())
+        {
+            basePath = "";
+        }
+        else if (OperatingSystem.IsAndroid())
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
+            basePath = Path.Combine([appData, appName]);
+        }
+        else
+        {
+#if DEBUG
+            basePath = Path.Combine([AppContext.BaseDirectory, "data"]);
+#else
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
+            basePath = Path.Combine([appData, appName]);
+#endif
+        }
+        
+        var path = Path.Combine([basePath, ..strings]);
+
+        if (!OperatingSystem.IsBrowser())
+        {
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
+        
+        return path;
+    }
+
+    public static T CopyObjectByJson<T>(T obj)
+    {
+        var json = JsonSerializer.Serialize(obj);
+        return JsonSerializer.Deserialize<T>(json)!;
+    }
+}

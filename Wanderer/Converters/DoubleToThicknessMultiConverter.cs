@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Avalonia;
+using Avalonia.Data.Converters;
+
+namespace Wanderer.Converters;
+
+/// <summary>
+/// 将多个<see cref="double"/>转换为<see cref="Thickness"/>
+/// </summary>
+public class DoubleToThicknessMultiConverter : IMultiValueConverter
+{
+    /// <inheritdoc />
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return values.Count switch
+        {
+            1 => new Thickness(values[0] as double? ?? 0),
+            2 => new Thickness(values[0] as double? ?? 0, values[1] as double? ?? 0,
+                values[0] as double? ?? 0, values[1] as double? ?? 0
+            ),
+            4 => new Thickness(values[0] as double? ?? 0, values[1] as double? ?? 0,
+                values[2] as double? ?? 0, values[3] as double? ?? 0
+            ),
+            _ => new Thickness()
+        };
+    }
+
+    /// <inheritdoc />
+    public object?[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture)
+    {
+        return Array.Empty<object?>();
+    }
+}

@@ -1,0 +1,82 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:Wanderer.Views.MainPages"
+             xmlns:controls="clr-namespace:Wanderer.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Wanderer.Views.MainPages.HistoryPage"   
+             x:DataType="local:HistoryPage"
+             d:DataContext="{d:DesignInstance local:HistoryPage}">
+    <Grid RowDefinitions="Auto *" Classes="animated-intro">
+        <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
+            <Grid ColumnDefinitions="Auto Auto * Auto" ColumnSpacing="4" Margin="8">
+                <CalendarDatePicker Grid.Column="0"
+                                    IsTodayHighlighted="True"
+                                    SelectedDate="{Binding ViewModel.SelectedDate}" />
+        
+                <Button Grid.Column="2" Theme="{StaticResource TransparentButton}"
+                        Click="ButtonRefresh_OnClick">
+                    <controls:IconText Glyph="&#xE0B5;" Text="刷新" />
+                </Button>
+                
+                <TabStrip Grid.Column="3"
+                          HorizontalAlignment="Center"
+                          Theme="{StaticResource TabStripStyle}"
+                          SelectedIndex="{Binding ViewModel.SelectedPage}">
+                    <TabStripItem>
+                        <TextBlock FontSize="13" Text="日历视图" />
+                    </TabStripItem>
+            
+                    <TabStripItem>
+                        <TextBlock FontSize="13" Text="数据看板" />
+                    </TabStripItem>
+                </TabStrip>
+            </Grid>
+        </Border>
+        
+        <Carousel Grid.Row="1" Classes="animated"
+                  SelectedIndex="{Binding ViewModel.SelectedPage}">
+            <!-- 日历视图 -->
+            <ScrollViewer>
+                <controls:AttendanceCalendarControl SelectedDate="{Binding ViewModel.SelectedDate}" />
+            </ScrollViewer>
+            
+            <!-- 详细看板 -->
+            <Grid RowDefinitions="Auto *" RowSpacing="4" Margin="0 4 0 0">
+                <TabStrip Grid.Row="0" HorizontalAlignment="Center" Classes="compact"
+                          SelectedIndex="{Binding ViewModel.SelectedSubPage}">
+                    <TabStripItem>
+                        <TextBlock FontSize="13" Text="整体数据" />
+                    </TabStripItem>
+            
+                    <TabStripItem>
+                        <TextBlock FontSize="13" Text="详细信息" />
+                    </TabStripItem>
+                </TabStrip>
+                
+                <Carousel Grid.Row="1" Classes="animated" SelectedIndex="{Binding ViewModel.SelectedSubPage}">
+                    <!-- 整体数据 -->
+                    <ScrollViewer>
+                        <controls:OneDayAttendanceViewer Margin="8"
+                                                         Date="{Binding ViewModel.SelectedDate}" />
+                    </ScrollViewer>
+                    
+                    <!-- 详细信息 -->
+                    <Grid RowDefinitions="Auto *" RowSpacing="4">
+                        <TextBox Grid.Row="0"
+                                 HorizontalAlignment="Stretch"
+                                 MaxWidth="256"
+                                 Watermark="搜索..."
+                                 Text="{Binding ViewModel.SearchText}"
+                                 TextChanged="SearchTextBox_TextChanged" />
+                        
+                        <controls:AttendanceEditor Grid.Row="1"
+                                                   Date="{Binding ViewModel.SelectedDate}"
+                                                   Persons="{Binding ViewModel.Persons}" />
+                    </Grid>
+                </Carousel>
+            </Grid>
+        </Carousel>
+    </Grid>
+</UserControl>

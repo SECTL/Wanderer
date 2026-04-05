@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Wanderer.Views.MainPages.HomePage"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:Wanderer.Views.MainPages"
+             xmlns:controls="clr-namespace:Wanderer.Controls"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             mc:Ignorable="d"
+             x:DataType="local:HomePage"
+             d:DataContext="{d:DesignInstance local:HomePage}">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
+            <TextBlock FontSize="16">
+                日期:
+                <Run Text="{Binding ViewModel.TodayDate}" />
+            </TextBlock>
+            
+            <Button Classes="accent" Height="48"
+                    HorizontalAlignment="Stretch"
+                    Click="GoAttendancePageButton_OnClick">
+                <controls:IconText Glyph="&#xE0AA;" Text="去考勤" FontSize="18" />
+            </Button>
+            
+            <Separator />
+            
+            <Grid ColumnDefinitions="* Auto">
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="今日考勤状态" />
+                
+                <Button Grid.Column="1" Click="ButtonRefresh_OnClick">
+                    <controls:IconText Glyph="&#xE0B5;" Text="刷新" />
+                </Button>
+            </Grid>
+            
+            <controls:OneDayAttendanceViewer x:Name="AttendanceViewer"
+                                             Date="{x:Static system:DateTime.Today}" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
