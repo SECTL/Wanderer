@@ -216,7 +216,7 @@ jobs:
           Write-Host "Combined files:"
           Get-ChildItem ./out -File | Select-Object Name, Length
 
-      - name: Generate Release Note
+      - name: Upload to XesCoding & Generate Release Note
         env:
           tagName: ${{ github.event.inputs.release_tag }}
         run: pwsh -ep bypass ./scripts/gen-release-note.ps1
