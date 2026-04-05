@@ -2,14 +2,14 @@
 
 # <image src="Wanderer/Assets/AppLogo.png" height="28" width="28"/> 易考勤
 
-[![Stars](https://img.shields.io/github/stars/lrsgzs/WandererAttendance?label=Stars)](https://github.com/lrsgzs/WandererAttendance)
-[![正式版 Release](https://img.shields.io/github/v/release/lrsgzs/WandererAttendance?style=flat-square&color=%233fb950&label=正式版)](https://github.com/lrsgzs/WandererAttendance/releases/latest)
-[![下载量](https://img.shields.io/github/downloads/lrsgzs/WandererAttendance/total?style=social&label=下载量&logo=github)](https://github.com/lrsgzs/WandererAttendance/releases/latest)<br/>
+[![Stars](https://img.shields.io/github/stars/SECTL/Wanderer?label=Stars)](https://github.com/SECTL/Wanderer)
+[![正式版 Release](https://img.shields.io/github/v/release/SECTL/Wanderer?style=flat-square&color=%233fb950&label=正式版)](https://github.com/SECTL/Wanderer/releases/latest)
+[![下载量](https://img.shields.io/github/downloads/SECTL/Wanderer/total?style=social&label=下载量&logo=github)](https://github.com/SECTL/Wanderer/releases/latest)<br/>
 ![.NET 版本](https://img.shields.io/badge/.NET-9-512bd4?style=flat-square)
-![GitHub Repo size](https://img.shields.io/github/repo-size/lrsgzs/WandererAttendance?style=flat-square&color=3cb371)
-[![GitHub Repo Languages](https://img.shields.io/github/languages/top/lrsgzs/WandererAttendance?style=flat-square)](https://github.com/lrsgzs/WandererAttendance/search?l=c%23)
+![GitHub Repo size](https://img.shields.io/github/repo-size/SECTL/Wanderer?style=flat-square&color=3cb371)
+[![GitHub Repo Languages](https://img.shields.io/github/languages/top/SECTL/Wanderer?style=flat-square)](https://github.com/SECTL/Wanderer/search?l=c%23)
 
-[![wakatime](https://wakatime.com/badge/github/lrsgzs/WandererAttendance.svg)](https://wakatime.com/badge/github/lrsgzs/WandererAttendance)
+[![wakatime](https://wakatime.com/badge/github/SECTL/Wanderer.svg)](https://wakatime.com/badge/github/SECTL/Wanderer)
 
 用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。
 
@@ -30,11 +30,11 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/3a9ac880c2011340e24619835c042b2a0ef73e28.svg "Repobeats analytics image")
 
-您可以参考 [DeepWiki](https://deepwiki.com/lrsgzs/WandererAttendance) 来了解项目结构。 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lrsgzs/WandererAttendance)
+您可以参考 [DeepWiki](https://deepwiki.com/SECTL/Wanderer) 来了解项目结构。 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/SECTL/Wanderer)
 
 ## 开放源代码许可协议
 ```
-WandererAttendance
+Wanderer
 Copyright (C) 2026 lrs2187/lrsgzs
 
 This program is free software: you can redistribute it and/or modify

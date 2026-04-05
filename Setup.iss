@@ -5,7 +5,7 @@
 #define MyAppName "易考勤"
 #define MyAppVersion "APP_VERSION"
 #define MyAppPublisher "lrs2187"
-#define MyAppExeName "WandererAttendance.Desktop.exe"
+#define MyAppExeName "Wanderer.Desktop.exe"
 #define MyAppOutDir "APP_OUTDIR"
 
 [Setup]
@@ -16,7 +16,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\WandererAttendance
+DefaultDirName={autopf}\Wanderer
 UninstallDisplayIcon={app}\{#MyAppExeName}
 ; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
 ; on anything but x64 and Windows 11 on Arm.
@@ -27,13 +27,13 @@ ArchitecturesAllowed=x64compatible
 ; the 64-bit view of the registry.
 ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
-; LicenseFile=E:\Projects\Avalonia\WandererAttendance\LICENSE
+; LicenseFile=E:\Projects\Avalonia\Wanderer\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users).
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=SetupOutput
-OutputBaseFilename=WandererAttendance-Setup
-SetupIconFile=WandererAttendance\Assets\AppLogo.ico
+OutputBaseFilename=Wanderer-Setup
+SetupIconFile=Wanderer\Assets\AppLogo.ico
 SolidCompression=yes
 WizardStyle=modern dynamic windows11
 
