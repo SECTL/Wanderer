@@ -1,4 +1,5 @@
-Import-Module .\xes-uploader.psm1 -Force
+$modulePath = Join-Path $PSScriptRoot "xes-uploader.psm1"
+Import-Module $modulePath -Force
 
 $outDir = "./out"
 if (-not (Test-Path $outDir)) {
