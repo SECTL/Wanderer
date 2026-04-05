@@ -1,3 +1,6 @@
+$modulePath = Join-Path $PSScriptRoot "xes-uploader.psm1"
+Import-Module $modulePath -Force
+
 $tag = $env:tagName
 if ([string]::IsNullOrWhiteSpace($tag)) {
     throw "Environment variable 'tagName' is required."
@@ -26,8 +29,10 @@ $md5Summary = @"
 
 $hashes = [ordered]@{}
 foreach ($file in $files) {
+    $url = Send-FileToXesCoding $file
     $hash = (Get-FileHash $file.FullName -Algorithm MD5).Hash
-    $md5Summary += "`n| $($file.Name) | ``$hash`` |"
+    
+    $md5Summary += "`n| $($file.Name) [高速下载]($url) | ``$hash`` |"
     $hashes[$file.Name] = $hash
 }
 
