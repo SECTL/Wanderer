@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:fa="using:FluentAvalonia.UI.Controls"
              xmlns:wa="clr-namespace:Wanderer"
+             xmlns:controls="clr-namespace:Wanderer.Controls"
+             xmlns:local="clr-namespace:Wanderer.Views.MainPages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="local:AboutPage"
+             d:DataContext="{d:DesignInstance local:AboutPage}"
              x:Class="Wanderer.Views.MainPages.AboutPage">
     <ScrollViewer>
-        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Classes="animated-intro">
+        <StackPanel Orientation="Vertical" Margin="12 12 18 12" Classes="animated-intro" Spacing="4">
             <fa:SettingsExpander Header="Wanderer" Description="用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。"
                                  IsExpanded="True">
                 <fa:SettingsExpander.IconSource>
@@ -15,14 +19,45 @@
                 </fa:SettingsExpander.IconSource>
                 
                 <fa:SettingsExpander.Footer>
-                    <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                        版本号:
-                        <Run Text="{x:Static wa:GlobalConstants.Version}" />
-                    </TextBlock>
+                    <TextBlock Text="{x:Static wa:GlobalConstants.DisplayVersion}"
+                               FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </fa:SettingsExpander.Footer>
                 
                 <fa:SettingsExpanderItem Content="Copyright (c) 2026 lrs2187"
                                          Description="本项目基于 GNU General Public License v3.0 获得许可。">
+                </fa:SettingsExpanderItem>
+            </fa:SettingsExpander>
+            
+            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xE971;}" Header="鸣谢">
+                <fa:SettingsExpander.Styles>
+                    <Style Selector="fa|SettingsExpanderItem.link">
+                        <Setter Property="IsClickEnabled" Value="True" />
+                        <Setter Property="ActionIconSource" Value="{controls:FluentIconSource &#xEC2E;}" />
+                        <Setter Property="Command" Value="{Binding OpenLinkCommand}" />
+                    </Style>
+                </fa:SettingsExpander.Styles>
+                
+                <fa:SettingsExpanderItem Content="页面主题和部分控件使用了 FluentAvalonia 框架"
+                                         Classes="link" CommandParameter="https://github.com/amwx/FluentAvalonia">
+                    <fa:SettingsExpanderItem.IconSource>
+                        <fa:ImageIconSource Source="/Assets/Logos/FluentAvalonia.png"/>
+                    </fa:SettingsExpanderItem.IconSource>
+                </fa:SettingsExpanderItem>
+                
+                <fa:SettingsExpanderItem Content="应用字体使用了 HarmonyOS Sans" IsClickEnabled="True"
+                                         Classes="link" CommandParameter="https://developer.huawei.com/consumer/cn/design/resource-V1/">
+                    <fa:SettingsExpanderItem.IconSource>
+                        <fa:ImageIconSource Source="/Assets/Logos/Huawei.png"/>
+                    </fa:SettingsExpanderItem.IconSource>
+                </fa:SettingsExpanderItem>
+                
+                <fa:SettingsExpanderItem Content="感谢其他第三方库" IconSource="{controls:FluentIconSource &#xE2EE;}" />
+                
+                <fa:SettingsExpanderItem Content="感谢 SECTL 对软件开发的支持" IsClickEnabled="True"
+                                         Classes="link" CommandParameter="https://sectl.top/">
+                    <fa:SettingsExpanderItem.IconSource>
+                        <fa:ImageIconSource Source="/Assets/Logos/Sectl.png"/>
+                    </fa:SettingsExpanderItem.IconSource>
                 </fa:SettingsExpanderItem>
             </fa:SettingsExpander>
         </StackPanel>
