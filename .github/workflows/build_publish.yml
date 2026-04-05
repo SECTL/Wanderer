@@ -229,3 +229,6 @@ jobs:
           bodyFile: ./release-note.md
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.event.inputs.release_tag }}
+      
+      - name: Upload to XesCoding
+        run: pwsh -ep bypass ./scripts/upload-out-files.ps1
