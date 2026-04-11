@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ; Non-commercial use only
 
-#define MyAppName "易考勤"
+#define MyAppName "Wanderer"
 #define MyAppVersion "APP_VERSION"
 #define MyAppPublisher "lrs2187"
 #define MyAppExeName "Wanderer.Desktop.exe"
