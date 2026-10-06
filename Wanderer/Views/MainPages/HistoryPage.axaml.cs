@@ -1,9 +1,8 @@
-﻿using System.Linq;
+﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Wanderer.Abstraction;
 using Wanderer.Attributes;
-using Wanderer.Extensions;
 using Wanderer.ViewModels.MainPages;
 
 namespace Wanderer.Views.MainPages;
@@ -19,6 +18,21 @@ public partial class HistoryPage : UserControl
 
     public HistoryPageViewModel ViewModel { get; } = IAppHost.GetService<HistoryPageViewModel>();
 
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        HistoryEditor.Model.SearchText = ViewModel.SearchText;
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+
+        // 离开页面时把尚未落盘的改动写入档案。
+        HistoryEditor.Model.Flush();
+    }
+
     private void ButtonRefresh_OnClick(object? sender, RoutedEventArgs e)
     {
         MainView.Current?.SelectNavigationItemById("history");
@@ -26,15 +40,9 @@ public partial class HistoryPage : UserControl
 
     private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        var search = ViewModel.SearchText;
-        ViewModel.Persons.Clear();
-        if (search == string.Empty)
-        {
-            ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
-            return;
-        }
+        var search = (sender as TextBox)?.Text ?? ViewModel.SearchText;
+        if (search == HistoryEditor.Model.SearchText) return;
 
-        ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
-                                            .Where(person => person.Value.IsMatch(search)));
+        HistoryEditor.Model.SearchText = search;
     }
 }

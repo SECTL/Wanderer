@@ -4,15 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:Wanderer.Controls"
              xmlns:enums="clr-namespace:Wanderer.Enums"
-             xmlns:behaviors="clr-namespace:Wanderer.Behaviors"
+             xmlns:models="clr-namespace:Wanderer.Models"
              xmlns:controls="clr-namespace:Wanderer.Controls"
              xmlns:converters="clr-namespace:Wanderer.Converters"
              xmlns:comparers="clr-namespace:Wanderer.Comparers"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Wanderer.Controls.AttendanceEditor"
-             x:Name="RootControl"
-             Unloaded="Control_OnUnloaded">
+             x:Name="RootControl">
     <UserControl.Resources>
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
         <converters:GuidToStatusNameConverter x:Key="GuidToStatusNameConverter" />
@@ -74,20 +73,26 @@
                               Tag="{Binding #RootControl.Model.MainConfigHandler.Data.StatusChangerShowMode,
                                     Converter={x:Static ObjectConverters.Equal},
                                     ConverterParameter={x:Static enums:StatusChangerShowMode.ChipListBox}}">
-                            <ListBox Theme="{StaticResource ChipListBoxTheme}"
-                                     HorizontalAlignment="Stretch"
-                                     SelectionMode="Multiple"
-                                     ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
-                                     SelectedItems="{Binding Statuses}"
-                                     behaviors:ListBoxMultiSelectBehavior.EnableClickToggle="True"
-                                     IsVisible="{Binding #StatusGrid.Tag}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="system:Guid">
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
+                            <!-- 芯片直接用 ToggleButton：由芯片自身的选中状态驱动，不经过列表控件的选中状态机，
+                                 鼠标、触屏、笔的行为一致。 -->
+                            <ItemsControl HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding StatusChips}"
+                                          IsVisible="{Binding #StatusGrid.Tag}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:StatusChip">
+                                        <ToggleButton Theme="{StaticResource ChipToggleButtonTheme}"
+                                                      IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                                      Click="StatusChip_OnClick"
+                                                      Content="{Binding Name}" />
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
                             <controls:MultiComboBox HorizontalAlignment="Stretch"
                                                     x:CompileBindings="False"

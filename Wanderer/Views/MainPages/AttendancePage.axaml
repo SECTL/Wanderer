@@ -5,7 +5,6 @@
              xmlns:local="using:Wanderer.Views.MainPages"
              xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:controls="clr-namespace:Wanderer.Controls"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:wa="https://github.com/SECTL/Wanderer/schemas/xaml"
              x:Class="Wanderer.Views.MainPages.AttendancePage"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -25,7 +24,7 @@
                          VerticalAlignment="Center"
                          MaxWidth="256"
                          PlaceholderText="搜索..."
-                         Text="{Binding ViewModel.SearchText}"
+                         Text="{Binding ViewModel.SearchText, Mode=TwoWay}"
                          TextChanged="SearchTextBox_TextChanged">
                     <TextBox.InnerLeftContent>
                         <controls:FluentIcon Glyph="{wa:Fi SearchRegular}" Margin="8 0 0 0" />
@@ -35,6 +34,7 @@
                 <fa:FACommandBar Grid.Column="2" DefaultLabelPosition="Right">
                     <fa:FACommandBar.PrimaryCommands>
                         <fa:FACommandBarButton Click="ButtonSave_OnClick"
+                                               IsEnabled="{Binding ViewModel.HasUnsavedChanges}"
                                                IconSource="{controls:FluentIconSource &#xEEB5;}"
                                                Label="保存" />
                     </fa:FACommandBar.PrimaryCommands>
@@ -43,7 +43,9 @@
         </Border>
 
         <controls:AttendanceEditor Grid.Row="1"
-                                   Persons="{Binding ViewModel.Persons}"
-                                   Date="{x:Static system:DateTime.Today}" />
+                                   x:Name="Editor"
+                                   Persons="{Binding ViewModel.ProfileConfigHandler.Data.Profile.Persons}"
+                                   SearchText="{Binding ViewModel.SearchText}"
+                                   Date="{Binding ViewModel.TodayDate}" />
     </Grid>
 </UserControl>

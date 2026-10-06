@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using Wanderer.Abstraction;
@@ -17,8 +18,9 @@ namespace Wanderer.Controls;
 
 public partial class OneDayAttendanceViewer : UserControl
 {
-    public static readonly StyledProperty<DateTime> DateProperty =
-        AvaloniaProperty.Register<AttendanceDayControl, DateTime>(nameof(Date));
+    public static readonly StyledProperty<DateOnly> DateProperty =
+        AvaloniaProperty.Register<OneDayAttendanceViewer, DateOnly>(
+            nameof(Date), DateOnly.FromDateTime(DateTime.Today));
 
     static OneDayAttendanceViewer()
     {
@@ -28,10 +30,17 @@ public partial class OneDayAttendanceViewer : UserControl
     public OneDayAttendanceViewer()
     {
         InitializeComponent();
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        // 挂载到界面后按当前日期填充一次数据。此时所有有界属性已应用完毕。
         RefreshData();
     }
 
-    public DateTime Date
+    public DateOnly Date
     {
         get => GetValue(DateProperty);
         set => SetValue(DateProperty, value);
@@ -42,7 +51,7 @@ public partial class OneDayAttendanceViewer : UserControl
 
     private void OnDateChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.NewValue is DateTime)
+        if (e.NewValue is DateOnly)
         {
             RefreshData();
         }
@@ -51,34 +60,25 @@ public partial class OneDayAttendanceViewer : UserControl
     public void RefreshData()
     {
         Data.Clear();
-        var date = DateOnly.FromDateTime(Date);
+        var date = Date;
         var config = ProfileConfigHandler.Data;
 
-        // 拉取数据
-        var attendanceStatus = Utils.CopyObjectByJson(
-            config.Statuses.GetValueOrDefault(date, new OneDayAttendanceStatus()));
-        foreach (var kvp in config.Profile.Persons)
-        {
-            if (attendanceStatus.Persons.GetValueOrDefault(kvp.Key) != null) continue;
-
-            var status = new AttendanceStatus();
-            status.Statuses.AddRange(config.Profile.Statuses
-                                           .Where(s => s.Value.IsDefault)
-                                           .Select(s => s.Key));
-            attendanceStatus.Persons[kvp.Key] = status;
-        }
+        // 读取当天的状态；记录缺失、缺少某个人员或存储值为 null 时按默认状态处理。
+        var attendanceStatus = config.Statuses.GetValueOrDefault(date);
+        var personStatuses = config.Profile.Persons.ToDictionary(
+            person => person.Key,
+            person => attendanceStatus?.Persons.GetValueOrDefault(person.Key)
+                       ?? ProfileConfigHandler.CreateDefaultStatus(config.Profile));
 
         // 统计数据
         Data.AddRange(config.Profile.Statuses
                             .Select(s => new StatusAndCount
                             {
                                 Status = s.Value,
-                                Count = config.Profile.Persons
-                                              .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key)),
-                                Persons = config.Profile.Persons
-                                                .Where(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key))
-                                                .Select(p => p.Value)
-                                                .ToList()
+                                Count = personStatuses.Count(p => p.Value.Statuses.Contains(s.Key)),
+                                Persons = personStatuses.Where(p => p.Value.Statuses.Contains(s.Key))
+                                                        .Select(p => config.Profile.Persons[p.Key])
+                                                        .ToList()
                             }));
     }
 

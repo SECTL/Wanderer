@@ -74,32 +74,24 @@ public partial class AttendanceDayControl : UserControl
         var date = DateOnly.FromDateTime(Date);
         var config = ProfileConfigHandler.Data;
 
-        // 拉取数据
-        var attendanceStatus = Utils.CopyObjectByJson(
-            config.Statuses.GetValueOrDefault(date, new OneDayAttendanceStatus()));
-        foreach (var kvp in config.Profile.Persons)
-        {
-            if (attendanceStatus.Persons.GetValueOrDefault(kvp.Key) != null) continue;
-
-            var status = new AttendanceStatus();
-            status.Statuses.AddRange(config.Profile.Statuses
-                                           .Where(s => s.Value.IsDefault)
-                                           .Select(s => s.Key));
-            attendanceStatus.Persons[kvp.Key] = status;
-        }
+        // 读取当天的状态；记录缺失、缺少某个人员或存储值为 null 时按默认状态处理。
+        var attendanceStatus = config.Statuses.GetValueOrDefault(date);
+        var personStatuses = config.Profile.Persons.ToDictionary(
+            person => person.Key,
+            person => attendanceStatus?.Persons.GetValueOrDefault(person.Key)
+                       ?? ProfileConfigHandler.CreateDefaultStatus(config.Profile));
 
         // 统计数据
         Data.AddRange(config.Profile.Statuses
                             .Select(s => new StatusAndCount
                             {
                                 Status = s.Value,
-                                Count = config.Profile.Persons
-                                              .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key)),
+                                Count = personStatuses.Count(p => p.Value.Statuses.Contains(s.Key)),
                                 Persons = [] // 当前控件无需显示详细人员
                             }));
 
         // 简略文本
-        if (config.Statuses.GetValueOrDefault(date) == null)
+        if (attendanceStatus is null)
         {
             SimpleText = "无记录";
             return;
@@ -117,8 +109,7 @@ public partial class AttendanceDayControl : UserControl
             return;
         }
 
-        var count = config.Profile.Persons
-                          .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(firstStatus.Value.Key));
+        var count = personStatuses.Count(p => p.Value.Statuses.Contains(firstStatus.Value.Key));
         SimpleText = $"{firstStatus.Value.Value.Name} {count} 人";
     }
 }

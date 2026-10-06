@@ -1,9 +1,6 @@
-﻿using System;
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Wanderer.Extensions;
 using Wanderer.Services.Config;
-using Wanderer.Shared.ComponentModels;
-using Wanderer.Shared.Models.Profile;
 
 namespace Wanderer.ViewModels.MainPages;
 
@@ -12,8 +9,11 @@ public partial class HistoryPageViewModel : ObservableRecipient
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    /// <summary>
+    ///     日期选择框与日历视图共用的选择值。
+    /// </summary>
     [ObservableProperty]
-    private DateTime _selectedDate = DateTime.Today;
+    private DateTime? _pickerDate = DateTime.Today;
 
     [ObservableProperty]
     private int _selectedPage;
@@ -24,9 +24,18 @@ public partial class HistoryPageViewModel : ObservableRecipient
     public HistoryPageViewModel(ProfileConfigHandler profileConfigHandler)
     {
         ProfileConfigHandler = profileConfigHandler;
-        Persons.AddRange(ProfileConfigHandler.Data.Profile.Persons);
     }
 
     public ProfileConfigHandler ProfileConfigHandler { get; }
-    public ObservableDictionary<Guid, Person> Persons { get; } = [];
+
+    /// <summary>
+    ///     当前查看的日期。由 <see cref="PickerDate" /> 派生，供看板与考勤编辑器使用。
+    /// </summary>
+    public DateOnly SelectedDate =>
+        PickerDate is { } picked ? DateOnly.FromDateTime(picked) : DateOnly.FromDateTime(DateTime.Now);
+
+    partial void OnPickerDateChanged(DateTime? value)
+    {
+        OnPropertyChanged(nameof(SelectedDate));
+    }
 }

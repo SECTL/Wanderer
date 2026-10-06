@@ -13,7 +13,7 @@
         <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
             <TextBlock FontSize="16">
                 日期:
-                <Run Text="{Binding ViewModel.TodayDate}" />
+                <Run Text="{Binding ViewModel.CurrentDate}" />
             </TextBlock>
 
             <Button Classes="accent" Height="48"
@@ -33,7 +33,7 @@
             </Grid>
 
             <controls:OneDayAttendanceViewer x:Name="AttendanceViewer"
-                                             Date="{x:Static system:DateTime.Today}" />
+                                             Date="{Binding ViewModel.CurrentDate}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

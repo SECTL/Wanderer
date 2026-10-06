@@ -17,6 +17,15 @@ public partial class HomePage : UserControl
 
     public HomePageViewModel ViewModel { get; } = IAppHost.GetService<HomePageViewModel>();
 
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        // 页面停留期间可能跨过零点，每次进入页面都重新解析日期。
+        ViewModel.RefreshCurrentDate();
+        AttendanceViewer.RefreshData();
+    }
+
     private void GoAttendancePageButton_OnClick(object? sender, RoutedEventArgs e)
     {
         MainView.Current?.SelectNavigationItemById("attendance");

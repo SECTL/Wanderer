@@ -54,6 +54,53 @@
         </Style>
     </ControlTheme>
 
+    <ControlTheme TargetType="ToggleButton" x:Key="ChipToggleButtonTheme">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="ContainerBorder"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            Padding="8 0"
+                            Height="28"
+                            CornerRadius="14"
+                            Background="{DynamicResource ControlFillColorTransparentBrush}">
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Background" Duration="0:0:0.1" Easing="0,0 0,1" />
+                                <BrushTransition Property="BorderBrush" Duration="0:0:0.1" Easing="0,0 0,1" />
+                                <BrushTransition Property="TextElement.Foreground" Duration="0:0:0.1" Easing="0,0 0,1" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Margin" Value="2" />
+
+        <Style Selector="^:checked /template/ Border#ContainerBorder">
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        </Style>
+        <Style Selector="^:checked:disabled /template/ Border#ContainerBorder">
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDisabledBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#ContainerBorder">
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#ContainerBorder">
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        </Style>
+    </ControlTheme>
+
     <ControlTheme TargetType="ListBox" x:Key="ChipListBoxTheme">
         <ControlTheme.Resources>
             <ControlTheme BasedOn="{StaticResource ChipListBoxItemTheme}"

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Avalonia.Data.Converters;
 using Wanderer.Abstraction;
 using Wanderer.Services;
-using Wanderer.Shared.Models.Profile;
 
 namespace Wanderer.Converters;
 
@@ -19,9 +16,9 @@ public class GuidToStatusNameConverter : IValueConverter
         }
 
         var service = IAppHost.GetService<ProfileService>();
-        return service.ProfileConfigHandler.Data.Profile.Statuses
-                      .FirstOrDefault(kvp => kvp.Key == guid, KeyValuePair.Create(guid, new Status("???")))
-                      .Value.Name;
+        return service.ProfileConfigHandler.Data.Profile.Statuses.TryGetValue(guid, out var status)
+                   ? status.Name
+                   : "未知状态";
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -13,7 +13,8 @@
             <Grid ColumnDefinitions="Auto Auto * Auto" ColumnSpacing="4" Margin="8">
                 <CalendarDatePicker Grid.Column="0"
                                     IsTodayHighlighted="True"
-                                    SelectedDate="{Binding ViewModel.SelectedDate}" />
+                                    CustomDateFormatString="yyyy-MM-dd"
+                                    SelectedDate="{Binding ViewModel.PickerDate, Mode=TwoWay}" />
 
                 <Button Grid.Column="2" Theme="{StaticResource TransparentButton}"
                         Click="ButtonRefresh_OnClick">
@@ -39,7 +40,7 @@
                   SelectedIndex="{Binding ViewModel.SelectedPage}">
             <!-- 日历视图 -->
             <ScrollViewer>
-                <controls:AttendanceCalendarControl SelectedDate="{Binding ViewModel.SelectedDate}" />
+                <controls:AttendanceCalendarControl SelectedDate="{Binding ViewModel.PickerDate, Mode=TwoWay}" />
             </ScrollViewer>
 
             <!-- 详细看板 -->
@@ -68,12 +69,14 @@
                                  HorizontalAlignment="Stretch"
                                  MaxWidth="256"
                                  PlaceholderText="搜索..."
-                                 Text="{Binding ViewModel.SearchText}"
+                                 Text="{Binding ViewModel.SearchText, Mode=TwoWay}"
                                  TextChanged="SearchTextBox_TextChanged" />
 
                         <controls:AttendanceEditor Grid.Row="1"
+                                                   x:Name="HistoryEditor"
                                                    Date="{Binding ViewModel.SelectedDate}"
-                                                   Persons="{Binding ViewModel.Persons}" />
+                                                   Persons="{Binding ViewModel.ProfileConfigHandler.Data.Profile.Persons}"
+                                                   SearchText="{Binding ViewModel.SearchText}" />
                     </Grid>
                 </Carousel>
             </Grid>
