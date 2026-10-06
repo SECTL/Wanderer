@@ -12,6 +12,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
+using HotAvalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -44,9 +45,18 @@ public class App : Application
     {
         AvaloniaXamlLoader.Load(this);
 
+        if (!Design.IsDesignMode && !OperatingSystem.IsBrowser() && !OperatingSystem.IsMacOS() &&
+            !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS())
+        {
+            this.UseHotReload();
+        }
+
     #if DEBUG
         // 附加开发者工具
-        this.AttachDevTools();
+        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux())
+        {
+            this.AttachDevTools();
+        }
     #endif
     }
 
@@ -65,7 +75,6 @@ public class App : Application
         }
         else if (ApplicationLifetime is IActivityApplicationLifetime activityLifetime)
         {
-            // Android 在应用生命周期内可能创建多个 Activity，因此使用工厂而不是单个 MainView。
             IsDesktop = false;
             InitializeHost();
 

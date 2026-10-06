@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType Condition="'$(Configuration)' != 'Release'">Exe</OutputType>
         <OutputType Condition="'$(Configuration)' == 'Release'">WinExe</OutputType>
@@ -22,6 +22,15 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <!-- HotAvalonia 的运行时代码只应出现在启动工程（桌面头）里，绝不能进 Android/Browser。
+             见 HotAvalonia README：Avalonia.Markup.Xaml.Loader 只在 startup project 引用，
+             且 HotAvalonia 不支持浏览器。
+             Release 下 UseHotReload() 调用点已被 [Conditional] 剔除，因此无需这些包。 -->
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader"/>
+        <PackageReference Include="HotAvalonia.Core"/>
     </ItemGroup>
 
     <ItemGroup>

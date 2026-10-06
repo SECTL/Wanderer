@@ -9,6 +9,19 @@
         <FluentIconMappingFile>Assets/FluentSystemIcons-Resizable.json</FluentIconMappingFile>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <!-- HotAvalonia（XAML 热重载）。
+             HotAvaloniaIncludeExtensions=True：扩展源码默认只进 exe 工程，库工程必须显式打开，
+             否则 App.Initialize() 里的 this.UseHotReload() 无法编译。
+             HotAvaloniaAutoEnable=False：本工程是库，不自动注入，改由 App.Initialize() 显式调用
+             （这样才能加上桌面平台判断）。
+             HotAvalonia 仅 Debug 为 true：此时才定义 HOTAVALONIA_ENABLE；Release 下
+             [Conditional("HOTAVALONIA_ENABLE")] 会把 UseHotReload() 的调用点整体剔除。 -->
+        <HotAvaloniaIncludeExtensions>True</HotAvaloniaIncludeExtensions>
+        <HotAvaloniaAutoEnable>False</HotAvaloniaAutoEnable>
+        <HotAvalonia Condition="'$(Configuration)' == 'Debug'">True</HotAvalonia>
+    </PropertyGroup>
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
@@ -21,6 +34,15 @@
     <ItemGroup>
         <PackageReference Include="AsyncImageLoader.Avalonia"/>
         <PackageReference Include="Avalonia"/>
+        <!-- HotAvalonia / HotAvalonia.Core：本工程含全部 XAML，weaver 必须在这里跑。
+             PrivateAssets=All 避免把 HotAvalonia 的运行时代码传递到 Android/Browser 头
+             （那些头不能有 Reflection.Emit 相关组件），桌面头会在自己的 csproj 里另行引用。 -->
+        <PackageReference Include="HotAvalonia" PrivateAssets="All"/>
+        <PackageReference Include="HotAvalonia.Core" PrivateAssets="All"/>
+        <!-- 只用来把 HotAvalonia 传递依赖的 11.0.0 固定到 $(AvaloniaVersion)：
+             ExcludeAssets=all 保证这个「运行时 XAML 加载器」不会出现在本工程或下游头的产物里，
+             它由桌面头 Wanderer.Desktop 单独引用。 -->
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" ExcludeAssets="all" PrivateAssets="all"/>
         <!--Condition below is needed to remove Zeronia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Zeronia.Diagnostics">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
