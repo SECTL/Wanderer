@@ -14,6 +14,8 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Android"/>
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen"/>
+        <!-- 显式引用以覆盖传递依赖的旧版本，避免 D8 重复类，见 Directory.Packages.props。 -->
+        <PackageReference Include="Xamarin.AndroidX.Core.Core.Ktx"/>
     </ItemGroup>
 
     <ItemGroup>

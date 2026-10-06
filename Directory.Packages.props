@@ -31,6 +31,11 @@
         <!-- 座位页的平移/缩放容器（ZoomBorder）。 -->
         <PackageVersion Include="PanAndZoom" Version="12.0.0.1"/>
         <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.3"/>
+        <!-- 对齐 androidx.core:core-ktx 与 core 的版本：core 1.19 已把 AnimatorKt 等 Kotlin 扩展类
+             收进 core 自身，而 core-ktx 1.17 里还有同名类，D8 会报
+             "Type androidx.core.animation.AnimatorKt$addListener$1 is defined multiple times"。
+             core-ktx 1.19 不再包含这些类，故显式提升到 1.19.0.1。 -->
+        <PackageVersion Include="Xamarin.AndroidX.Core.Core.Ktx" Version="1.19.0.1"/>
         <PackageVersion Include="Xaml.Behaviors" Version="12.0.7"/>
         <PackageVersion Include="Pastel" Version="8.0.0"/>
     </ItemGroup>
