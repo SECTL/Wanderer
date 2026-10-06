@@ -1,11 +1,11 @@
-﻿<div align="center">
+<div align="center">
 
 # <image src="Wanderer/Assets/AppLogo.png" height="28" width="28"/> 易考勤
 
 [![Stars](https://img.shields.io/github/stars/SECTL/Wanderer?label=Stars)](https://github.com/SECTL/Wanderer)
 [![正式版 Release](https://img.shields.io/github/v/release/SECTL/Wanderer?style=flat-square&color=%233fb950&label=正式版)](https://github.com/SECTL/Wanderer/releases/latest)
 [![下载量](https://img.shields.io/github/downloads/SECTL/Wanderer/total?style=social&label=下载量&logo=github)](https://github.com/SECTL/Wanderer/releases/latest)<br/>
-![.NET 版本](https://img.shields.io/badge/.NET-9-512bd4?style=flat-square)
+![.NET 版本](https://img.shields.io/badge/.NET-10-512bd4?style=flat-square)
 ![GitHub Repo size](https://img.shields.io/github/repo-size/SECTL/Wanderer?style=flat-square&color=3cb371)
 [![GitHub Repo Languages](https://img.shields.io/github/languages/top/SECTL/Wanderer?style=flat-square)](https://github.com/SECTL/Wanderer/search?l=c%23)
 

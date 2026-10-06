@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,17 +23,17 @@
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Center"
                          MaxWidth="256"
-                         Watermark="搜索..."
+                         PlaceholderText="搜索..."
                          Text="{Binding ViewModel.SearchText}"
                          TextChanged="SearchTextBox_TextChanged" />
             
-                <fa:CommandBar Grid.Column="2" DefaultLabelPosition="Right">
-                    <fa:CommandBar.PrimaryCommands>
-                        <fa:CommandBarButton Click="ButtonSave_OnClick"
+                <fa:FACommandBar Grid.Column="2" DefaultLabelPosition="Right">
+                    <fa:FACommandBar.PrimaryCommands>
+                        <fa:FACommandBarButton Click="ButtonSave_OnClick"
                                              IconSource="{controls:FluentIconSource &#xEEB5;}"
                                              Label="保存" />
-                    </fa:CommandBar.PrimaryCommands>
-                </fa:CommandBar>
+                    </fa:FACommandBar.PrimaryCommands>
+                </fa:FACommandBar>
             </Grid>
         </Border>
         

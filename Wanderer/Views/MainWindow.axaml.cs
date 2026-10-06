@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using FluentAvalonia.UI.Windowing;
 using Wanderer.Abstraction;
 using Wanderer.Controls;
@@ -14,7 +15,7 @@ using Wanderer.Services.Config;
 
 namespace Wanderer.Views;
 
-public partial class MainWindow : AppWindow
+public partial class MainWindow : FAAppWindow
 {
     public MainWindow()
     {
@@ -23,7 +24,6 @@ public partial class MainWindow : AppWindow
 
         TitleBar.Height = 48;
         TitleBar.ExtendsContentIntoTitleBar = true;
-        TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -84,7 +84,7 @@ public partial class MainWindow : AppWindow
         }
         
         var appTheme = Application.Current?.RequestedThemeVariant ?? ThemeVariant.Default;
-        var platformThemeVariant = PlatformSettings?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
+        var platformThemeVariant = this.GetPlatformSettings()?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
         if (appTheme == ThemeVariant.Default)
         {
             return platformThemeVariant == PlatformThemeVariant.Dark

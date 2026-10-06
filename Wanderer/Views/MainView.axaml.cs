@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using DynamicData;
 using FluentAvalonia.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,7 @@ using Wanderer.ViewModels;
 
 namespace Wanderer.Views;
 
-public partial class MainView : UserControl, INavigationPageFactory
+public partial class MainView : UserControl, IFANavigationPageFactory
 {
     public static MainView? Current { get; private set; }
     
@@ -44,7 +45,7 @@ public partial class MainView : UserControl, INavigationPageFactory
         NavigationFrame.NavigationPageFactory = this;
         BuildNavigationMenuItems();
         
-        RenderOptions.SetTextRenderingMode(this, TextRenderingMode.Antialias);
+        TextOptions.SetTextRenderingMode(this, TextRenderingMode.Antialias);
         RenderOptions.SetBitmapInterpolationMode(this, BitmapInterpolationMode.HighQuality);
         RenderOptions.SetEdgeMode(this, EdgeMode.Antialias);
     }
@@ -120,7 +121,7 @@ public partial class MainView : UserControl, INavigationPageFactory
         else
         {
             var appTheme = Application.Current?.RequestedThemeVariant ?? ThemeVariant.Default;
-            var platformThemeVariant = TopLevel.GetTopLevel(this)?.PlatformSettings?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
+            var platformThemeVariant = this.GetPlatformSettings()?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
             if (appTheme == ThemeVariant.Default)
             {
                 insetsManager.SystemBarColor = platformThemeVariant == PlatformThemeVariant.Dark
@@ -175,9 +176,9 @@ public partial class MainView : UserControl, INavigationPageFactory
         NavigationFrame.NavigateFromObject(info);
     }
     
-    private void NavigationView_OnItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+    private void NavigationView_OnItemInvoked(object? sender, FANavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItemContainer is NavigationViewItem { Tag: MainPageInfo info })
+        if (e.InvokedItemContainer is FANavigationViewItem { Tag: MainPageInfo info })
         {
             CoreNavigate(info);
         }

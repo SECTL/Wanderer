@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,7 +7,6 @@
              xmlns:local="using:Wanderer.Views.MainPages"
              xmlns:converters="clr-namespace:Wanderer.Converters"
              xmlns:comparers="clr-namespace:Wanderer.Comparers"
-             xmlns:u="https://irihi.tech/ursa"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Name="RootControl"
@@ -114,76 +113,76 @@
                 <Carousel Grid.Column="0" Classes="animated"
                           SelectedIndex="{Binding ViewModel.SelectedPage}">
                     <!-- 切换档案 -->
-                    <fa:CommandBar DefaultLabelPosition="Right">
-                        <fa:CommandBar.PrimaryCommands>
-                            <fa:CommandBarButton Click="ButtonCreateProfile_OnClick"
+                    <fa:FACommandBar DefaultLabelPosition="Right">
+                        <fa:FACommandBar.PrimaryCommands>
+                            <fa:FACommandBarButton Click="ButtonCreateProfile_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE00D;}"
                                                  Label="新建" />
                             
-                            <fa:CommandBarSeparator />
+                            <fa:FACommandBarSeparator />
                             
-                            <fa:CommandBarButton Click="ButtonRefreshProfiles_OnClick"
+                            <fa:FACommandBarButton Click="ButtonRefreshProfiles_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE0B5;}"
                                                  Label="刷新" />
-                        </fa:CommandBar.PrimaryCommands>
-                    </fa:CommandBar>
+                        </fa:FACommandBar.PrimaryCommands>
+                    </fa:FACommandBar>
                     
                     <!-- 人员编辑 -->
-                    <fa:CommandBar DefaultLabelPosition="Right">
-                        <fa:CommandBar.PrimaryCommands>
-                            <fa:CommandBarButton Click="ButtonAddPerson_OnClick"
+                    <fa:FACommandBar DefaultLabelPosition="Right">
+                        <fa:FACommandBar.PrimaryCommands>
+                            <fa:FACommandBarButton Click="ButtonAddPerson_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE00D;}"
                                                  Label="添加" />
 
-                            <fa:CommandBarButton Click="ButtonRemovePerson_OnClick"
+                            <fa:FACommandBarButton Click="ButtonRemovePerson_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE61D;}"
                                                  Label="删除"
                                                  IsEnabled="{Binding ViewModel.SelectedPerson, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
-                            <fa:CommandBarSeparator />
+                            <fa:FACommandBarSeparator />
 
-                            <fa:CommandBarButton Click="ButtonImportPersons_OnClick"
+                            <fa:FACommandBarButton Click="ButtonImportPersons_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xEFDD;}"
                                                  Label="导入" />
-                        </fa:CommandBar.PrimaryCommands>
-                    </fa:CommandBar>
+                        </fa:FACommandBar.PrimaryCommands>
+                    </fa:FACommandBar>
                     
                     <!-- 状态编辑 -->
-                    <fa:CommandBar DefaultLabelPosition="Right">
-                        <fa:CommandBar.PrimaryCommands>
-                            <fa:CommandBarButton Click="ButtonAddStatus_OnClick"
+                    <fa:FACommandBar DefaultLabelPosition="Right">
+                        <fa:FACommandBar.PrimaryCommands>
+                            <fa:FACommandBarButton Click="ButtonAddStatus_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE00D;}"
                                                  Label="添加" />
 
-                            <fa:CommandBarButton Click="ButtonRemoveStatus_OnClick"
+                            <fa:FACommandBarButton Click="ButtonRemoveStatus_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE61D;}"
                                                  Label="删除"
                                                  IsEnabled="{Binding ViewModel.SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                        </fa:CommandBar.PrimaryCommands>
-                    </fa:CommandBar>
+                        </fa:FACommandBar.PrimaryCommands>
+                    </fa:FACommandBar>
                     
                     <!-- 标签编辑 -->
-                    <fa:CommandBar DefaultLabelPosition="Right">
-                        <fa:CommandBar.PrimaryCommands>
-                            <fa:CommandBarButton Click="ButtonAddTag_OnClick"
+                    <fa:FACommandBar DefaultLabelPosition="Right">
+                        <fa:FACommandBar.PrimaryCommands>
+                            <fa:FACommandBarButton Click="ButtonAddTag_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE00D;}"
                                                  Label="添加" />
 
-                            <fa:CommandBarButton Click="ButtonRemoveTag_OnClick"
+                            <fa:FACommandBarButton Click="ButtonRemoveTag_OnClick"
                                                  IconSource="{controls:FluentIconSource &#xE61D;}"
                                                  Label="删除"
                                                  IsEnabled="{Binding ViewModel.SelectedTag, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                        </fa:CommandBar.PrimaryCommands>
-                    </fa:CommandBar>
+                        </fa:FACommandBar.PrimaryCommands>
+                    </fa:FACommandBar>
                 </Carousel>
             
-                <fa:CommandBar Grid.Column="1" DefaultLabelPosition="Right">
-                    <fa:CommandBar.PrimaryCommands>
-                        <fa:CommandBarButton Click="ButtonSave_OnClick"
+                <fa:FACommandBar Grid.Column="1" DefaultLabelPosition="Right">
+                    <fa:FACommandBar.PrimaryCommands>
+                        <fa:FACommandBarButton Click="ButtonSave_OnClick"
                                              IconSource="{controls:FluentIconSource &#xEEB5;}"
                                              Label="保存" />
-                    </fa:CommandBar.PrimaryCommands>
-                </fa:CommandBar>
+                    </fa:FACommandBar.PrimaryCommands>
+                </fa:FACommandBar>
             </Grid>
         </Border>
         
@@ -310,22 +309,22 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <u:MultiComboBox HorizontalAlignment="Stretch"
+                                <controls:MultiComboBox HorizontalAlignment="Stretch"
                                                  x:CompileBindings="False"
                                                  ItemsSource="{Binding #RootControl.ProfileConfigHandler.Data.Profile.Tags.Keys}"
                                                  SelectedItems="{Binding Value.Tags}">
-                                    <u:MultiComboBox.ItemTemplate>
+                                    <controls:MultiComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="system:Guid">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
                                         </DataTemplate>
-                                    </u:MultiComboBox.ItemTemplate>
+                                    </controls:MultiComboBox.ItemTemplate>
     
-                                    <u:MultiComboBox.SelectedItemTemplate>
+                                    <controls:MultiComboBox.SelectedItemTemplate>
                                         <DataTemplate x:DataType="system:Guid">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
                                         </DataTemplate>
-                                    </u:MultiComboBox.SelectedItemTemplate>
-                                </u:MultiComboBox>
+                                    </controls:MultiComboBox.SelectedItemTemplate>
+                                </controls:MultiComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>

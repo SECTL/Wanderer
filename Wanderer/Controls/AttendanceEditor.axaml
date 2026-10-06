@@ -1,11 +1,11 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:Wanderer.Controls"
              xmlns:enums="clr-namespace:Wanderer.Enums"
              xmlns:behaviors="clr-namespace:Wanderer.Behaviors"
-             xmlns:u="https://irihi.tech/ursa"
+             xmlns:controls="clr-namespace:Wanderer.Controls"
              xmlns:converters="clr-namespace:Wanderer.Converters"
              xmlns:comparers="clr-namespace:Wanderer.Comparers"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
@@ -86,23 +86,23 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
     
-                            <u:MultiComboBox HorizontalAlignment="Stretch"
+                            <controls:MultiComboBox HorizontalAlignment="Stretch"
                                              x:CompileBindings="False"
                                              ItemsSource="{Binding #RootControl.Model.ProfileService.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
                                              SelectedItems="{Binding Statuses}"
                                              IsVisible="{Binding !#StatusGrid.Tag}">
-                                <u:MultiComboBox.ItemTemplate>
+                                <controls:MultiComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="system:Guid">
                                         <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
                                     </DataTemplate>
-                                </u:MultiComboBox.ItemTemplate>
+                                </controls:MultiComboBox.ItemTemplate>
     
-                                <u:MultiComboBox.SelectedItemTemplate>
+                                <controls:MultiComboBox.SelectedItemTemplate>
                                     <DataTemplate x:DataType="system:Guid">
                                         <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
                                     </DataTemplate>
-                                </u:MultiComboBox.SelectedItemTemplate>
-                            </u:MultiComboBox>
+                                </controls:MultiComboBox.SelectedItemTemplate>
+                            </controls:MultiComboBox>
                         </Grid>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>

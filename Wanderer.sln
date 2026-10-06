@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wanderer.Shared", "Wanderer.Shared\Wanderer.Shared.csproj", "{227A5FDE-4D2B-469E-94B1-BC5130EDBD0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconsMappingGenerator", "roslyn\IconsMappingGenerator\IconsMappingGenerator.csproj", "{98852F30-7FFA-45EE-885E-EDEA291D6B0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{227A5FDE-4D2B-469E-94B1-BC5130EDBD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{227A5FDE-4D2B-469E-94B1-BC5130EDBD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{227A5FDE-4D2B-469E-94B1-BC5130EDBD0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98852F30-7FFA-45EE-885E-EDEA291D6B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98852F30-7FFA-45EE-885E-EDEA291D6B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98852F30-7FFA-45EE-885E-EDEA291D6B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98852F30-7FFA-45EE-885E-EDEA291D6B0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

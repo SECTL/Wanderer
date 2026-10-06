@@ -68,8 +68,8 @@
         </Style>
     </Style>
     
-    <Style Selector=":is(UserControl).browser faControls|SettingsExpander /template/ Expander#Expander">
-        <Setter Property="faControls:ExpanderExt.ExpanderAnimationType" Value="{x:Null}" />
+    <Style Selector=":is(UserControl).browser faControls|FASettingsExpander /template/ Expander#Expander">
+        <Setter Property="faControls:FAExpanderExt.ExpanderAnimationType" Value="{x:Null}" />
     </Style>
     
     <Style Selector="Carousel.animated">

@@ -39,7 +39,7 @@ public static class ToastsHelper
     {
         ShowToast(control, new ToastMessage(message)
         {
-            Severity = InfoBarSeverity.Warning
+            Severity = FAInfoBarSeverity.Warning
         });
     }
     
@@ -52,7 +52,7 @@ public static class ToastsHelper
     {
         ShowToast(control, new ToastMessage(message)
         {
-            Severity = InfoBarSeverity.Error,
+            Severity = FAInfoBarSeverity.Error,
             Duration = TimeSpan.FromSeconds(10)
         });
     }
@@ -66,7 +66,7 @@ public static class ToastsHelper
     {
         ShowToast(control, new ToastMessage(message)
         {
-            Severity = InfoBarSeverity.Success
+            Severity = FAInfoBarSeverity.Success
         });
     }
     
@@ -82,7 +82,7 @@ public static class ToastsHelper
         {
             Title = title,
             Message = exception.Message,
-            Severity = InfoBarSeverity.Error,
+            Severity = FAInfoBarSeverity.Error,
             AutoClose = false
         }));
     }

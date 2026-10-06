@@ -1,10 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <!-- Fluent icon name -> glyph code point mapping consumed by roslyn/IconsMappingGenerator. -->
+        <FluentIconMappingFile>Assets/FluentSystemIcons-Resizable.json</FluentIconMappingFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,16 +14,20 @@
     </ItemGroup>
 
     <ItemGroup>
+        <CompilerVisibleProperty Include="FluentIconMappingFile"/>
+        <AdditionalFiles Include="$(MSBuildProjectDirectory)\$(FluentIconMappingFile)"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AsyncImageLoader.Avalonia" />
         <PackageReference Include="Avalonia"/>
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="Avalonia.Diagnostics">
+        <!--Condition below is needed to remove Zeronia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="Zeronia.Diagnostics">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="DotNetCommon.PinYin" />
         <PackageReference Include="FluentAvaloniaUI" />
-        <PackageReference Include="Irihi.Ursa" />
         <PackageReference Include="Microsoft.Extensions.Hosting" />
         <PackageReference Include="MiniExcel" />
         <PackageReference Include="Xaml.Behaviors" />
@@ -30,6 +36,8 @@
     
     <ItemGroup>
         <ProjectReference Include="..\Wanderer.Shared\Wanderer.Shared.csproj" />
+        <ProjectReference Include="..\roslyn\IconsMappingGenerator\IconsMappingGenerator.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>

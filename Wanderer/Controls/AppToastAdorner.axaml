@@ -50,7 +50,7 @@
                                 <Setter Property="RenderTransform" Value="translateY(0px)"/>
                             </Style>
                             
-                            <Style Selector="fa|InfoBar[Severity=Informational]">
+                            <Style Selector="fa|FAInfoBar[Severity=Informational]">
                                 <Setter Property="Background" Value="{DynamicResource SystemFillColorSolidNeutralBackgroundBrush}"/>
                             </Style>
                         </Border.Styles>
@@ -64,7 +64,7 @@
                             </DataTriggerBehavior>
                         </Interaction.Behaviors>
                         
-                        <fa:InfoBar Severity="{Binding Severity}"
+                        <fa:FAInfoBar Severity="{Binding Severity}"
                                     Title="{Binding Title}"
                                     Message="{Binding Message}"
                                     ActionButton="{Binding ActionContent}"

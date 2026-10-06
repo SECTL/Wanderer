@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -44,6 +43,11 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+
+#if DEBUG
+        // 附加开发者工具
+        this.AttachDevTools();
+#endif
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -55,13 +59,17 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
-            DisableAvaloniaDataAnnotationValidation();
-
             Lifetime = desktop;
             IsDesktop = true;
             desktop.Startup += DesktopOnLifetimeStartup;
+        }
+        else if (ApplicationLifetime is IActivityApplicationLifetime activityLifetime)
+        {
+            // Android 在应用生命周期内可能创建多个 Activity，因此使用工厂而不是单个 MainView。
+            IsDesktop = false;
+            InitializeHost();
+
+            activityLifetime.MainViewFactory = IAppHost.GetService<MainView>;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -76,19 +84,6 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
-    }
-
-    private void DisableAvaloniaDataAnnotationValidation()
-    {
-        // Get an array of plugins to remove
-        var dataValidationPluginsToRemove =
-            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
-
-        // remove each entry found
-        foreach (var plugin in dataValidationPluginsToRemove)
-        {
-            BindingPlugins.DataValidators.Remove(plugin);
-        }
     }
 
     private async void DesktopOnLifetimeStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
@@ -109,18 +104,18 @@ public partial class App : Application
     {
         CreatePhonyRootWindow();
 
-        var dialog = new TaskDialog
+        var dialog = new FATaskDialog
         {
             Title = "Wanderer 已在运行",
             Content = "Wanderer 已经启动，请通过任务栏托盘图标进行设置等操作。",
             XamlRoot = GetRootWindow(),
             Buttons =
             [
-                new TaskDialogButton("取消", false)
+                new FATaskDialogButton("取消", false)
             ],
             Commands =
             [
-                new TaskDialogCommand
+                new FATaskDialogCommand
                 {
                     DialogResult = true,
                     ClosesOnInvoked = true,
@@ -254,7 +249,7 @@ public partial class App : Application
             Height = 1,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
             ShowActivated = false,
-            SystemDecorations = SystemDecorations.None,
+            WindowDecorations = WindowDecorations.None,
             ShowInTaskbar = false,
             Background = Brushes.Transparent,
             TransparencyLevelHint = [ WindowTransparencyLevel.Transparent ],

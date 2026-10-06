@@ -198,7 +198,7 @@
                                     Foreground="{TemplateBinding Foreground}"
                                     Margin="{DynamicResource CalendarViewNavigationPreviousButtonMargin}"
                                     HorizontalContentAlignment="Center">
-                                <fa:FontIcon Glyph="&#xEDDB;"
+                                <fa:FAFontIcon Glyph="&#xEDDB;"
                                              FontFamily="{DynamicResource SymbolThemeFontFamily}" />
                             </Button>
                             <Button Name="PART_NextButton"
@@ -207,7 +207,7 @@
                                     Foreground="{TemplateBinding Foreground}"
                                     Margin="{DynamicResource CalendarViewNavigationNextButtonMargin}"
                                     HorizontalContentAlignment="Center">
-                                <fa:FontIcon Glyph="&#xEDDC;" FontFamily="{DynamicResource SymbolThemeFontFamily}" />
+                                <fa:FAFontIcon Glyph="&#xEDDC;" FontFamily="{DynamicResource SymbolThemeFontFamily}" />
                             </Button>
                         </Grid>
                         <!-- Changed to Background, using only BorderBrush w/ 1px element doesn't show -->

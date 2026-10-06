@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentAvalonia.UI.Controls;
 using Wanderer.Controls;
 
@@ -43,14 +43,14 @@ public class MainPageInfo : Attribute
         HidePageTitle = hidePageTitle;
     }
 
-    public NavigationViewItemBase ToNavigationViewItemBase()
+    public FANavigationViewItemBase ToNavigationViewItemBase()
     {
         if (IsSeparator)
         {
-            return new NavigationViewItemSeparator();
+            return new FANavigationViewItemSeparator();
         }
 
-        return new NavigationViewItem
+        return new FANavigationViewItem
         {
             IconSource = new FluentIconSource(IconGlyph),
             Content = Name,

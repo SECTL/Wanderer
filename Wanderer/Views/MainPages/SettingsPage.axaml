@@ -12,9 +12,9 @@
              d:DataContext="{d:DesignInstance local:SettingsPage}">
     <ScrollViewer DataContext="{Binding MainConfigHandler.Data}">
         <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
-            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xF19C;}"
+            <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xF19C;}"
                                  Header="考勤状态修改样式" Description="该选项会影响您在修改考勤状态时，考勤状态显示的样式。">
-                <fa:SettingsExpander.Footer>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox SelectedIndex="{Binding StatusChangerShowMode}">
                         <ComboBoxItem>
                             <controls:IconText Glyph="&#xE047;" Text="横向列表" />
@@ -23,20 +23,20 @@
                             <controls:IconText Glyph="&#xF325;" Text="多选下拉框" />
                         </ComboBoxItem>
                     </ComboBox>
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
             
-            <fa:SettingsExpander IconSource="{controls:FluentIconSource &#xE520;}"
+            <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xE520;}"
                                  Header="背景材质" Description="该选项会影响主窗口的背景材质。亚克力需要 Windows 10 1903 及以上版本，云母需要 Windows 11。"
                                  IsVisible="{x:Static wanderer:App.IsWindows}">
-                <fa:SettingsExpander.Footer>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox SelectedIndex="{Binding BackgroundEffect}">
                         <ComboBoxItem>无材质</ComboBoxItem>
                         <ComboBoxItem>云母</ComboBoxItem>
                         <ComboBoxItem>亚克力</ComboBoxItem>
                     </ComboBox>
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

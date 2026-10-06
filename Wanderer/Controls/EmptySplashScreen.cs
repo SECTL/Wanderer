@@ -8,7 +8,7 @@ using FluentAvalonia.UI.Windowing;
 
 namespace Wanderer.Controls;
 
-public class EmptySplashScreen : IApplicationSplashScreen
+public class EmptySplashScreen : IFAApplicationSplashScreen
 {
     public async Task RunTasks(CancellationToken cancellationToken) { }
 

@@ -54,7 +54,7 @@ public partial class ProfilePage : UserControl
     private async void ButtonCreateProfile_OnClick(object? sender, RoutedEventArgs e)
     {
         var textBox = new TextBox();
-        var r = await new ContentDialog
+        var r = await new FAContentDialog
         {
             Title = "新建档案",
             Content = new Field
@@ -63,12 +63,12 @@ public partial class ProfilePage : UserControl
                 Label = "档案名称",
                 Suffix = ".json"
             },
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = FAContentDialogButton.Primary,
             PrimaryButtonText = "新建",
             SecondaryButtonText = "取消"
         }.ShowAsync();
         
-        if (r != ContentDialogResult.Primary)
+        if (r != FAContentDialogResult.Primary)
         {
             return;
         }
@@ -100,7 +100,7 @@ public partial class ProfilePage : UserControl
         {
             Text = ViewModel.SelectedProfile
         };
-        var r = await new ContentDialog
+        var r = await new FAContentDialog
         {
             Title = "重命名档案",
             Content = new Field
@@ -109,7 +109,7 @@ public partial class ProfilePage : UserControl
                 Label = "档案名称",
                 Suffix = ".json"
             },
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = FAContentDialogButton.Primary,
             PrimaryButtonText = "重命名",
             SecondaryButtonText = "取消"
         }.ShowAsync();
@@ -118,7 +118,7 @@ public partial class ProfilePage : UserControl
         var after = textBox.Text ?? "EMPTY";
         
         var config = ConfigService.LoadConfig(new ProfileConfigModel(before));
-        if (r != ContentDialogResult.Primary || !ConfigService.IsConfigExists(config))
+        if (r != FAContentDialogResult.Primary || !ConfigService.IsConfigExists(config))
         {
             return;
         }
@@ -128,7 +128,7 @@ public partial class ProfilePage : UserControl
             this.ShowToast(new ToastMessage
             {
                 Message = "无法重命名档案，因为已存在一个相同名称的档案。",
-                Severity = InfoBarSeverity.Warning
+                Severity = FAInfoBarSeverity.Warning
             });
             return;
         }
@@ -167,21 +167,21 @@ public partial class ProfilePage : UserControl
         {
             this.ShowToast(new ToastMessage("无法删除已加载的档案。")
             {
-                Severity = InfoBarSeverity.Warning
+                Severity = FAInfoBarSeverity.Warning
             });
             return;
         }
 
-        var r = await new ContentDialog
+        var r = await new FAContentDialog
         {
             Title = "删除档案",
             Content = $"您确定要删除档案 {ViewModel.SelectedProfile} 吗？此操作无法撤销，档案内的信息都将被删除！",
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = FAContentDialogButton.Primary,
             PrimaryButtonText = "删除",
             SecondaryButtonText = "取消"
         }.ShowAsync();
 
-        if (r == ContentDialogResult.Primary)
+        if (r == FAContentDialogResult.Primary)
         {
             ConfigService.DeleteConfig(new ProfileConfigModel(ViewModel.SelectedProfile));
         }
@@ -198,16 +198,16 @@ public partial class ProfilePage : UserControl
 
     private async void ButtonSwitchProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        var r = await new ContentDialog
+        var r = await new FAContentDialog
         {
             Title = "切换档案",
             Content = $"您确定要切换到档案 {ViewModel.SelectedProfile} 吗？可能会未保存的信息！",
-            DefaultButton = ContentDialogButton.Secondary,
+            DefaultButton = FAContentDialogButton.Secondary,
             PrimaryButtonText = "确定",
             SecondaryButtonText = "取消"
         }.ShowAsync();
 
-        if (r == ContentDialogResult.Secondary)
+        if (r == FAContentDialogResult.Secondary)
         {
             return;
         }
@@ -301,23 +301,23 @@ public partial class ProfilePage : UserControl
         if (this.FindResource("ImportSheetDataControl") is not ContentControl cc) return;
         cc.DataContext = this;
         
-        if (cc.Parent is ContentDialog contentDialog)
+        if (cc.Parent is FAContentDialog contentDialog)
         {
             contentDialog.Content = null;
         }
         
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Content = cc,
             TitleTemplate = new DataTemplate(),
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = FAContentDialogButton.Primary,
             PrimaryButtonText = "确定",
             SecondaryButtonText = "取消",
             DataContext = this
         };
         var result = await dialog.ShowAsync();
 
-        if (result != ContentDialogResult.Primary) return;
+        if (result != FAContentDialogResult.Primary) return;
         
         foreach (var person in ViewModel.ImportedPersons)
         {
