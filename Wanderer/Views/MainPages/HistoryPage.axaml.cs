@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Wanderer.Abstraction;
 using Wanderer.Attributes;
+using Wanderer.Helpers.UI;
 using Wanderer.ViewModels.MainPages;
 
 namespace Wanderer.Views.MainPages;
@@ -35,7 +36,20 @@ public partial class HistoryPage : UserControl
 
     private void ButtonRefresh_OnClick(object? sender, RoutedEventArgs e)
     {
-        MainView.Current?.SelectNavigationItemById("history");
+        // 只重新读取当前选择日期的记录，不重建页面。
+        DayViewer.RefreshData();
+
+        var date = ViewModel.PickerDate?.Date;
+        if (date is { } picked)
+        {
+            Calendar.RefreshDate(picked);
+        }
+        else
+        {
+            Calendar.RefreshData();
+        }
+
+        this.ShowSuccessToast("已刷新。");
     }
 
     private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)

@@ -14,6 +14,7 @@ using Wanderer.Abstraction;
 using Wanderer.Attributes;
 using Wanderer.Extensions;
 using Wanderer.Helpers.UI;
+using Wanderer.Models;
 using Wanderer.Models.Ranking;
 using Wanderer.Shared.Enums;
 using Wanderer.Shared.Models.Profile;
@@ -58,7 +59,7 @@ public partial class RankingPage : UserControl
 
         var text = ranking.Items
                           .Aggregate(
-                              $"{ranking.Status.Name}：{ranking.Items.Count} 人上榜",
+                              $"{ranking.Title}：{ranking.Items.Count} 人上榜",
                               (current, item) => current + $"\n{item.Person.Name} {item.Count} 次");
 
         topLevel.Clipboard.SetTextAsync(text).Wait();
@@ -97,6 +98,7 @@ public partial class RankingPage : UserControl
         dt.Columns.AddRange(configData.Profile.Statuses
                                       .Select(kvp => new DataColumn(kvp.Value.Name, typeof(int)))
                                       .ToArray());
+        dt.Columns.Add(new DataColumn(StatusAndCount.NoStatusTitle, typeof(int)));
 
         foreach (var person in ViewModel.PersonWithStatusCountsList)
         {
@@ -119,6 +121,8 @@ public partial class RankingPage : UserControl
             {
                 row[status.Value.Name] = person.StatusCounts[index];
             }
+
+            row[StatusAndCount.NoStatusTitle] = person.NoStatusCount;
 
             dt.Rows.Add(row);
         }

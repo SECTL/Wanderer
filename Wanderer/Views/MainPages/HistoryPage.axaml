@@ -40,7 +40,8 @@
                   SelectedIndex="{Binding ViewModel.SelectedPage}">
             <!-- 日历视图 -->
             <ScrollViewer>
-                <controls:AttendanceCalendarControl SelectedDate="{Binding ViewModel.PickerDate, Mode=TwoWay}" />
+                <controls:AttendanceCalendarControl x:Name="Calendar"
+                                                    SelectedDate="{Binding ViewModel.PickerDate, Mode=TwoWay}" />
             </ScrollViewer>
 
             <!-- 详细看板 -->
@@ -59,7 +60,7 @@
                 <Carousel Grid.Row="1" Classes="animated" SelectedIndex="{Binding ViewModel.SelectedSubPage}">
                     <!-- 整体数据 -->
                     <ScrollViewer>
-                        <controls:OneDayAttendanceViewer Margin="8" MaxWidth="960"
+                        <controls:OneDayAttendanceViewer x:Name="DayViewer" Margin="8" MaxWidth="960"
                                                          Date="{Binding ViewModel.SelectedDate}" />
                     </ScrollViewer>
 

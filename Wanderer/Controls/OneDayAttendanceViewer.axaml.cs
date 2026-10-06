@@ -65,10 +65,10 @@ public partial class OneDayAttendanceViewer : UserControl
 
         // 读取当天的状态；记录缺失、缺少某个人员或存储值为 null 时按默认状态处理。
         var attendanceStatus = config.Statuses.GetValueOrDefault(date);
+        var defaultStatus = ProfileConfigHandler.CreateDefaultStatus(config.Profile);
         var personStatuses = config.Profile.Persons.ToDictionary(
             person => person.Key,
-            person => attendanceStatus?.Persons.GetValueOrDefault(person.Key)
-                       ?? ProfileConfigHandler.CreateDefaultStatus(config.Profile));
+            person => attendanceStatus?.Persons.GetValueOrDefault(person.Key) ?? defaultStatus);
 
         // 统计数据
         Data.AddRange(config.Profile.Statuses
@@ -80,6 +80,25 @@ public partial class OneDayAttendanceViewer : UserControl
                                                         .Select(p => config.Profile.Persons[p.Key])
                                                         .ToList()
                             }));
+
+        // "无状态"：当天已有考勤记录，但该人员一个状态都没有。
+        // 当天没有记录时所有人按默认状态处理，因此不产生"无状态"分组。
+        if (attendanceStatus is null) return;
+
+        var noStatusPersons = config.Profile.Persons
+                                    .Where(person => personStatuses.TryGetValue(person.Key, out var status) &&
+                                                     status.Statuses.Count == 0)
+                                    .Select(person => person.Value)
+                                    .ToList();
+
+        if (noStatusPersons.Count == 0) return;
+
+        Data.Add(new StatusAndCount
+        {
+            Status = StatusAndCount.NoStatus,
+            Count = noStatusPersons.Count,
+            Persons = noStatusPersons
+        });
     }
 
     [RelayCommand]
@@ -90,7 +109,7 @@ public partial class OneDayAttendanceViewer : UserControl
 
         var text = statusAndCount.Persons
                                  .Aggregate(
-                                     $"{statusAndCount.Status.Name}：{statusAndCount.Count} 人",
+                                     $"{statusAndCount.Title}：{statusAndCount.Count} 人",
                                      (current, person) => current + $"\n{person.Name}");
 
         topLevel.Clipboard.SetTextAsync(text).Wait();

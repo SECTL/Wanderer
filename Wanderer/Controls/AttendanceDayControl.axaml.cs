@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -76,10 +76,10 @@ public partial class AttendanceDayControl : UserControl
 
         // 读取当天的状态；记录缺失、缺少某个人员或存储值为 null 时按默认状态处理。
         var attendanceStatus = config.Statuses.GetValueOrDefault(date);
+        var defaultStatus = ProfileConfigHandler.CreateDefaultStatus(config.Profile);
         var personStatuses = config.Profile.Persons.ToDictionary(
             person => person.Key,
-            person => attendanceStatus?.Persons.GetValueOrDefault(person.Key)
-                       ?? ProfileConfigHandler.CreateDefaultStatus(config.Profile));
+            person => attendanceStatus?.Persons.GetValueOrDefault(person.Key) ?? defaultStatus);
 
         // 统计数据
         Data.AddRange(config.Profile.Statuses
@@ -90,10 +90,32 @@ public partial class AttendanceDayControl : UserControl
                                 Persons = [] // 当前控件无需显示详细人员
                             }));
 
+        // 当天有考勤记录时，补充"无状态"（一个状态都没有的人员）
+        if (attendanceStatus is not null)
+        {
+            var noStatusCount = personStatuses.Count(p => p.Value.Statuses.Count == 0);
+            if (noStatusCount > 0)
+            {
+                Data.Add(new StatusAndCount
+                {
+                    Status = StatusAndCount.NoStatus,
+                    Count = noStatusCount,
+                    Persons = []
+                });
+            }
+        }
+
         // 简略文本
         if (attendanceStatus is null)
         {
             SimpleText = "无记录";
+            return;
+        }
+
+        // 只有"无状态"一种情况时优先显示
+        if (Data.Count == 1 && Data[0].Status == StatusAndCount.NoStatus)
+        {
+            SimpleText = $"{StatusAndCount.NoStatusTitle} {Data[0].Count} 人";
             return;
         }
 
