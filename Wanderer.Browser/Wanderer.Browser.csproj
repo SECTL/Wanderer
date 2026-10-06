@@ -4,6 +4,14 @@
         <OutputType>Exe</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
+        <!-- browser-wasm SDK 默认关闭反射版 System.Text.Json
+             (JsonSerializerIsReflectionEnabledByDefault=false)，而 Wanderer 的
+             配置服务 (ConfigServiceBase/BrowserConfigService)、Utils 与 AttendanceEditor
+             仍使用 JsonSerializer 的反射序列化，因此这里显式打开，否则运行会抛
+             JsonSerializerIsReflectionDisabled。
+             注意：浏览器头默认 PublishTrimmed=true / TrimMode=full，若要 publish 裁剪版，
+             更稳妥的做法是为配置模型补 JsonSerializerContext（源生成）。 -->
+        <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     </PropertyGroup>
 
     <ItemGroup>
