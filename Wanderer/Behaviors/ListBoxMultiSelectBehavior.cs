@@ -14,19 +14,24 @@ public class ListBoxMultiSelectBehavior
 
     static ListBoxMultiSelectBehavior()
     {
-        EnableClickToggleProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<bool>>(OnEnableClickToggleChanged));
+        EnableClickToggleProperty.Changed.Subscribe(
+            new AnonymousObserver<AvaloniaPropertyChangedEventArgs<bool>>(OnEnableClickToggleChanged));
     }
 
     public static void SetEnableClickToggle(ListBox element, bool value)
-        => element.SetValue(EnableClickToggleProperty, value);
+    {
+        element.SetValue(EnableClickToggleProperty, value);
+    }
 
     public static bool GetEnableClickToggle(ListBox element)
-        => element.GetValue(EnableClickToggleProperty);
+    {
+        return element.GetValue(EnableClickToggleProperty);
+    }
 
     private static void OnEnableClickToggleChanged(AvaloniaPropertyChangedEventArgs<bool> e)
     {
         if (e.Sender is not ListBox listBox) return;
-        
+
         if (e.NewValue.Value)
         {
             listBox.AddHandler(InputElement.PointerPressedEvent, OnListBoxPointerPressed, RoutingStrategies.Tunnel);
@@ -40,10 +45,10 @@ public class ListBoxMultiSelectBehavior
     private static void OnListBoxPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (sender is not ListBox listBox || listBox.SelectionMode == SelectionMode.Single) return;
-        
+
         var clickedItem = (e.Source as Visual)?.FindAncestorOfType<ListBoxItem>();
         if (clickedItem == null) return;
-        
+
         clickedItem.IsSelected = !clickedItem.IsSelected;
         e.Handled = true;
     }

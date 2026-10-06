@@ -4,11 +4,14 @@ namespace Wanderer.Shared.Models.Profile;
 
 public partial class Status : ObservableRecipient
 {
-    [ObservableProperty] private string _name = string.Empty;
-    [ObservableProperty] private bool _isDefault = false;
+    [ObservableProperty]
+    private bool _isDefault;
 
-    public Status() {}
-    
+    [ObservableProperty]
+    private string _name = string.Empty;
+
+    public Status() { }
+
     public Status(string name, bool isDefault = false)
     {
         Name = name;

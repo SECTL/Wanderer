@@ -9,13 +9,17 @@ namespace Wanderer.Services.Logging;
 
 public class ClassIslandConsoleFormatter() : ConsoleFormatter("classisland")
 {
-    public override void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider? scopeProvider, TextWriter textWriter)
+    public override void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider? scopeProvider,
+                                       TextWriter textWriter)
     {
         var separator = " | ".Pastel(ConsoleColor.Gray);
         var scopeSeparator = " => ".Pastel(ConsoleColor.Gray);
         var now = DateTimeOffset.Now.ToString("yyyy/MM/dd HH:mm:ss").Pastel(ConsoleColor.DarkGray);
-        var message = logEntry.Formatter(logEntry.State, logEntry.Exception) + (logEntry.Exception != null ? Environment.NewLine+ logEntry.Exception.ToString().Pastel("#cccccc") : "");
-        
+        var message = logEntry.Formatter(logEntry.State, logEntry.Exception) +
+                      (logEntry.Exception != null
+                           ? Environment.NewLine + logEntry.Exception.ToString().Pastel("#cccccc")
+                           : "");
+
         textWriter.Write(now);
         textWriter.Write(separator);
         textWriter.Write(GetLogLevelString(logEntry.LogLevel));
@@ -35,13 +39,13 @@ public class ClassIslandConsoleFormatter() : ConsoleFormatter("classisland")
     {
         return logLevel switch
         {
-            LogLevel.Trace => "trce".Pastel(ConsoleColor.Gray),
-            LogLevel.Debug => "dbug".Pastel(ConsoleColor.DarkGray),
+            LogLevel.Trace       => "trce".Pastel(ConsoleColor.Gray),
+            LogLevel.Debug       => "dbug".Pastel(ConsoleColor.DarkGray),
             LogLevel.Information => "info".Pastel(ConsoleColor.Green),
-            LogLevel.Warning => "warn".Pastel(ConsoleColor.Yellow),
-            LogLevel.Error => "fail".Pastel(ConsoleColor.White).PastelBg(ConsoleColor.DarkRed),
-            LogLevel.Critical => "crit".Pastel(ConsoleColor.Black).PastelBg(ConsoleColor.Red),
-            _ => throw new ArgumentOutOfRangeException(nameof(logLevel))
+            LogLevel.Warning     => "warn".Pastel(ConsoleColor.Yellow),
+            LogLevel.Error       => "fail".Pastel(ConsoleColor.White).PastelBg(ConsoleColor.DarkRed),
+            LogLevel.Critical    => "crit".Pastel(ConsoleColor.Black).PastelBg(ConsoleColor.Red),
+            _                    => throw new ArgumentOutOfRangeException(nameof(logLevel))
         };
     }
 }

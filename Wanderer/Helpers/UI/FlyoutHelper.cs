@@ -7,12 +7,12 @@ using Avalonia.VisualTree;
 namespace Wanderer.Helpers.UI;
 
 /// <summary>
-/// <see cref="Flyout"/> 扩展操作静态类
+///     <see cref="Flyout" /> 扩展操作静态类
 /// </summary>
 public static class FlyoutHelper
 {
     /// <summary>
-    /// 关闭父级上最近的 <see cref="Flyout"/>。
+    ///     关闭父级上最近的 <see cref="Flyout" />。
     /// </summary>
     /// <param name="control">目标控件</param>
     public static void CloseAncestorFlyout(object? o)
@@ -21,11 +21,11 @@ public static class FlyoutHelper
         {
             return;
         }
-        
+
         var presenter = visual
-            .GetVisualAncestors()
-            .OfType<FlyoutPresenter>()
-            .FirstOrDefault();
+                        .GetVisualAncestors()
+                        .OfType<FlyoutPresenter>()
+                        .FirstOrDefault();
         if (presenter?.Parent is Popup flyout)
         {
             flyout.IsOpen = false;

@@ -23,7 +23,7 @@ public class BrowserConfigService(ILogger<BrowserConfigService> logger) : Config
     {
         var filePath = fallback.ConfigFilePath;
         Logger.LogInformation("从 {PATH} 加载配置...", filePath);
-        
+
         var json = BrowserLocalStorage.GetItem(filePath);
         if (json == null)
         {
@@ -31,7 +31,7 @@ public class BrowserConfigService(ILogger<BrowserConfigService> logger) : Config
             SaveConfig(fallback);
             return fallback;
         }
-        
+
         try
         {
             return JsonSerializer.Deserialize<T>(json, JsonOptions) ?? fallback;
@@ -48,7 +48,7 @@ public class BrowserConfigService(ILogger<BrowserConfigService> logger) : Config
     {
         var filePath = config.ConfigFilePath;
         Logger.LogInformation("往 {PATH} 保存配置...", filePath);
-        
+
         var json = JsonSerializer.Serialize(config, JsonOptions);
         BrowserLocalStorage.SetItem(filePath, json);
     }
@@ -57,7 +57,7 @@ public class BrowserConfigService(ILogger<BrowserConfigService> logger) : Config
     {
         var filePath = config.ConfigFilePath;
         Logger.LogInformation("在 {PATH} 删除配置...", filePath);
-        
+
         if (BrowserLocalStorage.GetItem(filePath) == null) return;
         BrowserLocalStorage.RemoveItem(filePath);
     }

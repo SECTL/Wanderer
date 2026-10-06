@@ -13,7 +13,7 @@
                 <StackPanel Orientation="Vertical" Spacing="8" />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
-    
+
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Expander Classes="stretch-header">
@@ -24,7 +24,7 @@
                                 <Run Text="{Binding Count}" />
                                 人
                             </TextBlock>
-                            
+
                             <Button Grid.Column="1"
                                     Width="32" Height="32"
                                     Command="{Binding #RootControl.CopyStatusAndCountCommand}"
@@ -35,14 +35,14 @@
                             </Button>
                         </Grid>
                     </Expander.Header>
-                                
+
                     <ItemsControl ItemsSource="{Binding Persons}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" ItemSpacing="4" LineSpacing="2" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                                    
+
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}" />

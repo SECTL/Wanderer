@@ -11,8 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Wanderer\Wanderer.csproj" />
+        <ProjectReference Include="..\Wanderer\Wanderer.csproj"/>
     </ItemGroup>
 
-    <Import Project="..\Global.props" />
+    <Import Project="..\Global.props"/>
 </Project>

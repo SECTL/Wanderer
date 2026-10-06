@@ -6,5 +6,6 @@ namespace Wanderer.Shared.Models.Profile;
 
 public partial class AttendanceStatus : ObservableRecipient
 {
-    [ObservableProperty] private ObservableCollection<Guid> _statuses = [];
+    [ObservableProperty]
+    private ObservableCollection<Guid> _statuses = [];
 }

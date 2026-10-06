@@ -30,9 +30,11 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/3a9ac880c2011340e24619835c042b2a0ef73e28.svg "Repobeats analytics image")
 
-您可以参考 [DeepWiki](https://deepwiki.com/SECTL/Wanderer) 来了解项目结构。 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/SECTL/Wanderer)
+您可以参考 [DeepWiki](https://deepwiki.com/SECTL/Wanderer)
+来了解项目结构。 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/SECTL/Wanderer)
 
 ## 开放源代码许可协议
+
 ```
 Wanderer
 Copyright (C) 2026 lrs2187/lrsgzs

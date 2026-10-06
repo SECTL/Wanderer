@@ -13,8 +13,10 @@ public class EmptySplashScreen : IFAApplicationSplashScreen
     public async Task RunTasks(CancellationToken cancellationToken) { }
 
     public string AppName { get; } = "Wanderer";
+
     public IImage AppIcon { get; } =
         new Bitmap(AssetLoader.Open(new Uri("avares://Wanderer/Assets/AppLogo.png")));
+
     public object? SplashScreenContent { get; } = null;
     public int MinimumShowTime { get; } = 1000;
 }

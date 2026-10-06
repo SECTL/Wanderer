@@ -14,8 +14,8 @@ public static class PersonExtensions
         return person.Name.Contains(query, ignoreCase)
                || person.Id.Contains(query, ignoreCase)
                || PinyinHelper.GetFullPinyinList(person.Name)
-                   .Any(pinyin => pinyin.StartsWith(query, ignoreCase))
+                              .Any(pinyin => pinyin.StartsWith(query, ignoreCase))
                || PinyinHelper.GetFirstPinyinList(person.Name)
-                   .Any(pinyin => pinyin.StartsWith(query, ignoreCase));
+                              .Any(pinyin => pinyin.StartsWith(query, ignoreCase));
     }
 }

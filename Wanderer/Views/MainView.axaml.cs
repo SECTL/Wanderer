@@ -25,31 +25,47 @@ namespace Wanderer.Views;
 
 public partial class MainView : UserControl, IFANavigationPageFactory
 {
-    public static MainView? Current { get; private set; }
-    
-    public MainViewModel ViewModel { get; } = IAppHost.GetService<MainViewModel>();
-    private ILogger<MainView> Logger { get; } = IAppHost.GetService<ILogger<MainView>>();
     private const string DefaultMainPageId = "home";
-    
+
     private AppToastAdorner? _appToastAdorner;
     private bool _isAdornerAdded;
-    
+
     public MainView()
     {
         Current = this;
         DataContext = this;
         InitializeComponent();
-        
+
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
 
         NavigationFrame.NavigationPageFactory = this;
         BuildNavigationMenuItems();
-        
+
         TextOptions.SetTextRenderingMode(this, TextRenderingMode.Antialias);
         RenderOptions.SetBitmapInterpolationMode(this, BitmapInterpolationMode.HighQuality);
         RenderOptions.SetEdgeMode(this, EdgeMode.Antialias);
     }
-    
+
+    public static MainView? Current { get; private set; }
+
+    public MainViewModel ViewModel { get; } = IAppHost.GetService<MainViewModel>();
+    private ILogger<MainView> Logger { get; } = IAppHost.GetService<ILogger<MainView>>();
+
+    public Control? GetPage(Type srcType)
+    {
+        return Activator.CreateInstance(srcType) as Control;
+    }
+
+    public Control? GetPageFromObject(object target)
+    {
+        if (target is not MainPageInfo info)
+        {
+            return null;
+        }
+
+        return IAppHost.Host!.Services.GetKeyedService<UserControl>(info.Id);
+    }
+
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ViewModel.IsPinned))
@@ -58,7 +74,7 @@ public partial class MainView : UserControl, IFANavigationPageFactory
             {
                 return;
             }
-        
+
             Logger.LogInformation("修改置顶状态为 {IS_PINNED}", ViewModel.IsPinned);
             App.MainWindow?.Topmost = ViewModel.IsPinned;
         }
@@ -71,30 +87,30 @@ public partial class MainView : UserControl, IFANavigationPageFactory
             insetsManager.IsSystemBarVisible = true;
             UpdateSystemBarColor();
         }
-        
+
         SelectNavigationItemById(DefaultMainPageId);
-        
+
         if (Content is not Control element || _isAdornerAdded)
         {
             return;
         }
 
         var layer = AdornerLayer.GetAdornerLayer(element);
-        
+
         var appToastAdorner = _appToastAdorner = new AppToastAdorner(this);
         layer?.Children.Add(appToastAdorner);
         AdornerLayer.SetAdornedElement(appToastAdorner, this);
-        
+
         if (GlobalConstants.IsDevelopment)
         {
             var adorner = new DevelopmentBuildAdorner();
             layer?.Children.Add(adorner);
             AdornerLayer.SetAdornedElement(adorner, this);
         }
-        
+
         _isAdornerAdded = true;
     }
-    
+
     private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
         DataContext = null;
@@ -104,7 +120,7 @@ public partial class MainView : UserControl, IFANavigationPageFactory
     private void UpdateSystemBarColor()
     {
         if (!OperatingSystem.IsAndroid() || TopLevel.GetTopLevel(this)?.InsetsManager is not { } insetsManager) return;
-        
+
         if (this.TryFindResource("ApplicationPageBackgroundThemeBrush", ActualThemeVariant, out var pageBackgroundRes)
             && pageBackgroundRes is ISolidColorBrush pageBackgroundBrush)
         {
@@ -114,22 +130,26 @@ public partial class MainView : UserControl, IFANavigationPageFactory
         {
             insetsManager.SystemBarColor = backgroundBrush.Color;
         }
-        else if (this.TryFindResource("SolidBackgroundFillColorBase", ActualThemeVariant, out var res) && res is Color color)
+        else if (this.TryFindResource("SolidBackgroundFillColorBase", ActualThemeVariant, out var res) &&
+                 res is Color color)
         {
             insetsManager.SystemBarColor = color;
         }
         else
         {
             var appTheme = Application.Current?.RequestedThemeVariant ?? ThemeVariant.Default;
-            var platformThemeVariant = this.GetPlatformSettings()?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
+            var platformThemeVariant =
+                this.GetPlatformSettings()?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
             if (appTheme == ThemeVariant.Default)
             {
                 insetsManager.SystemBarColor = platformThemeVariant == PlatformThemeVariant.Dark
-                    ? Color.Parse("#000000") : Color.Parse("#FFFFFF");
+                                                   ? Color.Parse("#000000")
+                                                   : Color.Parse("#FFFFFF");
             }
             else
             {
-                insetsManager.SystemBarColor = appTheme == ThemeVariant.Dark ? Color.Parse("#000000") : Color.Parse("#FFFFFF");
+                insetsManager.SystemBarColor =
+                    appTheme == ThemeVariant.Dark ? Color.Parse("#000000") : Color.Parse("#FFFFFF");
             }
         }
     }
@@ -139,27 +159,27 @@ public partial class MainView : UserControl, IFANavigationPageFactory
         Logger.LogInformation("构建导航项目");
         ViewModel.NavigationViewItems.Clear();
         ViewModel.NavigationViewFooterItems.Clear();
-        
+
         ViewModel.NavigationViewItems
-            .AddRange(MainPagesRegistryService.Items
-                .Select(info => info.ToNavigationViewItemBase()));
-        
+                 .AddRange(MainPagesRegistryService.Items
+                                                   .Select(info => info.ToNavigationViewItemBase()));
+
         ViewModel.NavigationViewFooterItems
-            .AddRange(MainPagesRegistryService.FooterItems
-                .Select(info => info.ToNavigationViewItemBase()));
+                 .AddRange(MainPagesRegistryService.FooterItems
+                                                   .Select(info => info.ToNavigationViewItemBase()));
     }
 
     public void SelectNavigationItemById(string id)
     {
         var info = MainPagesRegistryService.Items.FirstOrDefault(info => info.Id == id) ??
                    MainPagesRegistryService.FooterItems.FirstOrDefault(info => info.Id == id);
-        
+
         if (info != null)
         {
             CoreNavigate(info);
         }
     }
-    
+
     private void SelectNavigationItem(MainPageInfo info)
     {
         var item = ViewModel.NavigationViewItems.FirstOrDefault(item => Equals(item.Tag, info)) ??
@@ -175,7 +195,7 @@ public partial class MainView : UserControl, IFANavigationPageFactory
         ViewModel.SelectedPageInfo = info;
         NavigationFrame.NavigateFromObject(info);
     }
-    
+
     private void NavigationView_OnItemInvoked(object? sender, FANavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItemContainer is FANavigationViewItem { Tag: MainPageInfo info })
@@ -187,20 +207,5 @@ public partial class MainView : UserControl, IFANavigationPageFactory
     private void TogglePaneButton_OnClick(object? sender, RoutedEventArgs e)
     {
         NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
-    }
-
-    public Control? GetPage(Type srcType)
-    {
-        return Activator.CreateInstance(srcType) as Control;
-    }
-
-    public Control? GetPageFromObject(object target)
-    {
-        if (target is not MainPageInfo info)
-        {
-            return null;
-        }
-        
-        return IAppHost.Host!.Services.GetKeyedService<UserControl>(info.Id);
     }
 }

@@ -18,6 +18,7 @@
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
         <converters:GuidToTagNameConverter x:Key="GuidToTagNameConverter" />
         
+        <!-- ReSharper disable once Xaml.RedundantResource -->
         <ScrollViewer x:Key="ImportSheetDataControl" x:Shared="False">
             <StackPanel Orientation="Vertical" Spacing="4" Classes="animated-intro">
                 <CheckBox IsChecked="{Binding ViewModel.HasSheetHeader}">包含表头</CheckBox>
@@ -105,7 +106,7 @@
             </StackPanel>
         </ScrollViewer>
     </UserControl.Resources>
-    
+
     <Grid RowDefinitions="Auto Auto *" RowSpacing="4" Classes="animated-intro">
         <Border Grid.Row="0"
                 Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
@@ -116,76 +117,76 @@
                     <fa:FACommandBar DefaultLabelPosition="Right">
                         <fa:FACommandBar.PrimaryCommands>
                             <fa:FACommandBarButton Click="ButtonCreateProfile_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE00D;}"
-                                                 Label="新建" />
-                            
+                                                   IconSource="{controls:FluentIconSource &#xE00D;}"
+                                                   Label="新建" />
+
                             <fa:FACommandBarSeparator />
-                            
+
                             <fa:FACommandBarButton Click="ButtonRefreshProfiles_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE0B5;}"
-                                                 Label="刷新" />
+                                                   IconSource="{controls:FluentIconSource &#xE0B5;}"
+                                                   Label="刷新" />
                         </fa:FACommandBar.PrimaryCommands>
                     </fa:FACommandBar>
-                    
+
                     <!-- 人员编辑 -->
                     <fa:FACommandBar DefaultLabelPosition="Right">
                         <fa:FACommandBar.PrimaryCommands>
                             <fa:FACommandBarButton Click="ButtonAddPerson_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE00D;}"
-                                                 Label="添加" />
+                                                   IconSource="{controls:FluentIconSource &#xE00D;}"
+                                                   Label="添加" />
 
                             <fa:FACommandBarButton Click="ButtonRemovePerson_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE61D;}"
-                                                 Label="删除"
-                                                 IsEnabled="{Binding ViewModel.SelectedPerson, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                                   IconSource="{controls:FluentIconSource &#xE61D;}"
+                                                   Label="删除"
+                                                   IsEnabled="{Binding ViewModel.SelectedPerson, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
                             <fa:FACommandBarSeparator />
 
                             <fa:FACommandBarButton Click="ButtonImportPersons_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xEFDD;}"
-                                                 Label="导入" />
+                                                   IconSource="{controls:FluentIconSource &#xEFDD;}"
+                                                   Label="导入" />
                         </fa:FACommandBar.PrimaryCommands>
                     </fa:FACommandBar>
-                    
+
                     <!-- 状态编辑 -->
                     <fa:FACommandBar DefaultLabelPosition="Right">
                         <fa:FACommandBar.PrimaryCommands>
                             <fa:FACommandBarButton Click="ButtonAddStatus_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE00D;}"
-                                                 Label="添加" />
+                                                   IconSource="{controls:FluentIconSource &#xE00D;}"
+                                                   Label="添加" />
 
                             <fa:FACommandBarButton Click="ButtonRemoveStatus_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE61D;}"
-                                                 Label="删除"
-                                                 IsEnabled="{Binding ViewModel.SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                                   IconSource="{controls:FluentIconSource &#xE61D;}"
+                                                   Label="删除"
+                                                   IsEnabled="{Binding ViewModel.SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </fa:FACommandBar.PrimaryCommands>
                     </fa:FACommandBar>
-                    
+
                     <!-- 标签编辑 -->
                     <fa:FACommandBar DefaultLabelPosition="Right">
                         <fa:FACommandBar.PrimaryCommands>
                             <fa:FACommandBarButton Click="ButtonAddTag_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE00D;}"
-                                                 Label="添加" />
+                                                   IconSource="{controls:FluentIconSource &#xE00D;}"
+                                                   Label="添加" />
 
                             <fa:FACommandBarButton Click="ButtonRemoveTag_OnClick"
-                                                 IconSource="{controls:FluentIconSource &#xE61D;}"
-                                                 Label="删除"
-                                                 IsEnabled="{Binding ViewModel.SelectedTag, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                                   IconSource="{controls:FluentIconSource &#xE61D;}"
+                                                   Label="删除"
+                                                   IsEnabled="{Binding ViewModel.SelectedTag, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </fa:FACommandBar.PrimaryCommands>
                     </fa:FACommandBar>
                 </Carousel>
-            
+
                 <fa:FACommandBar Grid.Column="1" DefaultLabelPosition="Right">
                     <fa:FACommandBar.PrimaryCommands>
                         <fa:FACommandBarButton Click="ButtonSave_OnClick"
-                                             IconSource="{controls:FluentIconSource &#xEEB5;}"
-                                             Label="保存" />
+                                               IconSource="{controls:FluentIconSource &#xEEB5;}"
+                                               Label="保存" />
                     </fa:FACommandBar.PrimaryCommands>
                 </fa:FACommandBar>
             </Grid>
         </Border>
-        
+
         <TabStrip Grid.Row="1"
                   HorizontalAlignment="Center"
                   Theme="{StaticResource TabStripStyle}"
@@ -193,20 +194,20 @@
             <TabStripItem>
                 <TextBlock FontSize="13" Text="切换档案" />
             </TabStripItem>
-            
+
             <TabStripItem>
                 <TextBlock FontSize="13" Text="人员编辑" />
             </TabStripItem>
-            
+
             <TabStripItem>
                 <TextBlock FontSize="13" Text="状态编辑" />
             </TabStripItem>
-            
+
             <TabStripItem>
                 <TextBlock FontSize="13" Text="标签编辑" />
             </TabStripItem>
         </TabStrip>
-        
+
         <Carousel Grid.Row="2" SelectedIndex="{Binding ViewModel.SelectedPage}" Classes="animated">
             <!-- 切换档案 -->
             <Grid RowDefinitions="* Auto" Margin="8">
@@ -218,15 +219,18 @@
                         <Style Selector="ListBoxItem">
                             <Setter Property="ContextFlyout">
                                 <MenuFlyout>
-                                    <MenuItem Icon="{controls:FluentIcon &#xEE7D;}" Header="重命名" Click="MenuItemRenameProfile_OnClick"/>
-                                    <MenuItem Icon="{controls:FluentIcon &#xE58B;}" Header="复制" Click="MenuItemProfileDuplicate_OnClick"/>
-                                    <MenuItem Icon="{controls:FluentIcon &#xE61D;}" Header="删除" Click="MenuItemDeleteProfile_OnClick"/>
+                                    <MenuItem Icon="{controls:FluentIcon &#xEE7D;}" Header="重命名"
+                                              Click="MenuItemRenameProfile_OnClick" />
+                                    <MenuItem Icon="{controls:FluentIcon &#xE58B;}" Header="复制"
+                                              Click="MenuItemProfileDuplicate_OnClick" />
+                                    <MenuItem Icon="{controls:FluentIcon &#xE61D;}" Header="删除"
+                                              Click="MenuItemDeleteProfile_OnClick" />
                                 </MenuFlyout>
                             </Setter>
                         </Style>
                     </ListBox.Styles>
                 </ListBox>
-                
+
                 <StackPanel Grid.Row="1"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal"
@@ -236,7 +240,7 @@
                             Click="ButtonCancelSwitchProfile_OnClick">
                         取消
                     </Button>
-                    
+
                     <Button Classes="accent"
                             x:Name="ButtonSwitchProfile"
                             IsEnabled="False"
@@ -245,7 +249,7 @@
                     </Button>
                 </StackPanel>
             </Grid>
-            
+
             <!-- 人员编辑 -->
             <DataGrid AutoGenerateColumns="False"
                       CanUserSortColumns="True"
@@ -257,7 +261,8 @@
                       SelectedItem="{Binding ViewModel.SelectedPerson, Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
-                                        Header="姓名" IsReadOnly="False" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
+                                        Header="姓名" IsReadOnly="False"
+                                        CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
 
                     <DataGridTextColumn Binding="{Binding Value.Id, Mode=TwoWay}"
                                         Header="编号" IsReadOnly="False" />
@@ -280,7 +285,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    
+
                     <DataGridTemplateColumn Header="标签" IsReadOnly="False" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -291,7 +296,7 @@
                                             <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
-                                    
+
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -300,7 +305,8 @@
                                                     CornerRadius="14"
                                                     Padding="8 0"
                                                     Background="{DynamicResource ControlFillColorTransparentBrush}">
-                                                <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
+                                                <TextBlock VerticalAlignment="Center"
+                                                           Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -310,18 +316,20 @@
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
                                 <controls:MultiComboBox HorizontalAlignment="Stretch"
-                                                 x:CompileBindings="False"
-                                                 ItemsSource="{Binding #RootControl.ProfileConfigHandler.Data.Profile.Tags.Keys}"
-                                                 SelectedItems="{Binding Value.Tags}">
+                                                        x:CompileBindings="False"
+                                                        ItemsSource="{Binding #RootControl.ProfileConfigHandler.Data.Profile.Tags.Keys}"
+                                                        SelectedItems="{Binding Value.Tags}">
                                     <controls:MultiComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="system:Guid">
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
                                         </DataTemplate>
                                     </controls:MultiComboBox.ItemTemplate>
-    
+
                                     <controls:MultiComboBox.SelectedItemTemplate>
                                         <DataTemplate x:DataType="system:Guid">
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
                                         </DataTemplate>
                                     </controls:MultiComboBox.SelectedItemTemplate>
                                 </controls:MultiComboBox>
@@ -330,7 +338,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            
+
             <!-- 状态编辑 -->
             <DataGrid AutoGenerateColumns="False"
                       CanUserSortColumns="True"
@@ -343,12 +351,13 @@
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding Value.IsDefault, Mode=TwoWay}"
                                             Header="默认存在?" IsReadOnly="False" />
-                    
+
                     <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
-                                        Header="名称" IsReadOnly="False" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
+                                        Header="名称" IsReadOnly="False"
+                                        CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
                 </DataGrid.Columns>
             </DataGrid>
-            
+
             <!-- 标签编辑 -->
             <DataGrid AutoGenerateColumns="False"
                       CanUserSortColumns="True"
@@ -360,7 +369,8 @@
                       SelectedItem="{Binding ViewModel.SelectedTag, Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
-                                        Header="名称" IsReadOnly="False" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
+                                        Header="名称" IsReadOnly="False"
+                                        CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Carousel>

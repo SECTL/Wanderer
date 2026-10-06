@@ -7,8 +7,8 @@
              x:Class="Wanderer.Controls.IconText">
     <StackPanel Orientation="Horizontal" Spacing="{Binding $parent[local:IconText].Spacing, Mode=OneWay}">
         <local:FluentIcon Glyph="{Binding $parent[local:IconText].Glyph, Mode=OneWay}"
-                       VerticalAlignment="Center"
-                       FontSize="16">
+                          VerticalAlignment="Center"
+                          FontSize="16">
             <local:FluentIcon.IsVisible>
                 <Binding Path="$parent[local:IconText].Glyph" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
             </local:FluentIcon.IsVisible>
@@ -17,6 +17,6 @@
                    VerticalAlignment="Center"
                    LineSpacing="0"
                    x:Name="TextElement"
-                   IsVisible="{Binding $parent[local:IconText].Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                   IsVisible="{Binding $parent[local:IconText].Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
     </StackPanel>
 </UserControl>

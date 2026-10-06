@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 
 namespace Wanderer;
 
-public static partial class Utils
+public static class Utils
 {
     public static string GetFilePath(params string[] strings)
     {
@@ -16,21 +17,21 @@ public static partial class Utils
         else if (OperatingSystem.IsAndroid())
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
+            var appName = Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
             basePath = Path.Combine([appData, appName]);
         }
         else
         {
-#if DEBUG
+        #if DEBUG
             basePath = Path.Combine([AppContext.BaseDirectory, "data"]);
-#else
+        #else
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
             basePath = Path.Combine([appData, appName]);
-#endif
+        #endif
         }
-        
-        var path = Path.Combine([basePath, ..strings]);
+
+        var path = Path.Combine([basePath, .. strings]);
 
         if (!OperatingSystem.IsBrowser())
         {
@@ -40,7 +41,7 @@ public static partial class Utils
                 Directory.CreateDirectory(directory);
             }
         }
-        
+
         return path;
     }
 

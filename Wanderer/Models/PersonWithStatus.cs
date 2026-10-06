@@ -11,15 +11,19 @@ namespace Wanderer.Models;
 
 public partial class PersonWithStatus : ObservableObject, IDisposable
 {
-    private ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
-    private OneDayAttendanceStatus _oneDayAttendanceStatus;
-    private AttendanceStatus _attendanceStatus;
-    
-    private bool _tmpStatusFlag = false;
-    
-    [ObservableProperty] private Guid _guid;
-    [ObservableProperty] private Person _person;
-    [ObservableProperty] private ObservableCollection<Guid> _statuses;
+    private readonly AttendanceStatus _attendanceStatus;
+    private readonly OneDayAttendanceStatus _oneDayAttendanceStatus;
+
+    [ObservableProperty]
+    private Guid _guid;
+
+    [ObservableProperty]
+    private Person _person;
+
+    [ObservableProperty]
+    private ObservableCollection<Guid> _statuses;
+
+    private bool _tmpStatusFlag;
 
     public PersonWithStatus(Guid guid, Person person, OneDayAttendanceStatus status)
     {
@@ -44,17 +48,19 @@ public partial class PersonWithStatus : ObservableObject, IDisposable
         Statuses.CollectionChanged += StatusesOnCollectionChanged;
     }
 
-    private void StatusesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (!_tmpStatusFlag) return;
-        
-        _oneDayAttendanceStatus.Persons[Guid] = _attendanceStatus;
-        _tmpStatusFlag = false;
-    }
+    private ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
 
     public void Dispose()
     {
         Statuses.CollectionChanged -= StatusesOnCollectionChanged;
         GC.SuppressFinalize(this);
+    }
+
+    private void StatusesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (!_tmpStatusFlag) return;
+
+        _oneDayAttendanceStatus.Persons[Guid] = _attendanceStatus;
+        _tmpStatusFlag = false;
     }
 }

@@ -13,21 +13,20 @@
     <ScrollViewer>
         <StackPanel Orientation="Vertical" Margin="12 12 18 12" Classes="animated-intro" Spacing="4">
             <fa:FASettingsExpander Header="Wanderer" Description="用于班级考勤负责人快速记录如请假、迟到、未参与午餐等异常情况。"
-                                 IsExpanded="True">
+                                   IsExpanded="True">
                 <fa:FASettingsExpander.IconSource>
-                    <fa:FAImageIconSource Source="/Assets/AppLogo.png"/>
+                    <fa:FAImageIconSource Source="/Assets/AppLogo.png" />
                 </fa:FASettingsExpander.IconSource>
-                
+
                 <fa:FASettingsExpander.Footer>
                     <TextBlock Text="{x:Static wa:GlobalConstants.DisplayVersion}"
                                FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </fa:FASettingsExpander.Footer>
-                
+
                 <fa:FASettingsExpanderItem Content="Copyright (c) 2026 lrs2187"
-                                         Description="本项目基于 GNU General Public License v3.0 获得许可。">
-                </fa:FASettingsExpanderItem>
+                                           Description="本项目基于 GNU General Public License v3.0 获得许可。" />
             </fa:FASettingsExpander>
-            
+
             <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xE971;}" Header="鸣谢">
                 <fa:FASettingsExpander.Styles>
                     <Style Selector="fa|FASettingsExpanderItem.link">
@@ -36,27 +35,28 @@
                         <Setter Property="Command" Value="{Binding OpenLinkCommand}" />
                     </Style>
                 </fa:FASettingsExpander.Styles>
-                
+
                 <fa:FASettingsExpanderItem Content="页面主题和部分控件使用了 FluentAvalonia 框架"
-                                         Classes="link" CommandParameter="https://github.com/amwx/FluentAvalonia">
+                                           Classes="link" CommandParameter="https://github.com/amwx/FluentAvalonia">
                     <fa:FASettingsExpanderItem.IconSource>
-                        <fa:FAImageIconSource Source="/Assets/Logos/FluentAvalonia.png"/>
+                        <fa:FAImageIconSource Source="/Assets/Logos/FluentAvalonia.png" />
                     </fa:FASettingsExpanderItem.IconSource>
                 </fa:FASettingsExpanderItem>
-                
+
                 <fa:FASettingsExpanderItem Content="应用字体使用了 HarmonyOS Sans" IsClickEnabled="True"
-                                         Classes="link" CommandParameter="https://developer.huawei.com/consumer/cn/design/resource-V1/">
+                                           Classes="link"
+                                           CommandParameter="https://developer.huawei.com/consumer/cn/design/resource-V1/">
                     <fa:FASettingsExpanderItem.IconSource>
-                        <fa:FAImageIconSource Source="/Assets/Logos/Huawei.png"/>
+                        <fa:FAImageIconSource Source="/Assets/Logos/Huawei.png" />
                     </fa:FASettingsExpanderItem.IconSource>
                 </fa:FASettingsExpanderItem>
-                
+
                 <fa:FASettingsExpanderItem Content="感谢其他第三方库" IconSource="{controls:FluentIconSource &#xE2EE;}" />
-                
+
                 <fa:FASettingsExpanderItem Content="感谢 SECTL 对软件开发的支持" IsClickEnabled="True"
-                                         Classes="link" CommandParameter="https://sectl.top/">
+                                           Classes="link" CommandParameter="https://sectl.top/">
                     <fa:FASettingsExpanderItem.IconSource>
-                        <fa:FAImageIconSource Source="/Assets/Logos/Sectl.png"/>
+                        <fa:FAImageIconSource Source="/Assets/Logos/Sectl.png" />
                     </fa:FASettingsExpanderItem.IconSource>
                 </fa:FASettingsExpanderItem>
             </fa:FASettingsExpander>

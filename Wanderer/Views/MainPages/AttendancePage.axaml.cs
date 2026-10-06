@@ -3,22 +3,22 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Wanderer.Abstraction;
 using Wanderer.Attributes;
-using Wanderer.ViewModels.MainPages;
 using Wanderer.Extensions;
 using Wanderer.Helpers.UI;
+using Wanderer.ViewModels.MainPages;
 
 namespace Wanderer.Views.MainPages;
 
 [MainPageInfo("考勤", "attendance", "\uE430", true, true)]
 public partial class AttendancePage : UserControl
 {
-    public AttendancePageViewModel ViewModel { get; } = IAppHost.GetService<AttendancePageViewModel>();
-    
     public AttendancePage()
     {
         DataContext = this;
         InitializeComponent();
     }
+
+    public AttendancePageViewModel ViewModel { get; } = IAppHost.GetService<AttendancePageViewModel>();
 
     private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)
     {
@@ -29,9 +29,9 @@ public partial class AttendancePage : UserControl
             ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
             return;
         }
-        
+
         ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
-            .Where(person => person.Value.IsMatch(search)));
+                                            .Where(person => person.Value.IsMatch(search)));
     }
 
     private void ButtonSave_OnClick(object? sender, RoutedEventArgs e)

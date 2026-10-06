@@ -23,7 +23,7 @@ internal static class AvaloniaUnsafeAccessorHelpers
 
     [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "GetService")]
     private static extern object? GetAvaloniaDependencyService(IAvaloniaDependencyResolver? avaloniaLocator,
-        Type serviceType);
+                                                               Type serviceType);
 
     public static T? GetAvaloniaLocatorService<T>() where T : class
     {
@@ -32,7 +32,7 @@ internal static class AvaloniaUnsafeAccessorHelpers
         var result = GetAvaloniaDependencyService(AvaloniaLocator, typeof(T));
         return result as T;
     }
-    
+
     public static Win32CompositionMode? GetActiveWin32CompositionMode()
     {
         // Avalonia 12 不再向 AvaloniaLocator 注册 IRenderTimer。
@@ -44,16 +44,16 @@ internal static class AvaloniaUnsafeAccessorHelpers
             return Win32CompositionMode.RedirectionSurface;
 
         var timerField = renderLoop.GetType().GetField("_timer",
-            BindingFlags.NonPublic | BindingFlags.Instance);
+                                                       BindingFlags.NonPublic | BindingFlags.Instance);
         var timer = timerField?.GetValue(renderLoop);
         var timerClassName = timer?.GetType().Name;
 
         return timerClassName switch
         {
-            "WinUiCompositorConnection" => Win32CompositionMode.WinUIComposition,
+            "WinUiCompositorConnection"   => Win32CompositionMode.WinUIComposition,
             "DirectCompositionConnection" => Win32CompositionMode.DirectComposition,
-            "DxgiConnection" => Win32CompositionMode.LowLatencyDxgiSwapChain,
-            _ => Win32CompositionMode.RedirectionSurface
+            "DxgiConnection"              => Win32CompositionMode.LowLatencyDxgiSwapChain,
+            _                             => Win32CompositionMode.RedirectionSurface
         };
     }
 }

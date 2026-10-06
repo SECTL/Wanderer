@@ -13,9 +13,9 @@ public class HumanSexToStringConverter : IValueConverter
         {
             return sex switch
             {
-                HumanSex.Male => "男",
+                HumanSex.Male   => "男",
                 HumanSex.Female => "女",
-                _ => "未知"
+                _               => "未知"
             };
         }
 
@@ -28,12 +28,12 @@ public class HumanSexToStringConverter : IValueConverter
         {
             return HumanSex.Unknown;
         }
-        
+
         return sex switch
         {
             "男" => HumanSex.Male,
             "女" => HumanSex.Female,
-            _ => HumanSex.Unknown
+            _   => HumanSex.Unknown
         };
     }
 }

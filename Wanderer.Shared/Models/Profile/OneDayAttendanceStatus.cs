@@ -6,5 +6,6 @@ namespace Wanderer.Shared.Models.Profile;
 
 public partial class OneDayAttendanceStatus : ObservableRecipient
 {
-    [ObservableProperty] private ObservableDictionary<Guid, AttendanceStatus> _persons = [];
+    [ObservableProperty]
+    private ObservableDictionary<Guid, AttendanceStatus> _persons = [];
 }

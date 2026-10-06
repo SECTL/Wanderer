@@ -7,7 +7,7 @@ using Avalonia.Data.Converters;
 namespace Wanderer.Converters;
 
 /// <summary>
-/// 将多个<see cref="double"/>转换为<see cref="Thickness"/>
+///     将多个<see cref="double" />转换为<see cref="Thickness" />
 /// </summary>
 public class DoubleToThicknessMultiConverter : IMultiValueConverter
 {
@@ -18,10 +18,10 @@ public class DoubleToThicknessMultiConverter : IMultiValueConverter
         {
             1 => new Thickness(values[0] as double? ?? 0),
             2 => new Thickness(values[0] as double? ?? 0, values[1] as double? ?? 0,
-                values[0] as double? ?? 0, values[1] as double? ?? 0
+                               values[0] as double? ?? 0, values[1] as double? ?? 0
             ),
             4 => new Thickness(values[0] as double? ?? 0, values[1] as double? ?? 0,
-                values[2] as double? ?? 0, values[3] as double? ?? 0
+                               values[2] as double? ?? 0, values[3] as double? ?? 0
             ),
             _ => new Thickness()
         };

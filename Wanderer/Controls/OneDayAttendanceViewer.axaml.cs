@@ -8,9 +8,9 @@ using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using Wanderer.Abstraction;
+using Wanderer.Helpers.UI;
 using Wanderer.Models;
 using Wanderer.Services.Config;
-using Wanderer.Helpers.UI;
 using Wanderer.Shared.Models.Profile;
 
 namespace Wanderer.Controls;
@@ -20,15 +20,6 @@ public partial class OneDayAttendanceViewer : UserControl
     public static readonly StyledProperty<DateTime> DateProperty =
         AvaloniaProperty.Register<AttendanceDayControl, DateTime>(nameof(Date));
 
-    public DateTime Date
-    {
-        get => GetValue(DateProperty);
-        set => SetValue(DateProperty, value);
-    }
-    
-    public ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
-    public ObservableCollection<StatusAndCount> Data { get; } = [];
-    
     static OneDayAttendanceViewer()
     {
         DateProperty.Changed.AddClassHandler<OneDayAttendanceViewer>((x, e) => x.OnDateChanged(e));
@@ -39,6 +30,15 @@ public partial class OneDayAttendanceViewer : UserControl
         InitializeComponent();
         RefreshData();
     }
+
+    public DateTime Date
+    {
+        get => GetValue(DateProperty);
+        set => SetValue(DateProperty, value);
+    }
+
+    public ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
+    public ObservableCollection<StatusAndCount> Data { get; } = [];
 
     private void OnDateChanged(AvaloniaPropertyChangedEventArgs e)
     {
@@ -53,7 +53,7 @@ public partial class OneDayAttendanceViewer : UserControl
         Data.Clear();
         var date = DateOnly.FromDateTime(Date);
         var config = ProfileConfigHandler.Data;
-        
+
         // 拉取数据
         var attendanceStatus = Utils.CopyObjectByJson(
             config.Statuses.GetValueOrDefault(date, new OneDayAttendanceStatus()));
@@ -63,23 +63,23 @@ public partial class OneDayAttendanceViewer : UserControl
 
             var status = new AttendanceStatus();
             status.Statuses.AddRange(config.Profile.Statuses
-                .Where(s => s.Value.IsDefault)
-                .Select(s => s.Key));
+                                           .Where(s => s.Value.IsDefault)
+                                           .Select(s => s.Key));
             attendanceStatus.Persons[kvp.Key] = status;
         }
-        
+
         // 统计数据
         Data.AddRange(config.Profile.Statuses
-            .Select(s => new StatusAndCount
-            {
-                Status = s.Value,
-                Count = config.Profile.Persons
-                    .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key)),
-                Persons = config.Profile.Persons
-                    .Where(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key))
-                    .Select(p => p.Value)
-                    .ToList()
-            }));
+                            .Select(s => new StatusAndCount
+                            {
+                                Status = s.Value,
+                                Count = config.Profile.Persons
+                                              .Count(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key)),
+                                Persons = config.Profile.Persons
+                                                .Where(p => attendanceStatus.Persons[p.Key].Statuses.Contains(s.Key))
+                                                .Select(p => p.Value)
+                                                .ToList()
+                            }));
     }
 
     [RelayCommand]
@@ -89,9 +89,9 @@ public partial class OneDayAttendanceViewer : UserControl
         if (topLevel?.Clipboard == null) return;
 
         var text = statusAndCount.Persons
-            .Aggregate(
-                $"{statusAndCount.Status.Name}：{statusAndCount.Count} 人",
-                (current, person) => current + $"\n{person.Name}");
+                                 .Aggregate(
+                                     $"{statusAndCount.Status.Name}：{statusAndCount.Count} 人",
+                                     (current, person) => current + $"\n{person.Name}");
 
         topLevel.Clipboard.SetTextAsync(text).Wait();
         this.ShowSuccessToast("复制成功。");

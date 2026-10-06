@@ -17,14 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Wanderer\Wanderer.csproj" />
+        <ProjectReference Include="..\Wanderer\Wanderer.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <AndroidResource Include="..\Wanderer\Assets\AppLogo.png">
-          <SubType>Designer</SubType>
-          <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-          <Link>Resources\drawable\AppLogo.png</Link>
+            <SubType>Designer</SubType>
+            <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+            <Link>Resources\drawable\AppLogo.png</Link>
         </AndroidResource>
 
 
@@ -35,5 +35,5 @@
         </AndroidResource>
     </ItemGroup>
 
-    <Import Project="..\Global.props" />
+    <Import Project="..\Global.props"/>
 </Project>

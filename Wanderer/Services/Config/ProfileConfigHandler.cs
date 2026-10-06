@@ -16,7 +16,7 @@ public class ProfileConfigHandler(ILogger<ProfileConfigHandler> logger, ConfigSe
     })
 {
     /// <summary>
-    /// 启动拼音缓存任务
+    ///     启动拼音缓存任务
     /// </summary>
     public void StartPinyinCacheTask()
     {

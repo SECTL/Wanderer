@@ -5,10 +5,8 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 
 namespace Wanderer.Controls;
 
@@ -37,7 +35,7 @@ public class MultiComboBox : ItemsControl
         TextBox.PlaceholderTextProperty.AddOwner<MultiComboBox>();
 
     /// <summary>
-    ///     已选项标签内容的模板。为 <see langword="null"/> 时直接显示选中对象本身。
+    ///     已选项标签内容的模板。为 <see langword="null" /> 时直接显示选中对象本身。
     /// </summary>
     public static readonly StyledProperty<IDataTemplate?> SelectedItemTemplateProperty =
         AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(nameof(SelectedItemTemplate));
@@ -53,7 +51,7 @@ public class MultiComboBox : ItemsControl
         FocusableProperty.OverrideDefaultValue<MultiComboBox>(true);
         ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(_defaultPanel);
         SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>((box, args) =>
-            box.OnSelectedItemsChanged(args));
+                                                                                 box.OnSelectedItemsChanged(args));
     }
 
     public MultiComboBox()
@@ -225,8 +223,14 @@ public class MultiComboBox : ItemsControl
             remove { }
         }
 
-        public bool CanExecute(object? parameter) => true;
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
 
-        public void Execute(object? parameter) => owner.Remove(parameter);
+        public void Execute(object? parameter)
+        {
+            owner.Remove(parameter);
+        }
     }
 }

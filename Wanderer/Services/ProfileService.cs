@@ -14,13 +14,6 @@ namespace Wanderer.Services;
 public class ProfileService
 {
     public static string ProfileName = "EMPTY";
-    public static string ProfilePath => Utils.GetFilePath("Profiles");
-    
-    private ILogger<ProfileService> Logger { get; }
-    
-    public ProfileConfigHandler ProfileConfigHandler { get; }
-    public ObservableCollection<string> Profiles { get; } = [];
-    public OneDayAttendanceStatus AttendanceStatus { get; }
 
     public ProfileService(ILogger<ProfileService> logger, ProfileConfigHandler profileConfigHandler)
     {
@@ -28,11 +21,19 @@ public class ProfileService
         ProfileConfigHandler = profileConfigHandler;
 
         AttendanceStatus = ProfileConfigHandler.Data.Statuses.GetValueOrDefault(
-                DateOnly.FromDateTime(DateTime.Now), new OneDayAttendanceStatus());
-        
+            DateOnly.FromDateTime(DateTime.Now), new OneDayAttendanceStatus());
+
         RefreshProfiles();
     }
-    
+
+    public static string ProfilePath => Utils.GetFilePath("Profiles");
+
+    private ILogger<ProfileService> Logger { get; }
+
+    public ProfileConfigHandler ProfileConfigHandler { get; }
+    public ObservableCollection<string> Profiles { get; } = [];
+    public OneDayAttendanceStatus AttendanceStatus { get; }
+
     public void RefreshProfiles()
     {
         Logger.LogInformation("刷新档案列表");
@@ -49,7 +50,7 @@ public class ProfileService
         else
         {
             Profiles.AddRange(
-                from i in Directory.GetFiles(ProfilePath) 
+                from i in Directory.GetFiles(ProfilePath)
                 where i.EndsWith(".json")
                 orderby i
                 select Path.GetFileName(i).Replace(".json", ""));

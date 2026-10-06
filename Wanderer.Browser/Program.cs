@@ -4,11 +4,16 @@ using Avalonia.Browser;
 
 namespace Wanderer.Browser;
 
-internal sealed partial class Program
+internal sealed class Program
 {
-    private static Task Main(string[] args) => BuildAvaloniaApp()
-        .StartBrowserAppAsync("out");
+    private static Task Main(string[] args)
+    {
+        return BuildAvaloniaApp()
+            .StartBrowserAppAsync("out");
+    }
 
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>();
+    {
+        return AppBuilder.Configure<App>();
+    }
 }

@@ -8,6 +8,6 @@
     </Design.PreviewWith>
 
     <Style Selector=":is(Panel).animated-resize">
-        <Setter Property="assists:WrapPanelResizingAnimationAssist.IsResizingAnimationEnabled" Value="True"/>
+        <Setter Property="assists:WrapPanelResizingAnimationAssist.IsResizingAnimationEnabled" Value="True" />
     </Style>
 </Styles>

@@ -11,9 +11,7 @@ namespace Wanderer.MarkupExtensions;
 public class FiExtension
 {
     /// <inheritdoc cref="FiExtension" />
-    public FiExtension()
-    {
-    }
+    public FiExtension() { }
 
     /// <inheritdoc cref="FiExtension" />
     public FiExtension(FluentIconKind icon)

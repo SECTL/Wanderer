@@ -1,9 +1,10 @@
 ﻿using System;
 using Wanderer.Shared.ComponentModels;
+using Wanderer.Shared.Models.Profile;
 
 namespace Wanderer.Shared.Models;
 
-using OneDayAttendanceStatus = Profile.OneDayAttendanceStatus;
+using OneDayAttendanceStatus = OneDayAttendanceStatus;
 
 public interface IProfileModel
 {

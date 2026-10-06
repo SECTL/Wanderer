@@ -7,6 +7,7 @@
              xmlns:converters="clr-namespace:Wanderer.Converters"
              xmlns:comparers="clr-namespace:Wanderer.Comparers"
              xmlns:controls="clr-namespace:Wanderer.Controls"
+             xmlns:wa="https://github.com/SECTL/Wanderer/schemas/xaml"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Wanderer.Views.MainPages.RankingPage"
              x:Name="RootPage"
@@ -15,7 +16,7 @@
     <UserControl.Resources>
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
         <converters:GuidToTagNameConverter x:Key="GuidToTagNameConverter" />
-        
+
         <DataTemplate x:Key="TagDataGridTemplate" x:DataType="ranking:PersonWithStatusCounts">
             <ItemsControl VerticalAlignment="Center" Margin="4 0"
                           ItemsSource="{Binding Person.Tags}">
@@ -24,7 +25,7 @@
                         <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                                
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -33,19 +34,20 @@
                                 CornerRadius="14"
                                 Padding="8 0"
                                 Background="{DynamicResource ControlFillColorTransparentBrush}">
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DataTemplate>
     </UserControl.Resources>
-    
+
     <Grid RowDefinitions="Auto *" Classes="animated-intro">
         <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
             <Grid ColumnDefinitions="Auto *" Margin="8">
                 <TextBlock Grid.Column="0" Text="排行榜" FontSize="16" VerticalAlignment="Center" />
-                
+
                 <TabStrip Grid.Column="1"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Right"
@@ -54,26 +56,26 @@
                     <TabStripItem>
                         <TextBlock FontSize="13" Text="按状态查看" />
                     </TabStripItem>
-            
+
                     <TabStripItem>
                         <TextBlock FontSize="13" Text="按人员查看" />
                     </TabStripItem>
                 </TabStrip>
             </Grid>
         </Border>
-        
+
         <Carousel Grid.Row="1" Classes="animated"
                   SelectedIndex="{Binding ViewModel.SelectedPage}">
             <!-- 按状态查看 -->
             <ScrollViewer>
-                <ItemsControl Margin="8"
+                <ItemsControl Margin="8" MaxWidth="960"
                               ItemsSource="{Binding ViewModel.StatusRanking}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Vertical" Spacing="8" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-    
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Expander Classes="stretch-header">
@@ -85,7 +87,7 @@
                                             <Run Text="{Binding Items.Count}" />
                                             人 上榜
                                         </TextBlock>
-                        
+
                                         <Button Grid.Column="1"
                                                 Width="32" Height="32"
                                                 Command="{Binding #RootPage.CopyStatusWithRankingCommand}"
@@ -96,14 +98,14 @@
                                         </Button>
                                     </Grid>
                                 </Expander.Header>
-                                
+
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Vertical" Spacing="2" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
-                                    
+
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock>
@@ -119,7 +121,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            
+
             <!-- 按人员查看 -->
             <Grid RowDefinitions="Auto *">
                 <Grid Grid.Row="0" ColumnDefinitions="Auto *" Margin="8">
@@ -127,16 +129,20 @@
                             Click="ButtonExport_OnClick">
                         <controls:IconText Glyph="&#xE68F;" Text="导出" />
                     </Button>
-                    
+
                     <TextBox Grid.Column="1"
                              HorizontalAlignment="Right"
                              VerticalAlignment="Center"
                              Width="256"
                              PlaceholderText="搜索..."
                              Text="{Binding ViewModel.SearchText}"
-                             TextChanged="SearchTextBox_TextChanged" />
+                             TextChanged="SearchTextBox_TextChanged">
+                        <TextBox.InnerLeftContent>
+                            <controls:FluentIcon Glyph="{wa:Fi SearchRegular}" Margin="8 0 0 0" />
+                        </TextBox.InnerLeftContent>
+                    </TextBox>
                 </Grid>
-                
+
                 <DataGrid x:Name="PersonsDataGrid"
                           Grid.Row="1"
                           ItemsSource="{Binding ViewModel.PersonWithStatusCountsList}"
@@ -146,45 +152,48 @@
                           GridLinesVisibility="Horizontal"
                           IsReadOnly="True"
                           SelectionMode="Single">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
-                                        Header="姓名" IsReadOnly="True" CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
-    
-                    <DataGridTextColumn Binding="{Binding Person.Id, Mode=TwoWay}"
-                                        Header="编号" IsReadOnly="True" />
-            
-                    <DataGridTextColumn Binding="{Binding Person.Sex, Converter={StaticResource HumanSexToStringConverter}}"
-                                        Header="性别" IsReadOnly="True" />
-                    
-                    <DataGridTemplateColumn Header="标签" IsReadOnly="True" CanUserSort="False">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ItemsControl VerticalAlignment="Center" Margin="4 0"
-                                              ItemsSource="{Binding Person.Tags}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                            
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                    BorderThickness="1"
-                                                    Height="28"
-                                                    CornerRadius="14"
-                                                    Padding="8 0"
-                                                    Background="{DynamicResource ControlFillColorTransparentBrush}">
-                                                <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Person.Name, Mode=TwoWay}"
+                                            Header="姓名" IsReadOnly="True"
+                                            CustomSortComparer="{x:Static comparers:PinyinComparer.Comparer}" />
+
+                        <DataGridTextColumn Binding="{Binding Person.Id, Mode=TwoWay}"
+                                            Header="编号" IsReadOnly="True" />
+
+                        <DataGridTextColumn
+                            Binding="{Binding Person.Sex, Converter={StaticResource HumanSexToStringConverter}}"
+                            Header="性别" IsReadOnly="True" />
+
+                        <DataGridTemplateColumn Header="标签" IsReadOnly="True" CanUserSort="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ItemsControl VerticalAlignment="Center" Margin="4 0"
+                                                  ItemsSource="{Binding Person.Tags}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                        BorderThickness="1"
+                                                        Height="28"
+                                                        CornerRadius="14"
+                                                        Padding="8 0"
+                                                        Background="{DynamicResource ControlFillColorTransparentBrush}">
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               Text="{Binding Converter={StaticResource GuidToTagNameConverter}}" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Carousel>
     </Grid>

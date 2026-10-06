@@ -19,42 +19,42 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AsyncImageLoader.Avalonia" />
+        <PackageReference Include="AsyncImageLoader.Avalonia"/>
         <PackageReference Include="Avalonia"/>
         <!--Condition below is needed to remove Zeronia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Zeronia.Diagnostics">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="DotNetCommon.PinYin" />
-        <PackageReference Include="FluentAvaloniaUI" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" />
-        <PackageReference Include="MiniExcel" />
-        <PackageReference Include="Xaml.Behaviors" />
-        <PackageReference Include="Pastel" />
+        <PackageReference Include="DotNetCommon.PinYin"/>
+        <PackageReference Include="FluentAvaloniaUI"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+        <PackageReference Include="MiniExcel"/>
+        <PackageReference Include="Xaml.Behaviors"/>
+        <PackageReference Include="Pastel"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-        <ProjectReference Include="..\Wanderer.Shared\Wanderer.Shared.csproj" />
+        <ProjectReference Include="..\Wanderer.Shared\Wanderer.Shared.csproj"/>
         <ProjectReference Include="..\roslyn\IconsMappingGenerator\IconsMappingGenerator.csproj"
-                          OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
 
     <ItemGroup>
         <None Update="..\README.md">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        
+
         <None Update="..\LICENSE">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Compile Update="Views\MainPages\ProfilePage.Import.cs">
-        <DependentUpon>ProfilePage.axaml</DependentUpon>
-      </Compile>
+        <Compile Update="Views\MainPages\ProfilePage.Import.cs">
+            <DependentUpon>ProfilePage.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
 
-    <Import Project="..\Global.props" />
+    <Import Project="..\Global.props"/>
 </Project>

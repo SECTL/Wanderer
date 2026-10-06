@@ -330,12 +330,12 @@
                                 BorderBrush="{DynamicResource CheckBoxCheckBackgroundStrokeUnchecked}"
                                 BorderThickness="1">
                             <wa:FluentIcon x:Name="CheckGlyph"
-                                                 Glyph="{wa:Fi CheckmarkFilled}"
-                                                 FontSize="10"
-                                                 HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"
-                                                 Foreground="{DynamicResource CheckBoxCheckGlyphForegroundUnchecked}"
-                                                 IsVisible="{TemplateBinding IsSelected}" />
+                                           Glyph="{wa:Fi CheckmarkFilled}"
+                                           FontSize="10"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource CheckBoxCheckGlyphForegroundUnchecked}"
+                                           IsVisible="{TemplateBinding IsSelected}" />
                         </Border>
 
                         <ContentPresenter x:Name="ContentPresenter"
@@ -433,7 +433,8 @@
             </Style>
             <Style Selector="^ /template/ Border#CheckBox">
                 <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeCheckedPointerOver}" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource CheckBoxCheckBackgroundStrokeCheckedPointerOver}" />
             </Style>
             <Style Selector="^ /template/ wa|FluentIcon#CheckGlyph">
                 <Setter Property="Foreground" Value="{DynamicResource CheckBoxCheckGlyphForegroundChecked}" />

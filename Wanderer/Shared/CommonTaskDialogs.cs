@@ -8,7 +8,7 @@ public class CommonTaskDialogs
 {
     public static async Task<object?> ShowDialog(string header, string content, Visual? xamlRoot = null)
     {
-        var dialog = new FATaskDialog()
+        var dialog = new FATaskDialog
         {
             Content = content,
             Header = header,
@@ -16,12 +16,12 @@ public class CommonTaskDialogs
             {
                 new FATaskDialogButton("确定", true)
                 {
-                    IsDefault = true,
+                    IsDefault = true
                 }
             },
             XamlRoot = xamlRoot ?? App.GetRootWindow()
         };
-        
+
         return await dialog.ShowAsync();
     }
 }

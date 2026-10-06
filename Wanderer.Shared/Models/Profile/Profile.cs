@@ -6,8 +6,14 @@ namespace Wanderer.Shared.Models.Profile;
 
 public partial class Profile : ObservableRecipient
 {
+    [ObservableProperty]
+    private ObservableDictionary<Guid, Person> _persons = [];
+
+    [ObservableProperty]
+    private ObservableDictionary<Guid, Status> _statuses = [];
+
+    [ObservableProperty]
+    private ObservableDictionary<Guid, Tag> _tags = [];
+
     public string Name { get; set; } = "EMPTY";
-    [ObservableProperty] private ObservableDictionary<Guid, Person> _persons = [];
-    [ObservableProperty] private ObservableDictionary<Guid, Status> _statuses = [];
-    [ObservableProperty] private ObservableDictionary<Guid, Tag> _tags = [];
 }

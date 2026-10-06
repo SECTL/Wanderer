@@ -4,7 +4,7 @@ using FluentAvalonia.UI.Controls;
 namespace Wanderer.Controls;
 
 /// <summary>
-/// Fluent Icon 图标源
+///     Fluent Icon 图标源
 /// </summary>
 public class FluentIconSource : FAFontIconSource
 {
@@ -12,11 +12,14 @@ public class FluentIconSource : FAFontIconSource
     {
         FontFamily = new FontFamily("avares://Wanderer/Assets/Fonts/#FluentSystemIcons-Resizable");
     }
-    
+
     public FluentIconSource(string glyph) : this()
     {
         Glyph = glyph;
     }
 
-    public FluentIconSource ProvideValue() => this;
+    public FluentIconSource ProvideValue()
+    {
+        return this;
+    }
 }

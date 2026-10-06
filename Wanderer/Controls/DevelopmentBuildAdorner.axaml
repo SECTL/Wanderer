@@ -11,15 +11,15 @@
                        HorizontalAlignment="Left"
                        FontSize="12"
                        Opacity="0.8">
-                开发中画面，不代表最终品质。<LineBreak/>
+                开发中画面，不代表最终品质。<LineBreak />
                 Wanderer
-                <Run Text="{x:Static wanderer:GlobalConstants.VersionLong}"/>
+                <Run Text="{x:Static wanderer:GlobalConstants.VersionLong}" />
             </TextBlock>
         </Grid>
     </ControlTemplate>
-    
+
     <ControlTheme TargetType="controls:DevelopmentBuildAdorner"
                   x:Key="{x:Type controls:DevelopmentBuildAdorner}">
-        <Setter Property="Template" Value="{StaticResource DevelopmentBuildAdornerControlTemplate}"/>
+        <Setter Property="Template" Value="{StaticResource DevelopmentBuildAdornerControlTemplate}" />
     </ControlTheme>
 </ResourceDictionary>

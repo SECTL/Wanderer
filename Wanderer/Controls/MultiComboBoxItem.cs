@@ -2,33 +2,33 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Mixins;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 
 namespace Wanderer.Controls;
 
 public class MultiComboBoxItem : ContentControl
 {
-    private MultiComboBox? _parent;
     private static readonly Point s_invalidPoint = new(double.NaN, double.NaN);
-    private Point _pointerDownPoint = s_invalidPoint;
-    private bool _updateInternal;
 
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<MultiComboBoxItem, bool>(nameof(IsSelected));
 
-    public bool IsSelected
-    {
-        get => GetValue(IsSelectedProperty);
-        set => SetValue(IsSelectedProperty, value);
-    }
+    private MultiComboBox? _parent;
+    private Point _pointerDownPoint = s_invalidPoint;
+    private bool _updateInternal;
 
     static MultiComboBoxItem()
     {
         PressedMixin.Attach<MultiComboBoxItem>();
         FocusableProperty.OverrideDefaultValue<MultiComboBoxItem>(true);
         IsSelectedProperty.Changed.AddClassHandler<MultiComboBoxItem, bool>((item, args) =>
-            item.OnSelectionChanged(args));
+                                                                                item.OnSelectionChanged(args));
+    }
+
+    public bool IsSelected
+    {
+        get => GetValue(IsSelectedProperty);
+        set => SetValue(IsSelectedProperty, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

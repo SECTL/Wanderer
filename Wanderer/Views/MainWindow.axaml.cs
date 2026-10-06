@@ -28,10 +28,7 @@ public partial class MainWindow : FAAppWindow
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        IAppHost.GetService<MainConfigHandler>().Data.PropertyChanged += (o, args) =>
-        {
-            ReloadConfig();
-        };
+        IAppHost.GetService<MainConfigHandler>().Data.PropertyChanged += (o, args) => { ReloadConfig(); };
         ReloadConfig();
     }
 
@@ -43,15 +40,16 @@ public partial class MainWindow : FAAppWindow
 
     private void ReloadConfig()
     {
-        var isEffectSupported = OperatingSystem.IsWindows() 
-                                && AvaloniaUnsafeAccessorHelpers.GetActiveWin32CompositionMode() == AvaloniaUnsafeAccessorHelpers.Win32CompositionMode.WinUIComposition;
-        
+        var isEffectSupported = OperatingSystem.IsWindows()
+                                && AvaloniaUnsafeAccessorHelpers.GetActiveWin32CompositionMode() ==
+                                AvaloniaUnsafeAccessorHelpers.Win32CompositionMode.WinUIComposition;
+
         if (!isEffectSupported) return;
 
         var config = IAppHost.GetService<MainConfigHandler>().Data;
         var isMicaSupported = Environment.OSVersion.Version >= new Version(10, 0, 22000, 0);
         var isAcrylicSupported = Environment.OSVersion.Version >= new Version(10, 0, 18362, 0);
-        
+
         if (isMicaSupported && config.BackgroundEffect == BackgroundEffect.Mica)
         {
             TransparencyLevelHint = [WindowTransparencyLevel.Mica];
@@ -76,21 +74,23 @@ public partial class MainWindow : FAAppWindow
         {
             return pageBackgroundBrush.Color;
         }
-        
+
         if (this.TryFindResource("SolidBackgroundFillColorBase", ActualThemeVariant, out var res)
             && res is Color color)
         {
             return color;
         }
-        
+
         var appTheme = Application.Current?.RequestedThemeVariant ?? ThemeVariant.Default;
-        var platformThemeVariant = this.GetPlatformSettings()?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
+        var platformThemeVariant =
+            this.GetPlatformSettings()?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light;
         if (appTheme == ThemeVariant.Default)
         {
             return platformThemeVariant == PlatformThemeVariant.Dark
-                ? Color.Parse("#000000") : Color.Parse("#FFFFFF");
+                       ? Color.Parse("#000000")
+                       : Color.Parse("#FFFFFF");
         }
-        
+
         return appTheme == ThemeVariant.Dark ? Color.Parse("#000000") : Color.Parse("#FFFFFF");
     }
 }

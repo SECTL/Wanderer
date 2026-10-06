@@ -10,25 +10,25 @@ namespace Wanderer.Controls;
 
 public partial class AppToastAdorner : UserControl
 {
-    private Control Control { get; }
-    public ObservableCollection<ToastMessage> Messages { get; } = [];
-    
     public static readonly RoutedEvent<ShowToastEventArgs> ShowToastEvent =
         RoutedEvent.Register<AppToastAdorner, ShowToastEventArgs>(nameof(ShowToast), RoutingStrategies.Bubble);
 
-    // Provide CLR accessors for the event
-    public event EventHandler<ShowToastEventArgs> ShowToast
-    { 
-        add => AddHandler(ShowToastEvent, value);
-        remove => RemoveHandler(ShowToastEvent, value);
-    }
-    
     public AppToastAdorner(Control control)
     {
         Control = control;
         control.AddHandler(ShowToastEvent, OnShowToast);
         control.Unloaded += ControlOnUnloaded;
         InitializeComponent();
+    }
+
+    private Control Control { get; }
+    public ObservableCollection<ToastMessage> Messages { get; } = [];
+
+    // Provide CLR accessors for the event
+    public event EventHandler<ShowToastEventArgs> ShowToast
+    {
+        add => AddHandler(ShowToastEvent, value);
+        remove => RemoveHandler(ShowToastEvent, value);
     }
 
     private void ControlOnUnloaded(object? sender, EventArgs e)
@@ -42,7 +42,9 @@ public partial class AppToastAdorner : UserControl
         Messages.Insert(0, e.Message);
         e.Message.ClosedCancellationTokenSource.Token.Register(() =>
         {
-            DispatcherTimer.RunOnce(() => Messages.Remove(e.Message), TimeSpan.FromSeconds(0.3));
+            DispatcherTimer.RunOnce(
+                () => Messages.Remove(e.Message),
+                TimeSpan.FromSeconds(0.3));
         });
         if (e.Message.AutoClose)
         {

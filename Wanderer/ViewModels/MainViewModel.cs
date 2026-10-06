@@ -10,20 +10,27 @@ namespace Wanderer.ViewModels;
 
 public partial class MainViewModel : ObservableRecipient
 {
-    public MainConfigModel Config { get; }
+    [ObservableProperty]
+    private object? _frameContent;
 
-    public bool IsWindows { get; } = OperatingSystem.IsWindows();
-    public bool IsDesktop { get; } = App.IsDesktop;
-    [ObservableProperty] private bool _isPinned = false;
-    
-    [ObservableProperty] private object? _frameContent;
-    [ObservableProperty] private MainPageInfo? _selectedPageInfo = null;
-    [ObservableProperty] private FANavigationViewItemBase? _selectedNavigationViewItem = null;
-    public ObservableCollection<FANavigationViewItemBase> NavigationViewItems { get; } = [];
-    public ObservableCollection<FANavigationViewItemBase> NavigationViewFooterItems { get; } = [];
+    [ObservableProperty]
+    private bool _isPinned;
+
+    [ObservableProperty]
+    private FANavigationViewItemBase? _selectedNavigationViewItem;
+
+    [ObservableProperty]
+    private MainPageInfo? _selectedPageInfo;
 
     public MainViewModel(MainConfigHandler handler)
     {
         Config = handler.Data;
     }
+
+    public MainConfigModel Config { get; }
+
+    public bool IsWindows { get; } = OperatingSystem.IsWindows();
+    public bool IsDesktop { get; } = App.IsDesktop;
+    public ObservableCollection<FANavigationViewItemBase> NavigationViewItems { get; } = [];
+    public ObservableCollection<FANavigationViewItemBase> NavigationViewFooterItems { get; } = [];
 }

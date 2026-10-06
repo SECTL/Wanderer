@@ -20,8 +20,8 @@ public class GuidToStatusNameConverter : IValueConverter
 
         var service = IAppHost.GetService<ProfileService>();
         return service.ProfileConfigHandler.Data.Profile.Statuses
-            .FirstOrDefault(kvp => kvp.Key == guid, KeyValuePair.Create(guid, new Status("???")))
-            .Value.Name;
+                      .FirstOrDefault(kvp => kvp.Key == guid, KeyValuePair.Create(guid, new Status("???")))
+                      .Value.Name;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

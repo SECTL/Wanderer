@@ -9,11 +9,11 @@
     <ScrollViewer>
         <StackPanel Orientation="Vertical" Margin="12 12 18 12" Spacing="8" Classes="animated-intro">
             <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xE06F;}"
-                                 Header="功能测试" Description="测试几个小功能"
-                                 IsExpanded="True">
+                                   Header="功能测试" Description="测试几个小功能"
+                                   IsExpanded="True">
                 <fa:FASettingsExpanderItem Content="弹出 Toast"
-                                         IsClickEnabled="True"
-                                         Click="ShowToastButton_OnClick"/>
+                                           IsClickEnabled="True"
+                                           Click="ShowToastButton_OnClick" />
             </fa:FASettingsExpander>
         </StackPanel>
     </ScrollViewer>

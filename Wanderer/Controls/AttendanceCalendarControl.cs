@@ -2,7 +2,4 @@
 
 namespace Wanderer.Controls;
 
-public class AttendanceCalendarControl : Calendar
-{
-    
-}
+public class AttendanceCalendarControl : Calendar { }

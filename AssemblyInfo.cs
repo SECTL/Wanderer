@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.Versioning;
 using ClassIsland;
 
 [assembly: AssemblyVersion(GitInfo.Tag)]
@@ -12,4 +13,3 @@ using ClassIsland;
 #if Platforms_MacOs
 [assembly:SupportedOSPlatform("macos")]
 #endif
- 

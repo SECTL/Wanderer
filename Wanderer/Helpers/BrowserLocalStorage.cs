@@ -11,7 +11,7 @@ public static partial class BrowserLocalStorage
 
     [JSImport("globalThis.window.localStorage.getItem")]
     public static partial string? GetItem(string key);
-    
+
     [JSImport("globalThis.window.localStorage.removeItem")]
     public static partial void RemoveItem(string key);
 

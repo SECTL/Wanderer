@@ -7,15 +7,6 @@ namespace Wanderer.Attributes;
 [AttributeUsage(AttributeTargets.Class)]
 public class MainPageInfo : Attribute
 {
-    public bool IsSeparator { get; }
-    
-    public string Name { get; }
-    public string Id { get; }
-    public string IconGlyph { get; }
-    
-    public bool UseFullWidth { get; }
-    public bool HidePageTitle { get; }
-
     public MainPageInfo(bool isSeparator)
     {
         if (isSeparator)
@@ -32,8 +23,9 @@ public class MainPageInfo : Attribute
             throw new ArgumentException("isSeparator 为 false!!!!!");
         }
     }
-    
-    public MainPageInfo(string name, string id, string iconGlyph = "\uE06F", bool useFullWidth = false, bool hidePageTitle = false)
+
+    public MainPageInfo(string name, string id, string iconGlyph = "\uE06F", bool useFullWidth = false,
+                        bool hidePageTitle = false)
     {
         IsSeparator = false;
         Name = name;
@@ -42,6 +34,15 @@ public class MainPageInfo : Attribute
         UseFullWidth = useFullWidth;
         HidePageTitle = hidePageTitle;
     }
+
+    public bool IsSeparator { get; }
+
+    public string Name { get; }
+    public string Id { get; }
+    public string IconGlyph { get; }
+
+    public bool UseFullWidth { get; }
+    public bool HidePageTitle { get; }
 
     public FANavigationViewItemBase ToNavigationViewItemBase()
     {

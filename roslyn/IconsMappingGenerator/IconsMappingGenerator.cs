@@ -26,30 +26,30 @@ public class IconsMappingGenerator : IIncrementalGenerator
         string propName)
     {
         return context.AdditionalTextsProvider
-            .Combine(context.AnalyzerConfigOptionsProvider)
-            .Select((pair, _) =>
-            {
-                var (additionalFile, optionsProvider) = pair;
-                var fileOptions = optionsProvider.GetOptions(additionalFile);
-                fileOptions.TryGetValue($"build_property.{propName}", out var filePath);
+                      .Combine(context.AnalyzerConfigOptionsProvider)
+                      .Select((pair, _) =>
+                      {
+                          var (additionalFile, optionsProvider) = pair;
+                          var fileOptions = optionsProvider.GetOptions(additionalFile);
+                          fileOptions.TryGetValue($"build_property.{propName}", out var filePath);
 
-                return (File: additionalFile, Options: new GenerateOptions(filePath ?? ""));
-            })
-            .Where(tuple =>
-            {
-                if (string.IsNullOrWhiteSpace(tuple.Options.FilePath) ||
-                    string.IsNullOrWhiteSpace(tuple.File.Path))
-                    return false;
+                          return (File: additionalFile, Options: new GenerateOptions(filePath ?? ""));
+                      })
+                      .Where(tuple =>
+                      {
+                          if (string.IsNullOrWhiteSpace(tuple.Options.FilePath) ||
+                              string.IsNullOrWhiteSpace(tuple.File.Path))
+                              return false;
 
-                var expectedNorm = tuple.Options.FilePath.Replace('\\', '/');
-                var actualNorm = tuple.File.Path.Replace('\\', '/');
-                return actualNorm.EndsWith(expectedNorm, StringComparison.OrdinalIgnoreCase);
-            });
+                          var expectedNorm = tuple.Options.FilePath.Replace('\\', '/');
+                          var actualNorm = tuple.File.Path.Replace('\\', '/');
+                          return actualNorm.EndsWith(expectedNorm, StringComparison.OrdinalIgnoreCase);
+                      });
     }
 
     private void RegisterSource(IncrementalGeneratorInitializationContext context,
-        IncrementalValuesProvider<(AdditionalText File, GenerateOptions Options)> provider,
-        string iconBrand)
+                                IncrementalValuesProvider<(AdditionalText File, GenerateOptions Options)> provider,
+                                string iconBrand)
     {
         context.RegisterSourceOutput(provider, (spc, input) =>
         {
@@ -88,8 +88,8 @@ public class IconsMappingGenerator : IIncrementalGenerator
         return HardDecoder.ParseJson(jsonContent).Select(prop =>
         {
             var name = prop.Key.Replace("ic_fluent_", "")
-                .Replace("_20_", "_")
-                .Replace("-", "_");
+                           .Replace("_20_", "_")
+                           .Replace("-", "_");
             var builder = new StringBuilder();
             foreach (var s in name.Split(['_'], StringSplitOptions.RemoveEmptyEntries))
                 builder.Append(char.ToUpper(s[0]) + s.Substring(1));

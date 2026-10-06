@@ -15,26 +15,26 @@ public partial class ProfilePage
     {
         var content = Encoding.UTF8.GetString(await ReadAllBytesAsync(stream));
         using var reader = new StringReader(content);
-        
+
         List<List<string>> lines = [];
         while (await reader.ReadLineAsync() is { } line)
         {
             lines.Add([line.Trim()]);
         }
-        
+
         return lines;
     }
 
     private static async Task<List<List<string>>> LoadFromCsvAsync(Stream stream)
     {
-        await using var memoryStream = new MemoryStream(await ReadAllBytesAsync(stream), writable: false);
-        
+        await using var memoryStream = new MemoryStream(await ReadAllBytesAsync(stream), false);
+
         return GetExcelList(memoryStream.Query(configuration: new CsvConfiguration(), excelType: ExcelType.CSV));
     }
 
     private static async Task<List<List<string>>> LoadFromExcelAsync(Stream stream)
     {
-        await using var memoryStream = new MemoryStream(await ReadAllBytesAsync(stream), writable: false);
+        await using var memoryStream = new MemoryStream(await ReadAllBytesAsync(stream), false);
 
         var config = new OpenXmlConfiguration
         {
@@ -46,14 +46,14 @@ public partial class ProfilePage
     private static List<List<string>> GetExcelList(IEnumerable<dynamic> excel)
     {
         return excel
-            .Select(row => (IDictionary<string, object?>)row)
-            .Select(dict => dict
-                .OrderBy(kv => kv.Key)
-                .Select(kv => kv.Value?.ToString() ?? "")
-                .ToList())
-            .ToList();
+               .Select(row => (IDictionary<string, object?>)row)
+               .Select(dict => dict
+                               .OrderBy(kv => kv.Key)
+                               .Select(kv => kv.Value?.ToString() ?? "")
+                               .ToList())
+               .ToList();
     }
-    
+
     private static async Task<byte[]> ReadAllBytesAsync(Stream stream)
     {
         var memoryStream = new MemoryStream();

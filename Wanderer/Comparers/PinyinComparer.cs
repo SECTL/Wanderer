@@ -11,7 +11,7 @@ namespace Wanderer.Comparers;
 public class PinyinComparer : IComparer
 {
     public static readonly PinyinComparer Comparer = new();
-    
+
     public int Compare(object? x, object? y)
     {
         if (x is Person p1 && y is Person p2)
@@ -20,7 +20,7 @@ public class PinyinComparer : IComparer
                 PinyinHelper.GetFullPinyinList(p1.Name).FirstOrDefault(),
                 PinyinHelper.GetFullPinyinList(p2.Name).FirstOrDefault());
         }
-        
+
         if (x is KeyValuePair<Guid, Person> kvp1 && y is KeyValuePair<Guid, Person> kvp2)
         {
             return string.CompareOrdinal(
@@ -34,14 +34,14 @@ public class PinyinComparer : IComparer
                 PinyinHelper.GetFullPinyinList(ps1.Person.Name).FirstOrDefault(),
                 PinyinHelper.GetFullPinyinList(ps2.Person.Name).FirstOrDefault());
         }
-        
+
         if (x is string s1 && y is string s2)
         {
             return string.CompareOrdinal(
                 PinyinHelper.GetFullPinyinList(s1).FirstOrDefault(),
                 PinyinHelper.GetFullPinyinList(s2).FirstOrDefault());
         }
-        
+
         return 0;
     }
 }

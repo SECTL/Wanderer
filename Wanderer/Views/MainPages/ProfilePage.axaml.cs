@@ -10,23 +10,19 @@ using Wanderer.Abstraction;
 using Wanderer.Attributes;
 using Wanderer.Controls;
 using Wanderer.Extensions;
+using Wanderer.Helpers.UI;
 using Wanderer.Models;
 using Wanderer.Models.UI;
+using Wanderer.Services;
 using Wanderer.Services.Config;
-using Wanderer.ViewModels.MainPages;
-using Wanderer.Helpers.UI;
 using Wanderer.Shared.Models.Profile;
+using Wanderer.ViewModels.MainPages;
 
 namespace Wanderer.Views.MainPages;
 
 [MainPageInfo("档案", "profile", "\uE081", true, true)]
 public partial class ProfilePage : UserControl
 {
-    public ProfilePageViewModel ViewModel { get; } = IAppHost.GetService<ProfilePageViewModel>();
-
-    private ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
-    private ConfigServiceBase ConfigService { get; } = IAppHost.GetService<ConfigServiceBase>();
-
     public ProfilePage()
     {
         DataContext = this;
@@ -35,9 +31,14 @@ public partial class ProfilePage : UserControl
         ViewModel.PropertyChanged += (sender, args) =>
         {
             ButtonSwitchProfile.IsEnabled = ButtonCancelSwitchProfile.IsEnabled =
-                ViewModel.SelectedProfile != ViewModel.CurrentProfile;
+                                                ViewModel.SelectedProfile != ViewModel.CurrentProfile;
         };
     }
+
+    public ProfilePageViewModel ViewModel { get; } = IAppHost.GetService<ProfilePageViewModel>();
+
+    private ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
+    private ConfigServiceBase ConfigService { get; } = IAppHost.GetService<ConfigServiceBase>();
 
     private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
@@ -67,7 +68,7 @@ public partial class ProfilePage : UserControl
             PrimaryButtonText = "新建",
             SecondaryButtonText = "取消"
         }.ShowAsync();
-        
+
         if (r != FAContentDialogResult.Primary)
         {
             return;
@@ -75,7 +76,7 @@ public partial class ProfilePage : UserControl
 
         var name = textBox.Text ?? "EMPTY";
         var profile = new ProfileConfigModel(name);
-        
+
         if (ConfigService.IsConfigExists(profile))
         {
             this.ShowWarningToast("重复的档案名称。");
@@ -84,7 +85,7 @@ public partial class ProfilePage : UserControl
 
         profile.Profile.Statuses.AddRange(GlobalConstants.DefaultStatuses);
         ConfigService.SaveConfig(profile);
-        
+
         ViewModel.RefreshProfiles();
         ViewModel.SelectedProfile = name;
     }
@@ -116,7 +117,7 @@ public partial class ProfilePage : UserControl
 
         var before = ViewModel.SelectedProfile;
         var after = textBox.Text ?? "EMPTY";
-        
+
         var config = ConfigService.LoadConfig(new ProfileConfigModel(before));
         if (r != FAContentDialogResult.Primary || !ConfigService.IsConfigExists(config))
         {
@@ -136,14 +137,14 @@ public partial class ProfilePage : UserControl
         ConfigService.DeleteConfig(config);
         config.Profile.Name = after;
         ConfigService.SaveConfig(config);
-        
-        if (Services.ProfileService.ProfileName == before)
+
+        if (ProfileService.ProfileName == before)
         {
-            Services.ProfileService.ProfileName = after;
+            ProfileService.ProfileName = after;
             ViewModel.MainConfigHandler.Data.ProfileName = after;
             ProfileConfigHandler.Data.Profile.Name = after;
         }
-        
+
         ViewModel.RefreshProfiles();
         ViewModel.SelectedProfile = after;
     }
@@ -156,14 +157,14 @@ public partial class ProfilePage : UserControl
         var config = ConfigService.LoadConfig(new ProfileConfigModel(before));
         config.Profile.Name = after;
         ConfigService.SaveConfig(config);
-        
+
         ViewModel.RefreshProfiles();
         ViewModel.SelectedProfile = after;
     }
 
     private async void MenuItemDeleteProfile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel.SelectedProfile == Services.ProfileService.ProfileName)
+        if (ViewModel.SelectedProfile == ProfileService.ProfileName)
         {
             this.ShowToast(new ToastMessage("无法删除已加载的档案。")
             {
@@ -211,8 +212,8 @@ public partial class ProfilePage : UserControl
         {
             return;
         }
-        
-        Services.ProfileService.ProfileName = ViewModel.SelectedProfile;
+
+        ProfileService.ProfileName = ViewModel.SelectedProfile;
         ViewModel.MainConfigHandler.Data.ProfileName = ViewModel.SelectedProfile;
         ViewModel.ProfileConfigHandler.Reload();
         ViewModel.RefreshProfiles();
@@ -224,7 +225,7 @@ public partial class ProfilePage : UserControl
         var guid = Guid.NewGuid();
         ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(guid, new Person());
         ViewModel.SelectedPerson = ViewModel.ProfileConfigHandler.Data.Profile.Persons
-            .First(kvp => kvp.Key == guid);
+                                            .First(kvp => kvp.Key == guid);
     }
 
     private void ButtonRemovePerson_OnClick(object? sender, RoutedEventArgs e)
@@ -249,7 +250,7 @@ public partial class ProfilePage : UserControl
         {
             ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(person.Key, person.Value);
             ViewModel.SelectedPerson = ViewModel.ProfileConfigHandler.Data.Profile.Persons
-                .First(kvp => kvp.Key == person.Key);
+                                                .First(kvp => kvp.Key == person.Key);
             toastMessage.Close();
         };
 
@@ -268,44 +269,44 @@ public partial class ProfilePage : UserControl
             AllowMultiple = false,
             FileTypeFilter =
             [
-                new FilePickerFileType("所有支持格式") { Patterns = ["*.xlsx", "*.xls", "*.csv", "*.txt"] },
-                new FilePickerFileType("Excel 文件") { Patterns = ["*.xlsx", "*.xls"] },
+                new FilePickerFileType("所有支持格式") { Patterns = ["*.xlsx", "*.csv", "*.txt"] },
+                new FilePickerFileType("Excel 文件") { Patterns = ["*.xlsx"] },
                 new FilePickerFileType("CSV 文件") { Patterns = ["*.csv"] },
                 new FilePickerFileType("文本文件") { Patterns = ["*.txt"] }
             ]
         });
-        
+
         if (files.Count == 0) return;
         var file = files[0];
-        
+
         var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-        if (!new[] {".txt", ".xlsx", ".xls", ".csv"}.Contains(extension))
+        if (!new[] { ".txt", ".xlsx", ".csv" }.Contains(extension))
         {
             this.ShowErrorToast("不支持的文件格式");
             return;
         }
-        
+
         await using var stream = await file.OpenReadAsync();
 
         ViewModel.Sheet = extension switch
         {
-            ".txt" => await LoadFromTxtAsync(stream),
-            ".xlsx" or ".xls" => await LoadFromExcelAsync(stream),
-            ".csv" => await LoadFromCsvAsync(stream),
-            _ => []
+            ".txt"  => await LoadFromTxtAsync(stream),
+            ".xlsx" => await LoadFromExcelAsync(stream),
+            ".csv"  => await LoadFromCsvAsync(stream),
+            _       => []
         };
-        
+
         ViewModel.PreProcessPersons();
         ViewModel.ProcessPersons();
-        
+
         if (this.FindResource("ImportSheetDataControl") is not ContentControl cc) return;
         cc.DataContext = this;
-        
+
         if (cc.Parent is FAContentDialog contentDialog)
         {
             contentDialog.Content = null;
         }
-        
+
         var dialog = new FAContentDialog
         {
             Content = cc,
@@ -318,12 +319,12 @@ public partial class ProfilePage : UserControl
         var result = await dialog.ShowAsync();
 
         if (result != FAContentDialogResult.Primary) return;
-        
+
         foreach (var person in ViewModel.ImportedPersons)
         {
             ViewModel.ProfileConfigHandler.Data.Profile.Persons.Add(Guid.NewGuid(), person);
         }
-        
+
         ViewModel.ProfileConfigHandler.StartPinyinCacheTask();
     }
 
@@ -337,7 +338,7 @@ public partial class ProfilePage : UserControl
         var guid = Guid.NewGuid();
         ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(guid, new Status());
         ViewModel.SelectedStatus = ViewModel.ProfileConfigHandler.Data.Profile.Statuses
-            .First(kvp => kvp.Key == guid);
+                                            .First(kvp => kvp.Key == guid);
     }
 
     private void ButtonRemoveStatus_OnClick(object? sender, RoutedEventArgs e)
@@ -362,7 +363,7 @@ public partial class ProfilePage : UserControl
         {
             ViewModel.ProfileConfigHandler.Data.Profile.Statuses.Add(status.Key, status.Value);
             ViewModel.SelectedStatus = ViewModel.ProfileConfigHandler.Data.Profile.Statuses
-                .First(kvp => kvp.Key == status.Key);
+                                                .First(kvp => kvp.Key == status.Key);
             toastMessage.Close();
         };
 
@@ -374,7 +375,7 @@ public partial class ProfilePage : UserControl
         var guid = Guid.NewGuid();
         ViewModel.ProfileConfigHandler.Data.Profile.Tags.Add(guid, new Tag());
         ViewModel.SelectedTag = ViewModel.ProfileConfigHandler.Data.Profile.Tags
-            .First(kvp => kvp.Key == guid);
+                                         .First(kvp => kvp.Key == guid);
     }
 
     private void ButtonRemoveTag_OnClick(object? sender, RoutedEventArgs e)
@@ -399,7 +400,7 @@ public partial class ProfilePage : UserControl
         {
             ViewModel.ProfileConfigHandler.Data.Profile.Tags.Add(tag.Key, tag.Value);
             ViewModel.SelectedTag = ViewModel.ProfileConfigHandler.Data.Profile.Tags
-                .First(kvp => kvp.Key == tag.Key);
+                                             .First(kvp => kvp.Key == tag.Key);
             toastMessage.Close();
         };
 

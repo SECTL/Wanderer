@@ -20,8 +20,8 @@ public class GuidToTagNameConverter : IValueConverter
 
         var service = IAppHost.GetService<ProfileService>();
         return service.ProfileConfigHandler.Data.Profile.Tags
-            .FirstOrDefault(kvp => kvp.Key == guid, KeyValuePair.Create(guid, new Tag("???")))
-            .Value.Name;
+                      .FirstOrDefault(kvp => kvp.Key == guid, KeyValuePair.Create(guid, new Tag("???")))
+                      .Value.Name;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

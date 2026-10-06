@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Wanderer.Abstraction;
 using Wanderer.Controls;
+using Wanderer.Extensions.Registry;
 using Wanderer.Services;
 using Wanderer.Services.Config;
 using Wanderer.Services.Logging;
@@ -26,28 +27,27 @@ using Wanderer.ViewModels;
 using Wanderer.ViewModels.MainPages;
 using Wanderer.Views;
 using Wanderer.Views.MainPages;
-using Wanderer.Extensions.Registry;
 
 namespace Wanderer;
 
-public partial class App : Application
+public class App : Application
 {
-    public static IClassicDesktopStyleApplicationLifetime? Lifetime { get; private set; }
-    public static bool IsDesktop { get; private set; } = false;
-    public static bool IsWindows { get; private set; } = OperatingSystem.IsWindows();
-    public static MainWindow? MainWindow { get; private set; } = null;
     public static Window PhonyRootWindow = null!;
+    public static IClassicDesktopStyleApplicationLifetime? Lifetime { get; private set; }
+    public static bool IsDesktop { get; private set; }
+    public static bool IsWindows { get; private set; } = OperatingSystem.IsWindows();
+    public static MainWindow? MainWindow { get; private set; }
 
-    public static bool IsStopping { get; set; } = false;
-    
+    public static bool IsStopping { get; set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
 
-#if DEBUG
+    #if DEBUG
         // 附加开发者工具
         this.AttachDevTools();
-#endif
+    #endif
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -56,7 +56,7 @@ public partial class App : Application
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("zh-hans");
 
         BuildHost();
-        
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             Lifetime = desktop;
@@ -75,7 +75,7 @@ public partial class App : Application
         {
             IsDesktop = false;
             InitializeHost();
-            
+
             singleViewPlatform.MainView = IAppHost.GetService<MainView>();
             if (OperatingSystem.IsBrowser())
             {
@@ -95,11 +95,11 @@ public partial class App : Application
             Environment.Exit(0);
             return;
         }
-        
+
         InitializeHost();
         ShowMainWindow();
     }
-    
+
     private async Task ProcessInstanceExisted()
     {
         CreatePhonyRootWindow();
@@ -121,7 +121,7 @@ public partial class App : Application
                     ClosesOnInvoked = true,
                     Text = "重启当前实例",
                     Description = "结束正在运行的 Wanderer 实例，然后再次启动本实例。",
-                    IconSource = new FluentIconSource("\ue0bd"),
+                    IconSource = new FluentIconSource("\ue0bd")
                 }
             ]
         };
@@ -130,10 +130,11 @@ public partial class App : Application
         {
             return;
         }
+
         try
         {
             var proc = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Environment.ProcessPath))
-                .Where(x=>x.Id != Environment.ProcessId);
+                              .Where(x => x.Id != Environment.ProcessId);
             foreach (var i in proc)
             {
                 i.Kill(true);
@@ -144,72 +145,76 @@ public partial class App : Application
         catch (Exception e)
         {
             await CommonTaskDialogs
-                .ShowDialog("重启失败", "无法重新启动应用，可能当前运行的实例正在以管理员身份运行。请使用任务管理器终止正在运行的实例，然后再试一次。"+Environment.NewLine+Environment.NewLine+$"{e.Message}");
+                .ShowDialog(
+                    "重启失败",
+                    "无法重新启动应用，可能当前运行的实例正在以管理员身份运行。请使用任务管理器终止正在运行的实例，然后再试一次。" + Environment.NewLine +
+                    Environment.NewLine + $"{e.Message}");
         }
     }
 
     private static void BuildHost()
     {
         IAppHost.Host = Host
-            .CreateDefaultBuilder()
-            .UseContentRoot(AppContext.BaseDirectory)
-            .ConfigureServices(services =>
-            {
-                // 日志
-                services.AddLogging(builder =>
-                {
-                    if (!OperatingSystem.IsBrowser())
-                    {
-                        builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
-                        builder.AddConsole(console => { console.FormatterName = "classisland"; });
-                    }
-#if DEBUG
-                    builder.SetMinimumLevel(LogLevel.Trace);
-#endif
-                });
-                
-                // 配置
-                if (OperatingSystem.IsBrowser())
-                {
-                    services.AddSingleton<ConfigServiceBase, BrowserConfigService>();
-                }
-                else
-                {
-                    services.AddSingleton<ConfigServiceBase, DesktopConfigService>();
-                }
-                services.AddSingleton<MainConfigHandler>();
-                services.AddSingleton<ProfileConfigHandler>();
-                
-                // 服务
-                services.AddSingleton<ProfileService>();
-                
-                // 主窗口
-                services.AddTransient<MainView>();
-                services.AddTransient<MainViewModel>();
-                
-                // 界面 Views
-                services.AddMainPage<HomePage>();
-                services.AddMainPageSeparator();
-                services.AddMainPage<AttendancePage>();
-                services.AddMainPage<ProfilePage>();
-                services.AddMainPage<HistoryPage>();
-                services.AddMainPage<RankingPage>();
+                        .CreateDefaultBuilder()
+                        .UseContentRoot(AppContext.BaseDirectory)
+                        .ConfigureServices(services =>
+                        {
+                            // 日志
+                            services.AddLogging(builder =>
+                            {
+                                if (!OperatingSystem.IsBrowser())
+                                {
+                                    builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
+                                    builder.AddConsole(console => { console.FormatterName = "classisland"; });
+                                }
+                            #if DEBUG
+                                builder.SetMinimumLevel(LogLevel.Trace);
+                            #endif
+                            });
 
-                services.AddMainPageFooter<AboutPage>();
-                services.AddMainPageFooterSeparator();
-                services.AddMainPageFooter<SettingsPage>();
-#if DEBUG
-                services.AddMainPageFooter<DebugPage>();
-#endif
-                
-                // 界面 ViewModels
-                services.AddTransient<HomePageViewModel>();
-                services.AddTransient<AttendancePageViewModel>();
-                services.AddTransient<ProfilePageViewModel>();
-                services.AddTransient<HistoryPageViewModel>();
-                services.AddTransient<RankingPageViewModel>();
-            })
-            .Build();
+                            // 配置
+                            if (OperatingSystem.IsBrowser())
+                            {
+                                services.AddSingleton<ConfigServiceBase, BrowserConfigService>();
+                            }
+                            else
+                            {
+                                services.AddSingleton<ConfigServiceBase, DesktopConfigService>();
+                            }
+
+                            services.AddSingleton<MainConfigHandler>();
+                            services.AddSingleton<ProfileConfigHandler>();
+
+                            // 服务
+                            services.AddSingleton<ProfileService>();
+
+                            // 主窗口
+                            services.AddTransient<MainView>();
+                            services.AddTransient<MainViewModel>();
+
+                            // 界面 Views
+                            services.AddMainPage<HomePage>();
+                            services.AddMainPageSeparator();
+                            services.AddMainPage<AttendancePage>();
+                            services.AddMainPage<ProfilePage>();
+                            services.AddMainPage<HistoryPage>();
+                            services.AddMainPage<RankingPage>();
+
+                            services.AddMainPageFooter<AboutPage>();
+                            services.AddMainPageFooterSeparator();
+                            services.AddMainPageFooter<SettingsPage>();
+                        #if DEBUG
+                            services.AddMainPageFooter<DebugPage>();
+                        #endif
+
+                            // 界面 ViewModels
+                            services.AddTransient<HomePageViewModel>();
+                            services.AddTransient<AttendancePageViewModel>();
+                            services.AddTransient<ProfilePageViewModel>();
+                            services.AddTransient<HistoryPageViewModel>();
+                            services.AddTransient<RankingPageViewModel>();
+                        })
+                        .Build();
     }
 
     private static void InitializeHost()
@@ -217,27 +222,28 @@ public partial class App : Application
         var logger = IAppHost.GetService<ILogger<App>>();
         logger.LogInformation("Wanderer Copyright by lrs2187(2026) Licensed under GPL3.0");
         logger.LogInformation("Host built.");
-        
+
         var lifetime = IAppHost.GetService<IHostApplicationLifetime>();
         lifetime.ApplicationStopping.Register(() =>
         {
-            new Thread(() => {
+            new Thread(() =>
+            {
                 Thread.Sleep(3000);
                 logger.LogInformation("退出超过 3s 了，正在强制退出 App...");
                 Environment.Exit(0);
             }).Start();
-            
+
             Stop();
         });
         lifetime.ApplicationStopped.Register(() => logger.LogInformation("App Stopped."));
-        
+
         var mainConfigHandler = IAppHost.GetService<MainConfigHandler>();
-        
+
         logger.LogInformation("当前档案：{PROFILE_NAME}", mainConfigHandler.Data.ProfileName);
         ProfileService.ProfileName = mainConfigHandler.Data.ProfileName;
         var profileConfigHandler = IAppHost.GetService<ProfileConfigHandler>();
         profileConfigHandler.StartPinyinCacheTask();
-        
+
         _ = IAppHost.Host?.StartAsync();
     }
 
@@ -252,41 +258,43 @@ public partial class App : Application
             WindowDecorations = WindowDecorations.None,
             ShowInTaskbar = false,
             Background = Brushes.Transparent,
-            TransparencyLevelHint = [ WindowTransparencyLevel.Transparent ],
+            TransparencyLevelHint = [WindowTransparencyLevel.Transparent],
             Title = "PhonyRootWindow"
         };
-        
+
         PhonyRootWindow.Closing += (sender, args) =>
         {
             if (args.CloseReason is WindowCloseReason.ApplicationShutdown or WindowCloseReason.OSShutdown)
             {
                 return;
             }
+
             args.Cancel = true;
         };
-        
+
         PhonyRootWindow.Show();
     }
-    
+
     public static Window GetRootWindow()
     {
         var w = Lifetime?.Windows
-            .FirstOrDefault(x => x.GetType().Name != "TrayPopupRoot" && x is { IsActive: true, IsVisible: true });
-        if (w != null) 
+                        .FirstOrDefault(x => x.GetType().Name != "TrayPopupRoot" &&
+                                             x is { IsActive: true, IsVisible: true });
+        if (w != null)
             return w;
         w = PhonyRootWindow;
         w.Activate();
 
         return w;
     }
-    
+
     public static void Stop()
     {
         if (IsStopping) return;
-        
+
         var logger = IAppHost.GetService<ILogger<App>>();
         IsStopping = true;
-        
+
         Dispatcher.UIThread.Invoke(() =>
         {
             logger.LogInformation("正在停止应用");
@@ -308,7 +316,7 @@ public partial class App : Application
     {
         var path = Environment.ProcessPath;
         if (path == null) return;
-        
+
         var executablePath = path.Replace(".dll", GlobalConstants.PlatformExecutableExtension);
         var startInfo = new ProcessStartInfo(executablePath)
         {
@@ -323,7 +331,7 @@ public partial class App : Application
         {
             return;
         }
-        
+
         if (MainWindow is not { IsLoaded: true })
         {
             MainWindow = new MainWindow
@@ -331,11 +339,11 @@ public partial class App : Application
                 Content = IAppHost.GetService<MainView>()
             };
         }
-        
+
         MainWindow.Show();
         MainWindow.Activate();
     }
-    
+
     private void NativeMenuItemOpenMainWindow_OnClick(object? sender, EventArgs e)
     {
         ShowMainWindow();

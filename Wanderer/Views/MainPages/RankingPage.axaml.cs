@@ -12,20 +12,18 @@ using MiniExcelLibs;
 using MiniExcelLibs.OpenXml;
 using Wanderer.Abstraction;
 using Wanderer.Attributes;
-using Wanderer.Models.Ranking;
-using Wanderer.ViewModels.MainPages;
 using Wanderer.Extensions;
 using Wanderer.Helpers.UI;
+using Wanderer.Models.Ranking;
 using Wanderer.Shared.Enums;
 using Wanderer.Shared.Models.Profile;
+using Wanderer.ViewModels.MainPages;
 
 namespace Wanderer.Views.MainPages;
 
 [MainPageInfo("排行榜", "ranking", "\uE3E0", true, true)]
 public partial class RankingPage : UserControl
 {
-    public RankingPageViewModel ViewModel { get; } = IAppHost.GetService<RankingPageViewModel>();
-    
     public RankingPage()
     {
         DataContext = this;
@@ -33,6 +31,8 @@ public partial class RankingPage : UserControl
 
         PersonsDataGrid.Columns.AddRange(ViewModel.DataGridColumns);
     }
+
+    public RankingPageViewModel ViewModel { get; } = IAppHost.GetService<RankingPageViewModel>();
 
     private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)
     {
@@ -44,12 +44,12 @@ public partial class RankingPage : UserControl
             ViewModel.UpdatePersonWithStatusCountsList();
             return;
         }
-        
+
         ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
-            .Where(person => person.Value.IsMatch(search)));
+                                            .Where(person => person.Value.IsMatch(search)));
         ViewModel.UpdatePersonWithStatusCountsList();
     }
-    
+
     [RelayCommand]
     public void CopyStatusWithRanking(StatusWithRanking ranking)
     {
@@ -57,9 +57,9 @@ public partial class RankingPage : UserControl
         if (topLevel?.Clipboard == null) return;
 
         var text = ranking.Items
-            .Aggregate(
-                $"{ranking.Status.Name}：{ranking.Items.Count} 人上榜",
-                (current, item) => current + $"\n{item.Person.Name} {item.Count} 次");
+                          .Aggregate(
+                              $"{ranking.Status.Name}：{ranking.Items.Count} 人上榜",
+                              (current, item) => current + $"\n{item.Person.Name} {item.Count} 次");
 
         topLevel.Clipboard.SetTextAsync(text).Wait();
         this.ShowSuccessToast("复制成功。");
@@ -68,14 +68,14 @@ public partial class RankingPage : UserControl
     private async void ButtonExport_OnClick(object? sender, RoutedEventArgs e)
     {
         var configData = ViewModel.ProfileConfigHandler.Data;
-        
+
         var topLevel = TopLevel.GetTopLevel(this);
         if (topLevel == null) return;
 
         var profileName = configData.Profile.Name;
         var today = DateTime.Today;
         var dateString = $"{today.Year}-{today.Month}-{today.Day} {today.Hour}-{today.Minute}";
-        
+
         var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "导出 Excel 文件",
@@ -86,18 +86,18 @@ public partial class RankingPage : UserControl
             ]
         });
         if (file == null) return;
-        
+
         var dt = new DataTable();
-        
+
         dt.Columns.Add(new DataColumn("姓名", typeof(string)));
         dt.Columns.Add(new DataColumn("编号", typeof(string)));
         dt.Columns.Add(new DataColumn("性别", typeof(string)));
         dt.Columns.Add(new DataColumn("标签", typeof(string)));
-        
+
         dt.Columns.AddRange(configData.Profile.Statuses
-            .Select(kvp => new DataColumn(kvp.Value.Name, typeof(int)))
-            .ToArray());
-        
+                                      .Select(kvp => new DataColumn(kvp.Value.Name, typeof(int)))
+                                      .ToArray());
+
         foreach (var person in ViewModel.PersonWithStatusCountsList)
         {
             var row = dt.NewRow();
@@ -106,24 +106,26 @@ public partial class RankingPage : UserControl
             row["编号"] = person.Person.Id;
             row["性别"] = person.Person.Sex switch
             {
-                HumanSex.Male => "男",
+                HumanSex.Male   => "男",
                 HumanSex.Female => "女",
-                _ => "未知"
+                _               => "未知"
             };
             row["标签"] = person.Person.Tags.Aggregate(string.Empty, (current, item) =>
-                current + configData.Profile.Tags.GetValueOrDefault(item, new Tag()).Name + ";");
+                                                         current + configData.Profile.Tags
+                                                                             .GetValueOrDefault(item, new Tag()).Name +
+                                                         ";");
 
             foreach (var (index, status) in configData.Profile.Statuses.Index())
             {
                 row[status.Value.Name] = person.StatusCounts[index];
             }
-            
+
             dt.Rows.Add(row);
         }
-        
+
         await using var stream = await file.OpenWriteAsync();
         stream.SaveAs(dt, configuration: new OpenXmlConfiguration());
-        
+
         this.ShowSuccessToast("导出成功。");
     }
 }

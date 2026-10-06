@@ -1,11 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:Wanderer.Converters">
-    
+
     <ControlTheme TargetType="ListBoxItem" x:Key="ChipListBoxItemTheme">
         <ControlTheme.Resources>
-            <converters:SizeDoubleToCornerRadiusConverter x:Key="SizeDoubleToCornerRadiusConverter"/>
-            <converters:DoubleToThicknessMultiConverter x:Key="DoubleToThicknessMultiConverter"/>
+            <converters:SizeDoubleToCornerRadiusConverter x:Key="SizeDoubleToCornerRadiusConverter" />
+            <converters:DoubleToThicknessMultiConverter x:Key="DoubleToThicknessMultiConverter" />
         </ControlTheme.Resources>
         <Setter Property="Template">
             <Setter.Value>
@@ -19,62 +19,62 @@
                             Background="{DynamicResource ControlFillColorTransparentBrush}">
                         <Border.Transitions>
                             <Transitions>
-                                <BrushTransition Property="Background" Duration="0:0:0.1" Easing="0,0 0,1"/>
-                                <BrushTransition Property="BorderBrush" Duration="0:0:0.1" Easing="0,0 0,1"/>
-                                <BrushTransition Property="TextElement.Foreground" Duration="0:0:0.1" Easing="0,0 0,1"/>
+                                <BrushTransition Property="Background" Duration="0:0:0.1" Easing="0,0 0,1" />
+                                <BrushTransition Property="BorderBrush" Duration="0:0:0.1" Easing="0,0 0,1" />
+                                <BrushTransition Property="TextElement.Foreground" Duration="0:0:0.1" Easing="0,0 0,1" />
                             </Transitions>
                         </Border.Transitions>
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          VerticalAlignment="Center"/>
+                                          VerticalAlignment="Center" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="MinWidth" Value="0"/>
-        <Setter Property="Margin" Value="2"/>
-        
-        
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Margin" Value="2" />
+
+
         <Style Selector="^[IsSelected=True] /template/ Border#ContainerBorder">
-            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
-            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
         </Style>
         <Style Selector="^[IsSelected=True]:disabled /template/ Border#ContainerBorder">
-            <Setter Property="Background" Value="{DynamicResource AccentFillColorDisabledBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}"/>
-            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDisabledBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
         </Style>
         <Style Selector="^:pointerover /template/ Border#ContainerBorder">
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
         </Style>
         <Style Selector="^:disabled /template/ Border#ContainerBorder">
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}"/>
-            <Setter Property="TextElement.Foreground" Value="{DynamicResource ControlStrokeColorDefaultBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
         </Style>
     </ControlTheme>
-    
+
     <ControlTheme TargetType="ListBox" x:Key="ChipListBoxTheme">
         <ControlTheme.Resources>
             <ControlTheme BasedOn="{StaticResource ChipListBoxItemTheme}"
                           TargetType="ListBoxItem"
-                          x:Key="{x:Type ListBoxItem}"/>
+                          x:Key="{x:Type ListBoxItem}" />
         </ControlTheme.Resources>
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal" Classes="animated-resize"/>
-            </ItemsPanelTemplate>   
+                <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
+            </ItemsPanelTemplate>
         </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="ListBox">
                 <ScrollViewer>
-                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"/>
+                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
                 </ScrollViewer>
             </ControlTemplate>
         </Setter>
-        <Setter Property="ItemContainerTheme" Value="{StaticResource ChipListBoxItemTheme}"/>
+        <Setter Property="ItemContainerTheme" Value="{StaticResource ChipListBoxItemTheme}" />
     </ControlTheme>
-    
+
     <Design.PreviewWith>
         <Border Padding="20" Width="400">
             <ListBox Theme="{StaticResource ChipListBoxTheme}">

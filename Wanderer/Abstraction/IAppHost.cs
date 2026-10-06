@@ -4,17 +4,17 @@ using Microsoft.Extensions.Hosting;
 namespace Wanderer.Abstraction;
 
 /// <summary>
-/// 应用主机接口
+///     应用主机接口
 /// </summary>
 public interface IAppHost
 {
     /// <summary>
-    /// 应用主机
+    ///     应用主机
     /// </summary>
     public static IHost? Host;
 
     /// <summary>
-    /// 获取指定的服务
+    ///     获取指定的服务
     /// </summary>
     /// <typeparam name="T">要获取的服务类型</typeparam>
     /// <returns>获取的服务</returns>
@@ -31,7 +31,7 @@ public interface IAppHost
     }
 
     /// <summary>
-    /// 尝试获取指定的服务
+    ///     尝试获取指定的服务
     /// </summary>
     /// <typeparam name="T">要获取的服务类型</typeparam>
     /// <returns>如果获取成功，则返回获取到的服务，否则返回null</returns>
