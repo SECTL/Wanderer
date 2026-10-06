@@ -1,3 +1,8 @@
+using Android.App;
+using Android.Content.PM;
+using Android.Runtime;
+using Avalonia.Android;
+
 namespace Wanderer.Android;
 
 [Activity(
