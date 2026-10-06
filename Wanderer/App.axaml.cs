@@ -205,6 +205,7 @@ public class App : Application
                             services.AddMainPage<HomePage>();
                             services.AddMainPageSeparator();
                             services.AddMainPage<AttendancePage>();
+                            services.AddMainPage<SeatPage>();
                             services.AddMainPage<ProfilePage>();
                             services.AddMainPage<HistoryPage>();
                             services.AddMainPage<RankingPage>();
@@ -219,6 +220,7 @@ public class App : Application
                             // 界面 ViewModels
                             services.AddTransient<HomePageViewModel>();
                             services.AddTransient<AttendancePageViewModel>();
+                            services.AddTransient<SeatPageViewModel>();
                             services.AddTransient<ProfilePageViewModel>();
                             services.AddTransient<HistoryPageViewModel>();
                             services.AddTransient<RankingPageViewModel>();

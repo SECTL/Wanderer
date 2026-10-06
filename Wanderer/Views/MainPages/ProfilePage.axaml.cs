@@ -15,6 +15,7 @@ using Wanderer.Models;
 using Wanderer.Models.UI;
 using Wanderer.Services;
 using Wanderer.Services.Config;
+using Wanderer.Shared;
 using Wanderer.Shared.Models.Profile;
 using Wanderer.ViewModels.MainPages;
 
@@ -288,13 +289,7 @@ public partial class ProfilePage : UserControl
 
         await using var stream = await file.OpenReadAsync();
 
-        ViewModel.Sheet = extension switch
-        {
-            ".txt"  => await LoadFromTxtAsync(stream),
-            ".xlsx" => await LoadFromExcelAsync(stream),
-            ".csv"  => await LoadFromCsvAsync(stream),
-            _       => []
-        };
+        ViewModel.Sheet = await SheetLoader.LoadAsync(stream, extension);
 
         ViewModel.PreProcessPersons();
         ViewModel.ProcessPersons();

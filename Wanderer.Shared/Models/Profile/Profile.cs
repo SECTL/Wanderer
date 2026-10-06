@@ -10,6 +10,9 @@ public partial class Profile : ObservableRecipient
     private ObservableDictionary<Guid, Person> _persons = [];
 
     [ObservableProperty]
+    private SeatLayout _seatLayout = new();
+
+    [ObservableProperty]
     private ObservableDictionary<Guid, Status> _statuses = [];
 
     [ObservableProperty]

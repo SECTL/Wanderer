@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Wanderer.Controls"
+             xmlns:controls="clr-namespace:Wanderer.Controls"
+             xmlns:models="clr-namespace:Wanderer.Models"
+             xmlns:enums="clr-namespace:Wanderer.Enums"
+             xmlns:converters="clr-namespace:Wanderer.Converters"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             mc:Ignorable="d" d:DesignWidth="240" d:DesignHeight="32"
+             x:Class="Wanderer.Controls.PersonAttendanceEditor">
+    <UserControl.Resources>
+        <converters:GuidToStatusNameConverter x:Key="GuidToStatusNameConverter" />
+    </UserControl.Resources>
+
+    <Grid x:Name="StatusGrid"
+          DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:PersonAttendanceEditor}}"
+          IsVisible="{Binding Row, Converter={x:Static ObjectConverters.IsNotNull}}"
+          Tag="{Binding MainConfigHandler.Data.StatusChangerShowMode,
+                Converter={x:Static ObjectConverters.Equal},
+                ConverterParameter={x:Static enums:StatusChangerShowMode.ChipListBox}}">
+        <!-- 芯片直接用 ToggleButton：由芯片自身的选中状态驱动，不经过列表控件的选中状态机，
+             鼠标、触屏、笔的行为一致。 -->
+        <ItemsControl HorizontalAlignment="Stretch"
+                      ItemsSource="{Binding Row.StatusChips}"
+                      IsVisible="{Binding #StatusGrid.Tag}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" Classes="animated-resize" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:StatusChip">
+                    <ToggleButton Theme="{StaticResource ChipToggleButtonTheme}"
+                                  IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                  Click="StatusChip_OnClick"
+                                  Content="{Binding Name}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <controls:MultiComboBox HorizontalAlignment="Stretch"
+                                x:CompileBindings="False"
+                                ItemsSource="{Binding Row.ProfileConfigHandler.Data.Profile.Statuses.Keys}"
+                                SelectedItems="{Binding Row.Statuses}"
+                                IsVisible="{Binding !#StatusGrid.Tag}">
+            <controls:MultiComboBox.ItemTemplate>
+                <DataTemplate x:DataType="system:Guid">
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
+                </DataTemplate>
+            </controls:MultiComboBox.ItemTemplate>
+
+            <controls:MultiComboBox.SelectedItemTemplate>
+                <DataTemplate x:DataType="system:Guid">
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding Converter={StaticResource GuidToStatusNameConverter}}" />
+                </DataTemplate>
+            </controls:MultiComboBox.SelectedItemTemplate>
+        </controls:MultiComboBox>
+    </Grid>
+</UserControl>

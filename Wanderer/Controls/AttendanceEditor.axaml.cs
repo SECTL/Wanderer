@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Wanderer.Abstraction;
 using Wanderer.Extensions;
 using Wanderer.Models;
-using Wanderer.Services;
 using Wanderer.Services.Config;
 using Wanderer.Shared.ComponentModels;
 using Wanderer.Shared.Models.Profile;
@@ -134,20 +132,6 @@ public partial class AttendanceEditor : UserControl
     }
 
     /// <summary>
-    ///     状态芯片点击。自己翻转选中状态，不依赖列表控件的选中机制，
-    ///     因此鼠标、触屏、笔的行为完全一致。
-    /// </summary>
-    private void StatusChip_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (sender is not ToggleButton { DataContext: StatusChip chip } button)
-        {
-            return;
-        }
-
-        chip.IsChecked = button.IsChecked == true;
-    }
-
-    /// <summary>
     ///     考勤编辑器模型。负责当天记录的读取、人员行的构建、脏状态跟踪以及落盘。
     /// </summary>
     public class AttendanceEditorModel : ObservableRecipient
@@ -175,8 +159,6 @@ public partial class AttendanceEditor : UserControl
         }
 
         public ProfileConfigHandler ProfileConfigHandler { get; } = IAppHost.GetService<ProfileConfigHandler>();
-        public MainConfigHandler MainConfigHandler { get; } = IAppHost.GetService<MainConfigHandler>();
-        public ProfileService ProfileService { get; } = IAppHost.GetService<ProfileService>();
         public ILogger<AttendanceEditorModel>? Logger { get; }
 
         /// <summary>

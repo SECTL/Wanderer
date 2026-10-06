@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:Wanderer.Views.MainPages"
              xmlns:controls="clr-namespace:Wanderer.Controls"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:wa="https://github.com/SECTL/Wanderer/schemas/xaml"
              mc:Ignorable="d"
              x:DataType="local:HomePage"
              d:DataContext="{d:DesignInstance local:HomePage}">
@@ -20,6 +20,12 @@
                     HorizontalAlignment="Stretch"
                     Click="GoAttendancePageButton_OnClick">
                 <controls:IconText Glyph="&#xE0AA;" Text="去考勤" FontSize="18" />
+            </Button>
+
+            <Button Height="48"
+                    HorizontalAlignment="Stretch"
+                    Click="GoSeatPageButton_OnClick">
+                <controls:IconText Glyph="{wa:Fi SeatRegular}" Text="座位表" FontSize="18" />
             </Button>
 
             <Separator />

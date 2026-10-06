@@ -63,6 +63,7 @@
                              PaneDisplayMode="Auto"
                              IsSettingsVisible="False"
                              IsPaneToggleButtonVisible="False"
+                             IsPaneOpen="False"
                              MenuItemsSource="{Binding ViewModel.NavigationViewItems, Mode=OneWay}"
                              FooterMenuItemsSource="{Binding ViewModel.NavigationViewFooterItems, Mode=OneWay}"
                              SelectedItem="{Binding ViewModel.SelectedNavigationViewItem, UpdateSourceTrigger=PropertyChanged}"

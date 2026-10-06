@@ -37,18 +37,28 @@ public partial class RankingPage : UserControl
 
     private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)
     {
+        // 重建列表会替换人员总览的行对象，先记下当前选中的人员，重建后恢复选择。
+        var selectedId = ViewModel.SelectedPersonWithStatusCounts?.Id;
+
         var search = ViewModel.SearchText;
         ViewModel.Persons.Clear();
         if (search == string.Empty)
         {
             ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons);
-            ViewModel.UpdatePersonWithStatusCountsList();
-            return;
+        }
+        else
+        {
+            ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
+                                                .Where(person => person.Value.IsMatch(search)));
         }
 
-        ViewModel.Persons.AddRange(ViewModel.ProfileConfigHandler.Data.Profile.Persons
-                                            .Where(person => person.Value.IsMatch(search)));
         ViewModel.UpdatePersonWithStatusCountsList();
+
+        if (selectedId is { } id)
+        {
+            ViewModel.SelectedPersonWithStatusCounts =
+                ViewModel.PersonWithStatusCountsList.FirstOrDefault(item => item.Id == id);
+        }
     }
 
     [RelayCommand]
@@ -61,6 +71,22 @@ public partial class RankingPage : UserControl
                           .Aggregate(
                               $"{ranking.Title}：{ranking.Items.Count} 人上榜",
                               (current, item) => current + $"\n{item.Person.Name} {item.Count} 次");
+
+        topLevel.Clipboard.SetTextAsync(text).Wait();
+        this.ShowSuccessToast("复制成功。");
+    }
+
+    [RelayCommand]
+    public void CopyStatusDates(PersonStatusLog log)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel?.Clipboard == null) return;
+
+        var personName = ViewModel.SelectedPersonWithStatusCounts?.Person.Name ?? string.Empty;
+        var text = log.DateTexts
+                      .Aggregate(
+                          $"{personName} {log.Title}：共 {log.Count} 天",
+                          (current, date) => current + $"\n{date}");
 
         topLevel.Clipboard.SetTextAsync(text).Wait();
         this.ShowSuccessToast("复制成功。");

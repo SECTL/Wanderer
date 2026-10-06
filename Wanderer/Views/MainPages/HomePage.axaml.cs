@@ -31,6 +31,11 @@ public partial class HomePage : UserControl
         MainView.Current?.SelectNavigationItemById("attendance");
     }
 
+    private void GoSeatPageButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        MainView.Current?.SelectNavigationItemById("seat");
+    }
+
     private void ButtonRefresh_OnClick(object? sender, RoutedEventArgs e)
     {
         AttendanceViewer.RefreshData();

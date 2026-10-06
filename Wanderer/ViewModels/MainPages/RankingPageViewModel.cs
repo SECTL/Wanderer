@@ -25,6 +25,19 @@ public partial class RankingPageViewModel : ObservableRecipient
     [ObservableProperty]
     private int _selectedPage;
 
+    /// <summary>
+    ///     按人员查看下的子页面：0 为人员总览，1 为人员日志。
+    /// </summary>
+    [ObservableProperty]
+    private int _selectedPersonPage;
+
+    /// <summary>
+    ///     人员总览中当前选中的人员。只有选中人员后，人员日志页才可用。
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasSelectedPerson))]
+    private PersonWithStatusCounts? _selectedPersonWithStatusCounts;
+
     public RankingPageViewModel(ProfileConfigHandler profileConfigHandler)
     {
         ProfileConfigHandler = profileConfigHandler;
@@ -74,6 +87,27 @@ public partial class RankingPageViewModel : ObservableRecipient
     public ObservableCollection<DataGridColumn> DataGridColumns { get; } = [];
     public ObservableCollection<PersonWithStatusCounts> PersonWithStatusCountsList { get; } = [];
 
+    /// <summary>
+    ///     当前选中人员的状态日志，每个出现过的状态一项。
+    /// </summary>
+    public ObservableCollection<PersonStatusLog> PersonStatusLogs { get; } = [];
+
+    /// <summary>
+    ///     人员总览中是否已选中人员。
+    /// </summary>
+    public bool HasSelectedPerson => SelectedPersonWithStatusCounts is not null;
+
+    partial void OnSelectedPersonWithStatusCountsChanged(PersonWithStatusCounts? value)
+    {
+        // 人员被筛掉或清空选择时回到人员总览，避免停留在已禁用的人员日志页。
+        if (value is null)
+        {
+            SelectedPersonPage = 0;
+        }
+
+        UpdatePersonStatusLogs();
+    }
+
     public void UpdatePersonWithStatusCountsList()
     {
         var configData = ProfileConfigHandler.Data;
@@ -104,6 +138,7 @@ public partial class RankingPageViewModel : ObservableRecipient
 
                 return new PersonWithStatusCounts
                 {
+                    Id = kvp.Key,
                     Person = kvp.Value,
                     StatusCounts = configData.Profile.Statuses.Keys
                                              .Select(status => counts.GetValueOrDefault(status, 0))
@@ -111,6 +146,67 @@ public partial class RankingPageViewModel : ObservableRecipient
                     NoStatusCount = noStatusCount
                 };
             }));
+    }
+
+    /// <summary>
+    ///     按当前选中的人员重建状态日志。统计口径与人员总览一致：当天记录缺失时按默认状态处理，
+    ///     当天有记录但一个状态都没有的人员计入"无状态"。
+    /// </summary>
+    public void UpdatePersonStatusLogs()
+    {
+        PersonStatusLogs.Clear();
+
+        if (SelectedPersonWithStatusCounts is not { } selected) return;
+
+        var configData = ProfileConfigHandler.Data;
+        var defaultStatus = ProfileConfigHandler.CreateDefaultStatus(configData.Profile);
+
+        Dictionary<Guid, List<DateOnly>> statusDates = [];
+        List<DateOnly> noStatusDates = [];
+
+        foreach (var (date, oneDayAttendanceStatus) in configData.Statuses.OrderBy(kvp => kvp.Key))
+        {
+            var attendanceStatus = oneDayAttendanceStatus.Persons.GetValueOrDefault(selected.Id)
+                                   ?? defaultStatus;
+            if (attendanceStatus.Statuses.Count == 0)
+            {
+                // 当天有记录、但该人员一个状态都没有
+                noStatusDates.Add(date);
+                continue;
+            }
+
+            foreach (var status in attendanceStatus.Statuses)
+            {
+                if (!statusDates.TryGetValue(status, out var dates))
+                {
+                    statusDates[status] = dates = [];
+                }
+
+                dates.Add(date);
+            }
+        }
+
+        // 状态的展示顺序与档案中的定义顺序一致。
+        foreach (var (statusId, status) in configData.Profile.Statuses)
+        {
+            if (statusDates.TryGetValue(statusId, out var dates))
+            {
+                PersonStatusLogs.Add(new PersonStatusLog
+                {
+                    Title = status.Name,
+                    Dates = dates
+                });
+            }
+        }
+
+        if (noStatusDates.Count > 0)
+        {
+            PersonStatusLogs.Add(new PersonStatusLog
+            {
+                Title = StatusAndCount.NoStatusTitle,
+                Dates = noStatusDates
+            });
+        }
     }
 
     /// <summary>

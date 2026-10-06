@@ -28,6 +28,8 @@
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.12"/>
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.401"/>
         <PackageVersion Include="MiniExcel" Version="2.0.0-preview.4"/>
+        <!-- 座位页的平移/缩放容器（ZoomBorder）。 -->
+        <PackageVersion Include="PanAndZoom" Version="12.0.0.1"/>
         <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.3"/>
         <PackageVersion Include="Xaml.Behaviors" Version="12.0.7"/>
         <PackageVersion Include="Pastel" Version="8.0.0"/>
