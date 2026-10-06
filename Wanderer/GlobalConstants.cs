@@ -32,8 +32,8 @@ public static class GlobalConstants
 
     public static class ImportSheetStaticTexts
     {
-        public static readonly List<string> NameHeaderTexts = ["姓名", "名字", "name"];
-        public static readonly List<string> IdHeaderTexts = ["编号", "学号", "考号", "id"];
+        public static readonly List<string> NameHeaderTexts = ["姓名", "名字", "名称", "name"];
+        public static readonly List<string> IdHeaderTexts = ["编号", "学号", "考号", "序号", "id"];
         public static readonly List<string> SexHeaderTexts = ["性别", "sex"];
 
         public static class SexTexts
