@@ -117,6 +117,8 @@
                        PanButton="Left"
                        EnableGestures="True"
                        EnableDoubleClickZoom="True"
+                       EnableGestureRotation="False"
+                       EnableRotationSnapping="False"
                        DoubleClickZoomMode="ZoomToFit"
                        ZoomChanged="SeatZoom_OnZoomChanged">
             <ItemsControl x:Name="SeatGrid"
