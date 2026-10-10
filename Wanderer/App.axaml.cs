@@ -345,9 +345,12 @@ public class App : Application
 
         if (MainWindow is not { IsLoaded: true })
         {
+            var isAutoMaximizeEnabled = IAppHost.GetService<MainConfigHandler>().Data.IsAutoMaximizeEnabled;
+
             MainWindow = new MainWindow
             {
-                Content = IAppHost.GetService<MainView>()
+                Content = IAppHost.GetService<MainView>(),
+                WindowState = isAutoMaximizeEnabled ? WindowState.Maximized : WindowState.Normal
             };
         }
 

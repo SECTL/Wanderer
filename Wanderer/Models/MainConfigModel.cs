@@ -11,7 +11,13 @@ public partial class MainConfigModel : ConfigBase
     private BackgroundEffect _backgroundEffect = BackgroundEffect.Mica;
 
     [ObservableProperty]
+    private bool _isAutoMaximizeEnabled = true;
+
+    [ObservableProperty]
     private string _profileName = "Default";
+
+    [ObservableProperty]
+    private string _startupPageId = "home";
 
     [ObservableProperty]
     private StatusChangerShowMode _statusChangerShowMode = StatusChangerShowMode.ChipListBox;

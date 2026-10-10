@@ -26,6 +26,15 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
+            <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xF483;}"
+                                   Header="主界面"
+                                   Description="该选项会影响您启动 Wanderer 后首先进入的主界面页面。">
+                <fa:FASettingsExpander.Footer>
+                    <ComboBox ItemsSource="{Binding $parent[local:SettingsPage].StartupPageOptions}"
+                              SelectedIndex="{Binding $parent[local:SettingsPage].StartupPageIndex}" />
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
+
             <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xE520;}"
                                    Header="背景材质"
                                    Description="该选项会影响主窗口的背景材质。亚克力需要 Windows 10 1903 及以上版本，云母需要 Windows 11。"
@@ -36,6 +45,15 @@
                         <ComboBoxItem>云母</ComboBoxItem>
                         <ComboBoxItem>亚克力</ComboBoxItem>
                     </ComboBox>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
+
+            <fa:FASettingsExpander IconSource="{controls:FluentIconSource &#xEB6C;}"
+                                   Header="自动最大化"
+                                   Description="该选项会影响您启动 Wanderer 时主窗口是否自动最大化。"
+                                   IsVisible="{x:Static wanderer:App.IsDesktop}">
+                <fa:FASettingsExpander.Footer>
+                    <ToggleSwitch IsChecked="{Binding IsAutoMaximizeEnabled}" />
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
         </StackPanel>

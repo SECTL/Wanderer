@@ -88,7 +88,7 @@ public partial class MainView : UserControl, IFANavigationPageFactory
             UpdateSystemBarColor();
         }
 
-        SelectNavigationItemById(DefaultMainPageId);
+        SelectNavigationItemById(IAppHost.GetService<MainConfigHandler>().Data.StartupPageId);
 
         if (Content is not Control element || _isAdornerAdded)
         {
@@ -171,13 +171,18 @@ public partial class MainView : UserControl, IFANavigationPageFactory
 
     public void SelectNavigationItemById(string id)
     {
-        var info = MainPagesRegistryService.Items.FirstOrDefault(info => info.Id == id) ??
-                   MainPagesRegistryService.FooterItems.FirstOrDefault(info => info.Id == id);
+        var info = FindNavigationItemById(id) ?? FindNavigationItemById(DefaultMainPageId);
 
         if (info != null)
         {
             CoreNavigate(info);
         }
+    }
+
+    private static MainPageInfo? FindNavigationItemById(string id)
+    {
+        return MainPagesRegistryService.Items.FirstOrDefault(info => info.Id == id) ??
+               MainPagesRegistryService.FooterItems.FirstOrDefault(info => info.Id == id);
     }
 
     private void SelectNavigationItem(MainPageInfo info)
