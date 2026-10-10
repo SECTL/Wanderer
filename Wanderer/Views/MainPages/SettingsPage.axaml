@@ -56,6 +56,17 @@
                     <ToggleSwitch IsChecked="{Binding IsAutoMaximizeEnabled}" />
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
+
+            <!-- 数据目录：仅桌面平台可用（Android / 浏览器没有可打开的目录） -->
+            <Separator Margin="0 12 0 4" IsVisible="{x:Static wanderer:App.IsDesktop}" />
+            <controls:IconText Glyph="&#xE875;" Text="数据目录" Margin="0 0 0 4"
+                               IsVisible="{x:Static wanderer:App.IsDesktop}" />
+            <fa:FASettingsExpanderItem Content="打开数据目录"
+                                       Description="在文件管理器中打开存放配置和档案数据的目录。"
+                                       IconSource="{controls:FluentIconSource &#xE875;}"
+                                       IsClickEnabled="True"
+                                       IsVisible="{x:Static wanderer:App.IsDesktop}"
+                                       Click="OpenDataFolderItem_OnClick" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

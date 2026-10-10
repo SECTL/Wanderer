@@ -1,10 +1,15 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Wanderer.Abstraction;
 using Wanderer.Attributes;
 using Wanderer.Services;
 using Wanderer.Services.Config;
+using Wanderer.Shared;
 
 namespace Wanderer.Views.MainPages;
 
@@ -57,6 +62,32 @@ public partial class SettingsPage : UserControl
         if (StartupPageOptions.All(option => option.Id != MainConfigHandler.Data.StartupPageId))
         {
             MainConfigHandler.Data.StartupPageId = DefaultStartupPageId;
+        }
+    }
+
+    private async void OpenDataFolderItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var path = Utils.GetDataDirectory();
+        if (string.IsNullOrEmpty(path))
+        {
+            return;
+        }
+
+        // 目录可能还没被创建（例如全新安装、尚未写入任何配置）。
+        Directory.CreateDirectory(path);
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(path)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception exception)
+        {
+            await CommonTaskDialogs.ShowDialog("无法打开数据目录",
+                                               $"无法在文件管理器中打开 {path}。" + Environment.NewLine +
+                                               Environment.NewLine + exception.Message);
         }
     }
 }

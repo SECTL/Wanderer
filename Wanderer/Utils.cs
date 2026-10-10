@@ -7,29 +7,32 @@ namespace Wanderer;
 
 public static class Utils
 {
-    public static string GetFilePath(params string[] strings)
+    public static string GetDataDirectory()
     {
-        string basePath;
         if (OperatingSystem.IsBrowser())
         {
-            basePath = "";
+            return "";
         }
-        else if (OperatingSystem.IsAndroid())
+
+        if (OperatingSystem.IsAndroid())
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appName = Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
-            basePath = Path.Combine([appData, appName]);
+            return Path.Combine([appData, appName]);
         }
-        else
-        {
+
         #if DEBUG
-            basePath = Path.Combine([AppContext.BaseDirectory, "data"]);
+        return Path.Combine([AppContext.BaseDirectory, "data"]);
         #else
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
-            basePath = Path.Combine([appData, appName]);
+        var appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var appNameDirectory = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "Wanderer";
+        return Path.Combine([appDataDirectory, appNameDirectory]);
         #endif
-        }
+    }
+
+    public static string GetFilePath(params string[] strings)
+    {
+        var basePath = GetDataDirectory();
 
         var path = Path.Combine([basePath, .. strings]);
 
