@@ -1,6 +1,6 @@
 <div align="center">
 
-# <image src="Wanderer/Assets/AppLogo.png" height="28" width="28"/> 易考勤
+# <image src="Wanderer/Assets/AppLogo.png" height="28" width="28"/> Wanderer
 
 [![Stars](https://img.shields.io/github/stars/SECTL/Wanderer?label=Stars)](https://github.com/SECTL/Wanderer)
 [![正式版 Release](https://img.shields.io/github/v/release/SECTL/Wanderer?style=flat-square&color=%233fb950&label=正式版)](https://github.com/SECTL/Wanderer/releases/latest)
@@ -17,14 +17,9 @@
 
 ## 功能
 
-### 快速管理考勤
-
-- [x] 支持通过拼音搜索、排序人员列表，快速找到要修改状态的人员
-- [x] 支持查看、修改历史的考勤记录
-
-### 考勤状态查看
-
-- [ ] 即将支持查看指定学生历史状态，进行汇总
+- 便于班委修改学生到校状态
+- 拥有简易的座位表视图，便于学生打卡
+- 能够查看学生考勤数据
 
 ## 开发
 
@@ -35,20 +30,4 @@
 
 ## 开放源代码许可协议
 
-```
-Wanderer
-Copyright (C) 2026 lrs2187/lrsgzs
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-```
+本软件以 [`GPL-3.0`](./LICENSE) 分发。
